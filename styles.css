@@ -1,7 +1,8 @@
-/* STYLES */
 html, body {
     height: 100%;
     margin: 0;
+    display: flex;
+    flex-direction: column;
   }
   
   body {
@@ -11,44 +12,245 @@ html, body {
   }
 
 .container-fluid {  /* Or apply to .main if you prefer */
-    position: relative; /* Create a stacking context */
-    z-index: 1; /* Ensure it's above the sidebars */
+    position: relative;
+    display: flex;
+    justify-content: center; /* Center child elements horizontally */
+    flex-grow: 1;
 }
 
 .sidebar {
     position: fixed;
+    /* display: block; */
     top: 56px; /* Align with navbar */
     bottom: 0;
     left: 0;
-    z-index: 1000;
+    max-width: 20vw;
+    /*z-index: 1000;*/
     padding: 20px;
-    overflow-x: hidden;
+    overflow-x:auto;
     overflow-y: auto;
     border-right: 1px solid #eee;
     box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); 
+    font-size: 0.7rem; /* Adjust this value to make the text smaller */
+    /* Optional: Override for mobile devices */
+    @media (max-width: 768px) {
+        font-size: 0.6rem; /* Even smaller text for mobile, if needed */
+    }
 }
+
 .sidebar-right {
     left: auto;
     right: 0;
-
+    margin-left: 2vw;
 }
+
+.sidebar-right button{
+    font-size: 0.7rem; /* Adjust this value to make the text smaller */
+    padding: .5vw 1vh;
+}
+
+.sidebar-left {
+    right: auto;
+    left: 0;
+    margin-right: 2vw;
+}
+
+
+
 .main {
     margin-top: 20px;
-    position: relative;
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    align-items: flex-start; /* Align content to the top */
     padding: 20px;
-    margin-left: 350px; /* Adjust for left sidebar width */
-    margin-right: 350px; /* Adjust for right sidebar width */
-    flex: 1; /* Allow main content to grow and take available space*/
-    max-width: 70%;
-    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); */
+}
+
+.main form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for input fields */
+    gap: 20px; /* Space between input fields */
+    align-items: center; /* Align items vertically in the middle */
+    width: 100%;
+    max-width: 65vw; /* Make sure form doesn't stretch too wide */
+    margin: 0 auto; /* Center the form horizontally */
+    padding: 3vw;
+    background-color: #fff;
     box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.2); 
     border-radius: 10px;
-
 }
+
+/* Explicitly target the email field and make it span both columns */
+.main form .form-group#email-row {
+    grid-column: span 2; /* Make email field span both columns */
+}
+
+/* Style for form groups (labels and inputs) */
+.main form .form-group {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.main form .form-group label {
+    font-weight: bold;
+}
+
+/* Button row styles */
+.main form .button-row {
+    grid-column: span 2; /* Make button row span both columns */
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1vh;
+}
+
+/* Style buttons */
+.main form .button-row button {
+    width: 48%; /* Buttons take up almost half the row each */
+}
+
+/* Extra buttons section */
+.main form .extra-buttons {
+    grid-column: span 2; /* Span both columns */
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1vh;
+}
+
+.main form .extra-buttons button {
+    width: 48%; /* Buttons take up almost half the row each */
+}
+
+
+
+
+
+
+
+
 .cookie-list {
     list-style: none;
     padding: 0;
 }
 .cookie-list li {
     margin-bottom: 5px;
+}
+
+/* Tablet (600px and above) */
+@media (min-width: 600px) {
+    .container {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  
+    .main-content {
+      flex: 2;
+    }
+  
+  }
+  
+  /* Desktop (1000px and above) */
+  @media (min-width: 1000px) {
+    .container {
+      gap: 20px;
+    }
+  
+    .header, .footer {
+      text-align: center;
+    }
+  }
+
+/* Media queries for smaller screens */
+@media (max-width: 992px) {
+    .sidebar {
+        position: relative;
+        max-width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        box-shadow: none; /* Remove box-shadow for smaller screens */
+    }
+    
+    .sidebar-left, .sidebar-right {
+        position: relative;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .main {
+        margin-left: 0;
+        margin-right: 0;
+        max-width: 100%; /* Full width for small screens */
+    }
+
+    .main form {
+        max-width: 100%; /* Allow form to take full width */
+    }
+}
+
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.2rem; /* Smaller navbar text */
+    }
+
+    .main {
+        padding: 15px;
+    }
+
+    .sidebar {
+        max-width: 100%; /* Sidebar takes full width for extra small screens */
+        position: relative; /* Sidebar stacks */
+    }
+
+    .sidebar-left {
+        margin-left: 0;
+    }
+
+    .sidebar-right {
+        margin-right: 0;
+    }
+}
+
+.click-mouse {
+    cursor:pointer;
+    transition: background-color 0.3s ease, padding 0.5s ease-in-out;
+}
+
+.click-mouse:hover {
+    background-color: #e0e0e0; /* Light grey background on hover */
+    padding: 10px; /* Add padding on hover for a subtle effect */
+    border-radius: 5px; /* Optional: Add curved edges on hover */
+    font-size: 0.6rem; /* Adjust this value to make the text smaller */
+}
+
+  /* Style for the toast notification */
+  .toast {
+    visibility: hidden;
+    min-width: 150px;
+    max-height : 40px;
+    margin-left: -125px;
+    background-color: #f0f0f0; /* Light grey background */
+    color: #333; /* Dark text color for contrast */
+    text-align: center;
+    border-radius: 10px; /* Curved edges */
+    padding: 10px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+    opacity: 0; /* Start as invisible */
+    transition: opacity 0.8s ease-in-out, visibility 0s linear 0.5s; /* Fade-in/out effect */
+}
+
+/* Toast animation: fade in and out */
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out, visibility 0s linear 0s;
+}
+
+
+footer button {
+    margin-right : 2vw;
 }

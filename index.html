@@ -6,35 +6,55 @@
     <title>Segment Demo</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./segment-demo.css">
+    <link rel="stylesheet" href="./styles.css">
 
-    <link rel="stylesheet" href="https://lizkane222.github.io/segment-demo/styles.css">
-    <script src="https://lizkane222.github.io/segment-demo/segment-demo.js"></script>
+    <!-- <link rel="stylesheet" href="https://lizkane222.github.io/segment-demo/styles.css">
+    <script src="https://lizkane222.github.io/segment-demo/segment-demo.js"></script> -->
 
     <script>
+
+        let userId
+        let anonymousId
+        let traits
+        let groupId
+        let groupTraits
+
         !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
         analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3");
         analytics.page();
         
-        
-            analytics.ready(
-                console.log("ANALYTICS.JS IS READY")
-            );
-            analytics.ready(
-                userId = () => {analytics.user().id()},
-                anonymousId = () => {analytics.user().anonymousId()},
-                traits = () => {analytics.user().traits()},
-                groupId = () => {analytics.group().id()},
-                groupTraits = () => {analytics.group().traits()}
-            )
+    
         }}();
+
+            // Wait for analytics to be ready before assigning values
+    analytics.ready(function() {
+        userId = analytics.user().id();
+        anonymousId = analytics.user().anonymousId();
+        traits = analytics.user().traits();
+        groupId = analytics.group().id();
+        groupTraits = analytics.group().traits();
+
+        console.log("ANALYTICS.JS IS READY");
+
+        // Log values to check
+        console.log("User ID: " + userId);
+        console.log("Anonymous ID: " + anonymousId);
+        console.log("Traits: " + JSON.stringify(traits, null, 2));
+        console.log("Group ID: " + groupId);
+        console.log("Group Traits: " + JSON.stringify(groupTraits, null, 2));
+
+
+        // Use ternary operator to assign values to form fields
+        document.getElementById('firstName').value = traits.firstName ? traits.firstName : '';
+        document.getElementById('lastName').value = traits.lastName ? traits.lastName : '';
+        document.getElementById('username').value = traits.username ? traits.username : '';
+        document.getElementById('phone').value = traits.phone ? traits.phone : '';
+        document.getElementById('email').value = traits.email ? traits.email : '';
+        
+    });
+
     </script>
-    <script src="stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
-    <script src="path/to/uuidv4.min.js"></script> 
-    <script src="./segment-demo.js"></script> 
+   
 
 </head>
 <body>
@@ -46,41 +66,53 @@
     <div class="container-fluid">
         <div class="row">
 
-            <nav class="col-md-3 sidebar">
+            <nav class="col-md-3 sidebar sidebar-left">
                 <h5>User Profile</h5>
                 <div id="user-profile">
-                    </div>
+                </div>
             </nav>
 
-            <main role="main" class="col-md-6 main">
+            <main role="main" class="col-md-6 main container">
 
                 <form id="myForm">
                     <div class="form-group">
                         <label for="firstName">First Name:</label>
-                        <input type="text" class="form-control" id="firstName" required>
+                        <input type="text" class="form-control" id="firstName" >
                     </div>
                     <div class="form-group">
                         <label for="lastName">Last Name:</label>
-                        <input type="text" class="form-control" id="lastName" required>
+                        <input type="text" class="form-control" id="lastName" >
                     </div>
                     <div class="form-group">
                         <label for="username">Username:</label>
-                        <input type="text" class="form-control" id="username" required>
+                        <input type="text" class="form-control" id="username" >
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone:</label>
-                        <input type="text" class="form-control" id="phone" required>
+                        <input type="text" class="form-control" id="phone" >
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="email-row">
                         <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" required>
+                        <input type="email" class="form-control" id="email" >
                     </div>
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <!-- <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <button type="button" class="btn btn-secondary" id="clearForm">Clear Form</button> -->
+                            <!-- Button Row: Update Profile and Clear Form -->
+                    <div class="button-row">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                        <button type="button" class="btn btn-secondary" id="clearForm">Clear Form</button>
+                    </div>
+
+                    <!-- Extra Buttons or Other Actions (optional) -->
+                    <div class="extra-buttons">
+                        <button type="button" class="btn btn-warning" id="check-data">Check Data</button>
+                        <button type="button" class="btn btn-danger" id="reset-ajs-user">Reset AJS User</button>
+                    </div>
                 </form>
 
-                <div id="dynamic-buttons">
-                    </div>
-
+                
+                <!-- <div id="dynamic-buttons">
+                </div> -->
             </main>
 
             <nav class="col-md-3 sidebar sidebar-right">
@@ -91,79 +123,46 @@
                     </ul>
                     
                     <h5>Client Cookies</h5>
-                    <ul class="cookie-list" id="client-cookies">
-                    </ul>
-                    
-                    <h5>Segment Network Requests</h5>
-                    <div id="segment-network-requests">
-                    </div>
+                <ul class="cookie-list" id="client-cookies">
+                </ul>
+                <h5>Segment Network Requests</h5>
+                <div id="segment-network-requests"></div>
+                <div>
+                    <p><button class="btn btn-secondary" id="userId-cookie-get" data-target="userId-p">userId</button>
+                    : </p><p class="click-mouse" id="userId-p" onclick="copyToClipboard('userId-p')"></p>
+                    <p><button class="btn btn-secondary" id="anonymousId-cookie-get" data-target="anonymousId-p">anonymousId</button>
+                    : </p><p class="click-mouse" id="anonymousId-p" onclick="copyToClipboard('anonymousId-p')"></p>
+                    <p><button class="btn btn-secondary" id="traits-cookie-get" data-target="traits-p">traits</button>
+                    : </p><p class="click-mouse" id="traits-p" onclick="copyToClipboard('traits-p')"></p>
+                    <p><button class="btn btn-secondary" id="groupId-cookie-get" data-target="groupId-p">groupId</button>
+                    : </p><p class="click-mouse" id="groupId-p" onclick="copyToClipboard('groupId-p')"></p>
+                    <p><button class="btn btn-secondary" id="groupTraits-cookie-get" data-target="groupTraits-p">groupTraits</button>
+                    : </p><p class="click-mouse" id="groupTraits-p" onclick="copyToClipboard('groupTraits-p')"></p>
                 </div>
+
+                <!-- Toast notification element -->
+                <div id="toast" class="toast">Copied to clipboard!</div>
+
             </nav>
 
         </div>
     </div>
 
-    <footer class="footer mt-auto py-3 bg-light">
+    <footer class="footer mt-auto py-3 bg-light row">
         <div class="container text-center">
-            <span class="text-muted">&copy; 2024 My Company</span>
+            <span class="text-muted">&copy; Liz Kane</span>
         </div>
+        <button id="analytics-reset" class="btn btn-danger right" onclick="resetAjsUser()">analytics.reset()</button>
     </footer>
 
 </body>
-<style>
-    /* STYLES */
-html, body {
-    height: 100%;
-    margin: 0;
-  }
-  
-  body {
-    display: flex;
-    flex-direction: column; 
-    padding-top: 56px; /* Account for fixed navbar height */
-  }
 
-.container-fluid {  /* Or apply to .main if you prefer */
-    position: relative; /* Create a stacking context */
-    /*z-index: 1; /* Ensure it's above the sidebars */
-}
 
-.sidebar {
-    position: fixed;
-    top: 56px; /* Align with navbar */
-    bottom: 0;
-    left: 0;
-    /*z-index: 1000;*/
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    border-right: 1px solid #eee;
-    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); 
-}
-.sidebar-right {
-    left: auto;
-    right: 0;
+<script src="stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
+<script src="path/to/uuidv4.min.js"></script> 
+<script src="./segment-demo.js"></script> 
 
-}
-.main {
-    margin-top: 20px;
-    position: relative;
-    padding: 20px;
-    margin-left: 350px; /* Adjust for left sidebar width */
-    margin-right: 350px; /* Adjust for right sidebar width */
-    flex: 1; /* Allow main content to grow and take available space*/
-    max-width: 70%;
-    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); */
-    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.2); 
-    border-radius: 10px;
-
-}
-.cookie-list {
-    list-style: none;
-    padding: 0;
-}
-.cookie-list li {
-    margin-bottom: 5px;
-}
-</style>
 </html>
