@@ -18,11 +18,15 @@
         let traits
         let groupId
         let groupTraits
+        let sessionId
+        let sessionNumber
+        let clientId
+        let cid
 
         !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
         analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3");
-        analytics.page();
-        
+        //analytics.page();
+        updateFormAndQueryString()
     
         }}();
 
@@ -55,7 +59,47 @@
 
     </script>
    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKHZZPMN4Y"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
+        gtag('config', 'G-BKHZZPMN4Y'), { 'debug_mode':true };
+
+        
+        analytics.ready(function() {
+            window.gtag('consent', 'default', {
+                'ad_storage': 'granted',
+                'ad_user_data': 'granted',
+                'ad_personalization': 'granted',
+                'analytics_storage': 'granted'
+            });
+
+    
+        // Segment retrieve Google's session data : session stitching server-side   -->
+
+            const sessionIdPromise =  new  Promise(resolve => {gtag('get', 'G-BKHZZPMN4Y', 'session_id', resolve)});
+            const sessionNumPromise =  new  Promise(resolve => {gtag('get', 'G-BKHZZPMN4Y', 'session_number', resolve)});
+    
+            Promise.all([sessionIdPromise, sessionNumPromise]).then(function(session_data) {
+                sessionId = session_data[0]
+                sessionNumber = session_data[1]
+            });    
+    
+        // Segment retrieve Google's client_id : session stitching server-side -->
+    
+
+            const retrieved = new Promise(resolve => {
+            gtag('get', 'G-BKHZZPMN4Y', 'client_id', resolve)
+            });
+            retrieved.then((client_id) => {
+            cid = client_id
+            })
+        });
+         //Google tag (gtag.js) -->
+    
+    </script>
 </head>
 <body>
 
@@ -112,47 +156,55 @@
                 <div id="campaign-fields">
                     <div class="form-group" id="campaignId-row">
                         <label for="campaignId">campaignId:</label>
-                        <input type="campaignId" class="form-control" id="campaignId-input" >
+                        <input type="campaignId" name="utm_id" class="form-control" id="campaignId-input" >
                     </div>
                     <div class="form-group" id="campaign-row">
                         <label for="campaign">campaign:</label>
-                        <input type="campaign" class="form-control" id="campaign-input" >
+                        <input type="campaign" name="utm_campaign" class="form-control" id="campaign-input" >
                     </div>
                     <div class="form-group" id="campaignSource-row">
                         <label for="campaignSource">campaignSource:</label>
-                        <input type="campaignSource" class="form-control" id="campaignSource-input" >
+                        <input type="campaignSource" class="form-control" name="utm_source" id="campaignSource-input" >
                     </div>
                     <div class="form-group" id="campaignMedium-row">
                         <label for="campaignMedium">campaignMedium:</label>
-                        <input type="campaignMedium" class="form-control" id="campaignMedium-input" >
+                        <input type="campaignMedium" class="form-control" name="utm_medium" id="campaignMedium-input" >
                     </div>
                     <div class="form-group" id="campaignTerm-row">
                         <label for="campaignTerm">campaignTerm:</label>
-                        <input type="campaignTerm" class="form-control" id="campaignTerm-input" >
+                        <input type="campaignTerm" class="form-control" name="utm_term" id="campaignTerm-input" >
                     </div>
                     <div class="form-group" id="campaignContent-row">
                         <label for="campaignContent">campaignContent:</label>
-                        <input type="campaignContent" class="form-control" id="campaignContent-input" >
-                    </div>
-                    <div class="form-group" id="sessionId-row">
-                        <label for="sessionId">sessionId:</label>
-                        <input type="sessionId" class="form-control" id="sessionId-input" >
-                    </div>
-                    <div class="form-group" id="sessionNumber-row">
-                        <label for="sessionNumber">sessionNumber:</label>
-                        <input type="sessionNumber" class="form-control" id="sessionNumber-input" >
+                        <input type="campaignContent" class="form-control" name="utm_content" id="campaignContent-input" >
                     </div>
                     <div class="form-group" id="referrer-row">
                         <label for="referrer">referrer:</label>
-                        <input type="referrer" class="form-control" id="referrer-input" >
+                        <input type="referrer" name="referrer"  class="form-control" id="referrer-input" >
+                    </div>
+                    <div class="form-group" id="sessionId-row">
+                        <label for="sessionId">sessionId:</label>
+                        <input type="sessionId" name="sessionId" class="form-control" id="sessionId-input" >
+                    </div>
+                    <div class="form-group" id="sessionNumber-row">
+                        <label for="sessionNumber">sessionNumber:</label>
+                        <input type="sessionNumber" name="sessionNumber" class="form-control" id="sessionNumber-input" >
                     </div>
                     <div class="form-group" id="client_id-row">
                         <label for="client_id">client_id:</label>
-                        <input type="client_id" class="form-control" id="client_id-input" >
+                        <input type="client_id" name="client_id" class="form-control" id="client_id-input" >
                     </div>
-                    <!-- <div class="form-group" id="blank-row"> </div> -->
-                    <div class="form-group" id="get-campaign-row">
-                        <button class="btn btn-info" id="getCampaign">Get Campaign Data</button>
+                    <!-- Display Query String -->
+                    <div id="querystring-display">
+                        <p></p>
+                    </div>
+                    <div class="button-container">
+                        <!-- <div class="form-group" id="new-campaign-row"> -->
+                            <button class="btn btn-info" id="newCampaign">New Campaign Data</button>
+                        <!-- </div>
+                        <div class="form-group" id="use-campaign-row"> -->
+                            <button class="btn btn-info" id="useCampaign">Use Campaign Data</button>
+                        <!-- </div> -->
                     </div>
                 </div>
                 
@@ -193,14 +245,15 @@
         </div>
     </div>
 
-    <footer class="footer mt-auto py-3 bg-light row">
-        <div class="container text-center">
+    <footer class="footer">
+        <!-- <div class="container text-center">
             <span class="text-muted">&copy; Liz Kane</span>
-        </div>
-        <button id="analytics-reset" class="btn btn-danger right" onclick="resetAjsUser()">analytics.reset()</button>
+        </div> -->
+        <button id="analytics-reset" class="btn btn-danger click-mouse" onclick="resetAjsUser()">analytics.reset()</button>
     </footer>
 
 </body>
+
 
 
 <script src="stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -210,53 +263,6 @@
 <script src="path/to/uuidv4.min.js"></script> 
 <script src="./segment-demo.js"></script> 
 
-
-<!-- GOOGLE : GA4 & GTAG -->
-    <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKHZZPMN4Y"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-BKHZZPMN4Y');
-
-        analytics.ready(function() {
-        window.gtag('consent', 'default', {
-            'ad_storage': 'granted',
-            'ad_user_data': 'granted',
-            'ad_personalization': 'granted',
-            'analytics_storage': 'granted'
-        });
-        });
-    //<!-- Google tag (gtag.js) -->
-
-    // Segment retrieve Google's session data : session stitching server-side
-    let sessionId, sessionNumber;
-
-    const sessionIdPromise =  new  Promise(resolve => {
-        gtag('get', 'G-BKHZZPMN4Y', 'session_id', resolve)
-    });
-    const sessionNumPromise =  new  Promise(resolve => {
-        gtag('get', 'G-BKHZZPMN4Y', 'session_number', resolve)
-    });
-
-    Promise.all([sessionIdPromise, sessionNumPromise]).then(function(session_data) {
-        console.log("session ID: "+session_data[0]);
-        console.log("session Number: "+session_data[1]);
-    });
-    
-    // Segment retrieve Google's client_id : session stitching server-side
-    let cid
-    analytics.ready(function() {
-        const retrieved = new Promise(resolve => {
-            gtag('get', 'G-BKHZZPMN4Y', 'client_id', resolve)
-        });
-        retrieved.then((client_id) => {
-            cid = client_id
-        })
-    });
-</script>
 
 <!-- ENVIRONMENT VARIABLES -->
 <!-- <script>
@@ -283,5 +289,12 @@
 
     init();
   </script> -->
+
+
+
+<!-- GOOGLE : GA4 & GTAG -->
+<!-- Google tag (gtag.js) -->
+
+
 
 </html>

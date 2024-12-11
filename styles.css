@@ -58,7 +58,7 @@ html, body {
 
 
 .main {
-    margin-top: 20px;
+    margin-top: 15px;
     display: flex;
     flex-direction:column;
     flex-wrap:wrap;
@@ -103,19 +103,17 @@ html, body {
 
 /* Button row styles */
 /* .main form .button-row { */
-.main form .button-row , #get-campaign-row, #blank-row {
+.main form .button-row , #new-campaign-row {
     grid-column: span 2; /* Make button row span both columns */
     display: flex;
     justify-content: space-between;
     margin-top: .5em;
 }
 
-/* Style buttons */
-.main form .button-row button {
-    width: 48%; /* Buttons take up almost half the row each */
+/* Ensure buttons are side by side */
+.main form .button-row button, #get-campaign-row button {
+    width: 48%; /* Each button takes almost half the width */
 }
-
-
 
 /* Extra buttons section */
 .main form .extra-buttons{
@@ -134,18 +132,41 @@ html, body {
     padding:0;
 }
 
-#get-campaign-row{
-    position:right;
-    /* grid-column: span 2; */
-    width: 48%; /* Buttons take up almost half the row each */
-    /* grid-column: span 2; Make button row span both columns */
-    /* display: flex; */
-    /* justify-content: space-between; */
+/* Campaign Fields div: apply margin and padding for spacing */
+#campaign-fields div {
     margin-top: .5em;
+    padding: 0;
+}
 
+/* Wrapper for buttons, ensure they are side by side */
+.button-container {
+    grid-column: span 2; /* Make this row span both columns */
+    display: flex; /* Flexbox to align buttons side by side */
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 10px; /* Space between buttons */
+    padding: 1em; /* Optional: Add padding around the button row */
+}
+
+/* Style buttons to ensure they are side by side with proper width */
+.button-container button {
+    width: 48%; /* Each button takes almost half the row */
+    padding: 0.8em; /* Optional: Adjust button padding */
 }
 
 
+/* Querystring display styles */
+#querystring-display {
+    display: inline-block;
+    grid-column: span 2; /* Make querystring-display span both columns */
+    width: 100%; /* Ensure it spans the full width of the grid */
+    overflow-wrap: break-word; 
+    word-break: break-all; 
+    padding: 10px; /* Padding for readability */
+    font-size: 14px; /* Optional: Adjust font size */
+    margin-bottom: 20px; /* Space above the buttons */
+    text-align: center !important;
+    /* Center text inside query string display */
+}
 
 
 
@@ -272,9 +293,24 @@ html, body {
     transition: opacity 0.5s ease-in-out, visibility 0s linear 0s;
 }
 
+button:hover{
+    cursor: pointer;
+}
+
+/* footer {
+    padding:0;
+    height: 2.5vh;
+    max-height: fit-content;
+    display: flex;
+
+} */
 
 footer button {
+    position:absolute;
+    bottom:0;
+    right:0;
     margin-right : 2vw;
+    margin-bottom: .75vh;
 }
 
 
