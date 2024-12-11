@@ -19,8 +19,8 @@
         let groupId
         let groupTraits
 
-        !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
-        analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3");
+        !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="SOURCEWRITEKEY";;analytics.SNIPPET_VERSION="5.2.0";
+        analytics.load("SOURCEWRITEKEY");
         analytics.page();
         
     
@@ -165,14 +165,77 @@
 <script src="path/to/uuidv4.min.js"></script> 
 <script src="./segment-demo.js"></script> 
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKHZZPMN4Y"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-BKHZZPMN4Y');
+<!-- GOOGLE : GA4 & GTAG -->
+    <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKHZZPMN4Y"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', GTAGID);
+
+        analytics.ready(function() {
+        window.gtag('consent', 'default', {
+            'ad_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted',
+            'analytics_storage': 'granted'
+        });
+        });
+    //<!-- Google tag (gtag.js) -->
+
+    // Segment retrieve Google's session data : session stitching server-side
+    let sessionId, sessionNumber;
+
+    const sessionIdPromise =  new  Promise(resolve => {
+        gtag('get', GTAGID, 'session_id', resolve)
+    });
+    const sessionNumPromise =  new  Promise(resolve => {
+        gtag('get', GTAGID, 'session_number', resolve)
+    });
+
+    Promise.all([sessionIdPromise, sessionNumPromise]).then(function(session_data) {
+        console.log("session ID: "+session_data[0]);
+        console.log("session Number: "+session_data[1]);
+    });
+    
+    // Segment retrieve Google's client_id : session stitching server-side
+    let cid
+    analytics.ready(function() {
+        const retrieved = new Promise(resolve => {
+            gtag('get', GTAGID, 'client_id', resolve)
+        });
+        retrieved.then((client_id) => {
+            cid = client_id
+        })
+    });
 </script>
+
+<script>
+    // Function to fetch environment variables from the server
+    async function getEnvVars() {
+      try {
+        const response = await fetch('/env'); // Replace '/env' with the actual endpoint
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error fetching environment variables:', error);
+        return {}; // Return an empty object in case of an error
+      }
+    }
+
+    // Example usage:
+    async function init() {
+      const envVars = await getEnvVars();
+      console.log(envVars.GTAGID);
+      console.log(envVars.SOURCEWRITEKEY);
+      // Access the API_KEY
+      // ... use the environment variables in your HTML or JavaScript code
+    }
+
+    init();
+  </script>
 
 </html>
