@@ -1,3 +1,7 @@
+// JAVASCRIPT
+import { Analytics } from '@segment/analytics-node'
+const node = new Analytics({ writeKey: 'WOIYdGFBtpCDtCHTMenBAnuTYPA9HLMM' })
+
 let userId
 let anonymousId
 let traits
