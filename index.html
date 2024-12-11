@@ -110,4 +110,60 @@
     </footer>
 
 </body>
+<style>
+    /* STYLES */
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column; 
+    padding-top: 56px; /* Account for fixed navbar height */
+  }
+
+.container-fluid {  /* Or apply to .main if you prefer */
+    position: relative; /* Create a stacking context */
+    z-index: 1; /* Ensure it's above the sidebars */
+}
+
+.sidebar {
+    position: fixed;
+    top: 56px; /* Align with navbar */
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 1px solid #eee;
+    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); 
+}
+.sidebar-right {
+    left: auto;
+    right: 0;
+
+}
+.main {
+    margin-top: 20px;
+    position: relative;
+    padding: 20px;
+    margin-left: 350px; /* Adjust for left sidebar width */
+    margin-right: 350px; /* Adjust for right sidebar width */
+    flex: 1; /* Allow main content to grow and take available space*/
+    max-width: 70%;
+    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); */
+    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.2); 
+    border-radius: 10px;
+
+}
+.cookie-list {
+    list-style: none;
+    padding: 0;
+}
+.cookie-list li {
+    margin-bottom: 5px;
+}
+</style>
 </html>
