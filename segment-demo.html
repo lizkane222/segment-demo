@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise-Ready Form with Dynamic Features</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./segment-demo.css">
+
+    <script>
+        !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
+        analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3");
+        analytics.page();
+        
+        
+            analytics.ready(
+                console.log("ANALYTICS.JS IS READY")
+            );
+            analytics.ready(
+                userId = () => {analytics.user().id()},
+                anonymousId = () => {analytics.user().anonymousId()},
+                traits = () => {analytics.user().traits()},
+                groupId = () => {analytics.group().id()},
+                groupTraits = () => {analytics.group().traits()}
+            )
+        }}();
+    </script>
+    <script src="stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
+    <script src="path/to/uuidv4.min.js"></script> 
+    <script src="./segment-demo.js"></script> 
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">My Enterprise App</a>
+        </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <nav class="col-md-3 sidebar">
+                <h5>User Profile</h5>
+                <div id="user-profile">
+                    </div>
+            </nav>
+
+            <main role="main" class="col-md-6 main">
+
+                <form id="myForm">
+                    <div class="form-group">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" class="form-control" id="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <input type="text" class="form-control" id="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+
+                <div id="dynamic-buttons">
+                    </div>
+
+            </main>
+
+            <nav class="col-md-3 sidebar sidebar-right">
+                <div class="resizer right">
+
+                    <h5>Local Storage Cookies</h5>
+                    <ul class="cookie-list" id="local-storage-cookies">
+                    </ul>
+                    
+                    <h5>Client Cookies</h5>
+                    <ul class="cookie-list" id="client-cookies">
+                    </ul>
+                    
+                    <h5>Segment Network Requests</h5>
+                    <div id="segment-network-requests">
+                    </div>
+                </div>
+            </nav>
+
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">&copy; 2024 My Company</span>
+        </div>
+    </footer>
+
+</body>
+</html>
