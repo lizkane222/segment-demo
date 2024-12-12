@@ -1,4 +1,4 @@
-[
+const userData = [
     {
       "userId": "6de83e65-1d66-4c87-a04d-8b6f917615f2",
       "traits": {

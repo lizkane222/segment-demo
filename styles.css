@@ -4,12 +4,68 @@ html, body {
     display: flex;
     flex-direction: column;
   }
-  
+
   body {
     display: flex;
     flex-direction: column; 
-    padding-top: 56px; /* Account for fixed navbar height */
+    padding-top: 60px; /* Account for fixed navbar height */
   }
+/* COLORS */
+:root {
+    --segment-green: #4fb58b;
+    --text-white: #ffffff;
+    --text-dark: #333333;
+    /* 
+    #edf7f3
+    #dbf0e7
+    #b7e1cf
+    #93d2b8
+    #6fc3a0
+    #4fb58b
+    #44a27b
+    #357e5f
+    #265a44
+    #173629
+    #304050
+    #435A6F
+    #56728f
+    #708ba9
+    #8fa4bc
+    #afbecf
+    #cfd8e2
+    #eff2f5
+    #e6f3ff
+    #cce6ff
+    #99ceff
+    #66b5ff
+    #339cff
+    #0084ff
+    #0069cc
+    #004f99
+    #00386C 
+    */
+}
+
+.white-text {
+    color: var(--text-white);
+}
+
+.segment-green-text {
+    color: var(--segment-green);
+}
+
+.container-fluid {
+    padding-top: 1em;
+}
+
+/* medium green */
+nav.navbar-dark .segment-green-text a.navbar-brand { 
+    color: #44a27b;
+}
+
+
+/* DARK MODE */
+/* LIGHT MODE */
 
 .container-fluid {  /* Or apply to .main if you prefer */
     position: relative;
@@ -18,60 +74,127 @@ html, body {
     flex-grow: 1;
 }
 
+/* SIDEBARS */
 .sidebar {
-    position: fixed;
-    /* display: block; */
-    top: 56px; /* Align with navbar */
+    position: fixed; /* Align with navbar */
+    top: 56px;
+    padding-top:1em;
     bottom: 0;
     left: 0;
-    max-width: 20vw;
-    /*z-index: 1000;*/
-    padding: 20px;
-    overflow-x:auto;
+    width: 20vw;
     overflow-y: auto;
     border-right: 1px solid #eee;
-    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); 
+    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1);
+    /* max-width: 20vw; */
+    /*z-index: 1000;*/
+    /* padding: 20px; */
+    /* overflow-x:auto; */
+    /* overflow-y: auto; */
+    /* border-right: 1px solid #eee; */
+    /* box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1);  */
     font-size: 0.7rem; /* Adjust this value to make the text smaller */
     /* Optional: Override for mobile devices */
     @media (max-width: 768px) {
         font-size: 0.6rem; /* Even smaller text for mobile, if needed */
+        .main div .form {
+            grid-template-columns: 1fr; /* Single-column layout for smaller screens */
+        }
     }
 }
 
 .sidebar-right {
     left: auto;
     right: 0;
+    width: 20vw;
     margin-left: 2vw;
+    /* left: auto; */
+    /* right: 0; */
+    /* margin-left: 2vw; */
 }
 
 .sidebar-right button{
     font-size: 0.7rem; /* Adjust this value to make the text smaller */
-    padding: .5vw 1vh;
+    padding: 1em;
 }
 
 .sidebar-left {
     right: auto;
     left: 0;
     margin-right: 2vw;
+    padding-top: 1em;
 }
-
 
 
 .main {
     margin-top: 15px;
     display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 1em;
+    max-width: 1200px;
+    margin: 0 auto; /* Centers the content */
+    /* margin-left: 20vw;  */
+    /* Width of the left sidebar */
+    /* margin-right: 20vw;  */
+    /* Adjust if you only have one sidebar */
+    /* display: flex;
     flex-direction:column;
     flex-wrap:wrap;
-    justify-content: center; /* Center the content horizontally */
-    align-items: flex-start; /* Align content to the top */
-    padding: 1em;
+    justify-content: center;  */
+    /* Center the content horizontally */
+    /* align-items: flex-start;  */
+    /* Align content to the top */
+    /* padding: 1em;
+    max-width: 1200px;  */
+    /* Adjust based on your layout */
+    /* margin: 15px auto;  */
+    /* Centers the content */
 }
 
-/* .main form {
-    
-} */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Ensures the form stretches correctly */
+    width: 100%; /* Full width of the container */
+    margin-bottom: 20px; /* Adds space between form sections */
+    /* position: relative; */
+}
 
-.main form , #campaign-fields{
+form {
+    flex: 1; /* Takes up most of the space */
+}
+
+.generate-user-data {
+    width: 50px; /* Adjust the width to your needs */
+    display: flex;
+    justify-content: center; /* Center the button horizontally */
+    align-items: center; /* Center the button vertically */
+    background-color: #f5f5f5; /* Optional background for clarity */
+}
+
+.generate-user-data button {
+    writing-mode: vertical-rl; /* Rotates the text vertically */
+    transform: rotate(180deg); /* Adjust the orientation */
+    height: 100%; /* Full height of the parent container */
+    border-radius: 0; /* Remove button roundness for strip style */
+    padding: 0;
+    text-align: center;
+    line-height: 1.5;
+    word-wrap: break-word; /* Ensures long text wraps */
+}
+
+
+
+
+/* ----------------------------- */
+
+
+
+
+/* USER FORM / CAMPAIGN FORM */
+.main .form-container form , #campaign-fields{
     padding: 1vw;
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two columns for input fields */
@@ -85,25 +208,39 @@ html, body {
     border-radius: 10px;
 }
 
+.form-group {
+    margin-bottom: 1.5rem; /* Ensures space between fields */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Ensures input fields stretch to fill parent */
+}
+
+.form-group input {
+    width: 100%; /* Ensures inputs take full width */
+    padding: 0.75rem; /* Add padding for consistency */
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+
 /* Explicitly target the email field and make it span both columns */
-.main form .form-group#email-row {
+.main .form-container form .form-group#email-row {
     grid-column: span 2; /* Make email field span both columns */
 }
 
 /* Style for form groups (labels and inputs) */
-.main form .form-group {
+.main .form-container form .form-group {
     display: flex;
     flex-direction: column;
     margin: 0;
 }
 
-.main form .form-group label, #campaign-fields label {
+.main .form-container form .form-group label, #campaign-fields label {
     font-weight: bold;
 }
 
 /* Button row styles */
-/* .main form .button-row { */
-.main form .button-row , #new-campaign-row {
+/* .main .form-container form .button-row { */
+.main .form-container form .button-row , #new-campaign-row {
     grid-column: span 2; /* Make button row span both columns */
     display: flex;
     justify-content: space-between;
@@ -111,19 +248,19 @@ html, body {
 }
 
 /* Ensure buttons are side by side */
-.main form .button-row button, #get-campaign-row button {
+.main .form-container form .button-row button, #get-campaign-row button {
     width: 48%; /* Each button takes almost half the width */
 }
 
 /* Extra buttons section */
-.main form .extra-buttons{
+.main .form-container form .extra-buttons{
     grid-column: span 2; /* Span both columns */
     display: flex;
     justify-content: space-between;
     margin-top: 1vh;
 }
 
-.main form .extra-buttons button {
+.main .form-container form .extra-buttons button {
     width: 48%; /* Buttons take up almost half the row each */
 }
 
@@ -206,10 +343,11 @@ html, body {
 @media (max-width: 992px) {
     .sidebar {
         position: relative;
-        max-width: 100%;
-        padding: 10px;
+        width: 100%;
         margin-bottom: 20px;
-        box-shadow: none; /* Remove box-shadow for smaller screens */
+        box-shadow: none; /* Remove shadows for smaller screens */
+        /* padding: 10px; */
+        margin-bottom: 20px;
     }
     
     .sidebar-left, .sidebar-right {
@@ -219,13 +357,13 @@ html, body {
         margin-right: 0;
     }
 
+
     .main {
         margin-left: 0;
         margin-right: 0;
-        max-width: 100%; /* Full width for small screens */
     }
 
-    .main form {
+    .main .form-container form {
         max-width: 100%; /* Allow form to take full width */
     }
 }
@@ -260,10 +398,11 @@ html, body {
 }
 
 .click-mouse:hover {
-    background-color: #e0e0e0; /* Light grey background on hover */
-    padding: 10px; /* Add padding on hover for a subtle effect */
-    border-radius: 5px; /* Optional: Add curved edges on hover */
-    font-size: 0.6rem; /* Adjust this value to make the text smaller */
+    opacity: 0.7; /* Decreased opacity on hover */
+    transition: background-color 0.1s ease-in-out;
+    padding: 1px; /* Add padding on hover for a subtle effect */
+    /* font-size: 0.6rem; */
+     /* Adjust this value to make the text smaller */
 }
 
   /* Style for the toast notification */
@@ -290,11 +429,20 @@ html, body {
 .toast.show {
     visibility: visible;
     opacity: 1;
-    transition: opacity 0.5s ease-in-out, visibility 0s linear 0s;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+.toast.hide {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
 }
 
 button:hover{
     cursor: pointer;
+    background-color: #ddd; /* Light grey on hover */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+
 }
 
 /* footer {

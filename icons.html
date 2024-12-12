@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>icons</title>
+    <script>
+        // library :  npm i bootstrap-icons
+        // https://icons.getbootstrap.com/
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.x.x/font/bootstrap-icons.css">
+    
+</head>
+<style>
+    body{
+        margin:2.2em;
+    }
+    hr{
+        max-width: 78%;
+        margin-left:-10px;
+        border-color : #b7e1cf;
+    }
+
+    /* Style for the toast notification */
+  .toast {
+    visibility: hidden;
+    min-width: 150px;
+    max-height : 40px;
+    margin-left: -125px;
+    background-color: #f0f0f0; /* Light grey background */
+    color: #333; /* Dark text color for contrast */
+    text-align: center;
+    border-radius: 10px; /* Curved edges */
+    padding: 10px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+    opacity: 0; /* Start as invisible */
+    transition: opacity 0.8s ease-in-out, visibility 0s linear 0.5s; /* Fade-in/out effect */
+}
+
+/* Toast animation: fade in and out */
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out, visibility 0s linear 0s;
+}
+/* Style for the toast notification */
+.toast {
+    visibility: hidden;
+    min-width: 150px;
+    max-height : 40px;
+    margin-left: -125px;
+    background-color: #f0f0f0; /* Light grey background */
+    color: #333; /* Dark text color for contrast */
+    text-align: center;
+    border-radius: 10px; /* Curved edges */
+    padding: 10px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+    opacity: 0; /* Start as invisible */
+    transition: opacity 0.8s ease-in-out, visibility 0s linear 0.5s; /* Fade-in/out effect */
+}
+
+/* Toast animation: fade in and out */
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out, visibility 0s linear 0s;
+}
+
+div i {
+    padding: 0 .2em;
+}
+</style>
+<body>
+    <!-- Toast notification element -->
+    <div id="toast" class="toast">Copied!</div>
+<div>
+    
+<!-- --------------------------------------- -->
+    <!-- NAV -->
+    
+    <!-- SCOOTER : https://icons.getbootstrap.com/icons/scooter/ -->
+    <!--  -->
+    <i  onclick="copyElement(this)" class="bi bi-scooter"></i>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-scooter" viewBox="0 0 16 16"> 
+        <path fill-rule="evenodd" d="M9 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-.39l1.4 7a2.5 2.5 0 1 1-.98.195l-.189-.938-2.43 3.527A.5.5 0 0 1 9.5 13H4.95a2.5 2.5 0 1 1 0-1h4.287l2.831-4.11L11.09 3H9.5a.5.5 0 0 1-.5-.5M3.915 12a1.5 1.5 0 1 0 0 1H2.5a.5.5 0 0 1 0-1zm8.817-.789A1.499 1.499 0 0 0 13.5 14a1.5 1.5 0 0 0 .213-2.985l.277 1.387a.5.5 0 0 1-.98.196z"/>
+    </svg> -->
+
+    
+<!-- --------------------------------------- -->
+    <!-- FORMS  -->
+
+    <!-- LIGHTNING CHARGE : https://icons.getbootstrap.com/icons/lightning-charge/ -->
+    <i  onclick="" class="bi bi-lightning-charge"></i>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
+        <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z"/>
+    </svg> -->
+
+    <!-- NODE MINUS : https://icons.getbootstrap.com/icons/node-minus/ -->
+    <!-- REMOVE ITEM FROM FORM -->
+    <i  onclick="" class="bi bi-node-minus"></i>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8M6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8"/> -->
+    </svg>
+    <!-- NODE PLUS : https://icons.getbootstrap.com/icons/node-plus/ -->
+    <!-- ADD ITEM TO FORM -->
+    <i  onclick="" class="bi bi-node-plus"></i>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-node-plus" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8M6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5zM11 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 11 5M1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+    </svg> -->
+
+
+<!-- --------------------------------------- -->
+    <!-- LEFT SIDEBAR -->
+
+
+
+    <!-- PERSON : https://icons.getbootstrap.com/icons/person/ -->
+     <!-- PROFILE ICON : LEFT SIDEBAR -->
+     <i  onclick="" class="bi bi-person"></i>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+    </svg> -->
+    
+    <!-- PERSON EXCLAMATION : https://icons.getbootstrap.com/icons/person-exclamation/ -->
+    <!-- USERID / ANONYMOUSID / TRAITS EXIST FOR PREVIOUS USER -->
+    <i  onclick="" class="bi bi-person-exclamation"></i>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-exclamation" viewBox="0 0 16 16">
+        <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+        <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1.5a.5.5 0 0 0 1 0V11a.5.5 0 0 0-.5-.5m0 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+    </svg> -->
+
+    <!-- ↑ {TOGGLE} ↓ -->
+    <!-- PERSON CHECK : https://icons.getbootstrap.com/icons/person-check/ -->
+    <!-- USER DATA IS SAFE -->
+    <i  onclick="" class="bi bi-person-check"></i>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
+        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+    </svg> -->
+    
+    
+    <!-- PUSHPIN : https://icons.getbootstrap.com/icons/pin-angle-fill/ -->
+     <!-- USER PROFILE -->
+     <i  onclick="" class="bi bi-pin-angle-fill"></i>
+     <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pin-angle-fill" viewBox="0 0 16 16">
+        <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a6 6 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707s.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a6 6 0 0 1 1.013.16l3.134-3.133a3 3 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146"/>
+    </svg> -->
+
+
+
+<!-- --------------------------------------- -->
+    <!-- RIGHT SIDEBAR -->
+
+    <!-- COPY : https://icons.getbootstrap.com/icons/copy/ -->
+    <i  onclick="" class="bi bi-copy"></i>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+    </svg> -->
+
+<!-- --------------------------------------- -->
+
+<!-- FOOTER -->
+
+
+<!-- --------------------------------------- -->
+<!-- 1em -->
+ <div>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 1rem"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 1rem"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 1rem"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 1rem"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 1rem"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 1rem"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 1rem"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 1rem"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 1rem"></i>
+</div>
+<!-- 2em -->
+ <div>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 2rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 2rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 2rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 2rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 2rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 2rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 2rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 2rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 2rem;"></i>
+</div>
+<!-- 3em -->
+ <div>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem;"></i>
+</div>
+<!-- 4em -->
+ <div>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 4rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 4rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 4rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 4rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 4rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 4rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 4rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 4rem;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 4rem;"></i>
+</div>
+
+<br><br><br>
+
+</div>
+
+
+
+
+<!-- ICON VISUALIZER -->
+
+<div>
+<p>
+<!-- green : start -->
+<span style="color:#edf7f3"> | #edf7f3 | </span>
+<span style="color:#dbf0e7"> | #dbf0e7 | </span>
+<span style="color:#b7e1cf"> | #b7e1cf | </span>
+<span style="color:#93d2b8"> | #93d2b8 | </span>
+<span style="color:#6fc3a0"> | #6fc3a0 | </span>
+<span style="color:#4fb58b"> | #4fb58b | </span>
+<span style="color:#44a27b"> | #44a27b | </span>
+<span style="color:#357e5f"> | #357e5f | </span>
+<span style="color:#265a44"> | #265a44 | </span>
+<span style="color:#173629"> | #173629 | </span>
+<!-- green : end -->
+<!-- grey : start -->
+<span style="color:#304050"> | #304050 | </span>
+<span style="color:#435A6F"> | #435A6F | </span>
+<span style="color:#56728f"> | #56728f | </span>
+<span style="color:#708ba9"> | #708ba9 | </span>
+<span style="color:#8fa4bc"> | #8fa4bc | </span>
+<span style="color:#afbecf"> | #afbecf | </span>
+<span style="color:#cfd8e2"> | #cfd8e2 | </span>
+<span style="color:#eff2f5"> | #eff2f5 | </span>
+<!-- grey : end -->
+<!-- blue : start -->
+<span style="color:#e6f3ff"> | #e6f3ff | </span>
+<span style="color:#cce6ff"> | #cce6ff | </span>
+<span style="color:#99ceff"> | #99ceff | </span>
+<span style="color:#66b5ff"> | #66b5ff | </span>
+<span style="color:#339cff"> | #339cff | </span>
+<span style="color:#0084ff"> | #0084ff | </span>
+<span style="color:#0069cc"> | #0069cc | </span>
+<span style="color:#004f99"> | #004f99 | </span>
+<span style="color:#00386C"> | #00386C | </span>
+<!-- blue : end -->
+
+
+
+<!-- <span style="color:#4fb58b"> | #4fb58b | </span>
+<span style="color:#44a27b"> | #44a27b | </span>
+<span style="color:#357e5f"> | #357e5f | </span>
+<span style="color:#265a44"> | #265a44 | </span>
+<span style="color:#173629"> | #173629 | </span>
+<span style="color:#304050"> | #304050 | </span>
+<span style="color:#435A6F"> | #435A6F | </span>
+<span style="color:#56728f"> | #56728f | </span>
+<span style="color:#708ba9"> | #708ba9 | </span>
+<span style="color:#8fa4bc"> | #8fa4bc | </span>
+<span style="color:#afbecf"> | #afbecf | </span>
+<span style="color:#cfd8e2"> | #cfd8e2 | </span>
+<span style="color:#eff2f5"> | #eff2f5 | </span>
+<span style="color:#e6f3ff"> | #e6f3ff | </span>
+<span style="color:#cce6ff"> | #cce6ff | </span>
+<span style="color:#99ceff"> | #99ceff | </span>
+<span style="color:#66b5ff"> | #66b5ff | </span>
+<span style="color:#339cff"> | #339cff | </span>
+<span style="color:#0084ff"> | #0084ff | </span>
+<span style="color:#0069cc"> | #0069cc | </span>
+<span style="color:#004f99"> | #004f99 | </span>
+<span style="color:#00386C"> | #00386C | </span> -->
+
+</p>
+</div>
+
+<hr>
+<div>
+
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#edf7f3;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#dbf0e7;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#b7e1cf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#93d2b8;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#6fc3a0;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#4fb58b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#44a27b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#357e5f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#265a44;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#173629;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#304050;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#435A6F;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#56728f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#708ba9;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#8fa4bc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#afbecf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#cfd8e2;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#eff2f5;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#e6f3ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#cce6ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#99ceff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#66b5ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#339cff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#0084ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#0069cc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#004f99;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-scooter" style="font-size: 3rem; color:#00386C;"></i>
+
+</div>
+<div>
+
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#edf7f3;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#dbf0e7;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#b7e1cf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#93d2b8;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#6fc3a0;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#4fb58b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#44a27b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#357e5f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#265a44;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#173629;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#304050;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#435A6F;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#56728f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#708ba9;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#8fa4bc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#afbecf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#cfd8e2;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#eff2f5;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#e6f3ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#cce6ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#99ceff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#66b5ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#339cff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#0084ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#0069cc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#004f99;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-lightning-charge" style="font-size: 3rem; color:#00386C;"></i>
+
+</div>
+<div>
+
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#edf7f3;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#dbf0e7;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#b7e1cf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#93d2b8;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#6fc3a0;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#4fb58b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#44a27b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#357e5f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#265a44;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#173629;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#304050;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#435A6F;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#56728f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#708ba9;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#8fa4bc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#afbecf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#cfd8e2;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#eff2f5;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#e6f3ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#cce6ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#99ceff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#66b5ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#339cff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#0084ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#0069cc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#004f99;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-minus" style="font-size: 3rem; color:#00386C;"></i>
+
+</div>
+<div>
+
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#edf7f3;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#dbf0e7;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#b7e1cf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#93d2b8;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#6fc3a0;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#4fb58b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#44a27b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#357e5f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#265a44;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#173629;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#304050;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#435A6F;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#56728f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#708ba9;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#8fa4bc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#afbecf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#cfd8e2;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#eff2f5;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#e6f3ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#cce6ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#99ceff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#66b5ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#339cff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#0084ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#0069cc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#004f99;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-node-plus" style="font-size: 3rem; color:#00386C;"></i>
+
+</div>
+<div>
+
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#edf7f3;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#dbf0e7;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#b7e1cf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#93d2b8;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#6fc3a0;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#4fb58b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#44a27b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#357e5f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#265a44;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#173629;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#304050;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#435A6F;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#56728f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#708ba9;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#8fa4bc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#afbecf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#cfd8e2;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#eff2f5;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#e6f3ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#cce6ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#99ceff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#66b5ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#339cff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#0084ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#0069cc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#004f99;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person" style="font-size: 3rem; color:#00386C;"></i>
+
+</div>
+<div>
+
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#edf7f3;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#dbf0e7;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#b7e1cf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#93d2b8;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#6fc3a0;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#4fb58b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#44a27b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#357e5f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#265a44;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#173629;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#304050;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#435A6F;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#56728f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#708ba9;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#8fa4bc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#afbecf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#cfd8e2;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#eff2f5;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#e6f3ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#cce6ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#99ceff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#66b5ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#339cff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#0084ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#0069cc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#004f99;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-exclamation" style="font-size: 3rem; color:#00386C;"></i>
+
+</div>
+<div>
+
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#edf7f3;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#dbf0e7;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#b7e1cf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#93d2b8;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#6fc3a0;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#4fb58b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#44a27b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#357e5f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#265a44;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#173629;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#304050;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#435A6F;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#56728f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#708ba9;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#8fa4bc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#afbecf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#cfd8e2;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#eff2f5;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#e6f3ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#cce6ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#99ceff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#66b5ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#339cff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#0084ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#0069cc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#004f99;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-person-check" style="font-size: 3rem; color:#00386C;"></i>
+
+</div>
+<div>
+
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#edf7f3;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#dbf0e7;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#b7e1cf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#93d2b8;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#6fc3a0;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#4fb58b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#44a27b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#357e5f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#265a44;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#173629;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#304050;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#435A6F;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#56728f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#708ba9;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#8fa4bc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#afbecf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#cfd8e2;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#eff2f5;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#e6f3ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#cce6ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#99ceff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#66b5ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#339cff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#0084ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#0069cc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#004f99;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-pin-angle-fill" style="font-size: 3rem; color:#00386C;"></i>
+
+</div>
+<div>
+
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#edf7f3;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#dbf0e7;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#b7e1cf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#93d2b8;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#6fc3a0;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#4fb58b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#44a27b;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#357e5f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#265a44;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#173629;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#304050;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#435A6F;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#56728f;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#708ba9;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#8fa4bc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#afbecf;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#cfd8e2;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#eff2f5;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#e6f3ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#cce6ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#99ceff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#66b5ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#339cff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#0084ff;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#0069cc;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#004f99;"></i>
+    <i  onclick="copyElement(this)" class="bi bi-copy" style="font-size: 3rem; color:#00386C;"></i>
+
+</div>
+    
+
+</body>
+
+<script>
+    
+    // COPY HTML ELEMENT TO CLIPBOARD
+      function copyElement(element) {
+        // Create a temporary element to hold the HTML content
+        const tempElement = document.createElement('div');
+        tempElement.appendChild(element.cloneNode(true)); // Clone the element with its content
+    
+        // Get the HTML content as a string
+        const htmlContent = tempElement.innerHTML;
+    
+        // Use the modern Clipboard API to copy the content
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(htmlContent)
+                .then(() => {
+                    // Successfully copied, show the toast
+                    showToast();
+                })
+                .catch((err) => {
+                    console.error('Failed to copy content: ', err);
+                });
+        } else {
+            // Fallback for older browsers
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = htmlContent;
+            tempTextArea.style.display = 'none'; // Hide the textarea
+            document.body.appendChild(tempTextArea);
+    
+            tempTextArea.select();
+            const successful = document.execCommand('copy');
+    
+            // Remove the temporary textarea
+            document.body.removeChild(tempTextArea);
+    
+            if (successful) {
+                showToast();
+            } else {
+                console.error('Failed to copy using execCommand.');
+            }
+        }
+    }
+    
+    // Function to display the toast message
+    function showToast() {
+        var toast = document.getElementById("toast");
+        toast.classList.add("show");
+    
+        // Hide the toast after 2 seconds
+        setTimeout(function () {
+            toast.classList.remove("show");
+        }, 2000);
+    }
+      
+
+  </script>
+</html>

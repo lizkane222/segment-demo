@@ -7,6 +7,12 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./styles.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
+    <!-- <script src="path/to/uuidv4.min.js"></script> -->
 
     <!-- <link rel="stylesheet" href="https://lizkane222.github.io/segment-demo/styles.css">
     <script src="https://lizkane222.github.io/segment-demo/segment-demo.js"></script> -->
@@ -15,7 +21,7 @@
 
         let userId
         let anonymousId
-        let traits
+        let usertraits
         let groupId
         let groupTraits
         let sessionId
@@ -25,8 +31,7 @@
 
         !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
         analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3");
-        //analytics.page();
-        updateFormAndQueryString()
+        analytics.page();
     
         }}();
 
@@ -34,7 +39,7 @@
     analytics.ready(function() {
         userId = analytics.user().id();
         anonymousId = analytics.user().anonymousId();
-        traits = analytics.user().traits();
+        usertraits = analytics.user().traits();
         groupId = analytics.group().id();
         groupTraits = analytics.group().traits();
 
@@ -43,31 +48,38 @@
         // Log values to check
         console.log("User ID: " + userId);
         console.log("Anonymous ID: " + anonymousId);
-        console.log("Traits: " + JSON.stringify(traits, null, 2));
+        console.log("Traits: " + JSON.stringify(usertraits, null, 2));
         console.log("Group ID: " + groupId);
         console.log("Group Traits: " + JSON.stringify(groupTraits, null, 2));
 
 
         // Use ternary operator to assign values to form fields
-        document.getElementById('firstName').value = traits.firstName ? traits.firstName : '';
-        document.getElementById('lastName').value = traits.lastName ? traits.lastName : '';
-        document.getElementById('username').value = traits.username ? traits.username : '';
-        document.getElementById('phone').value = traits.phone ? traits.phone : '';
-        document.getElementById('email').value = traits.email ? traits.email : '';
+        document.getElementById('firstName').value = usertraits.firstName ? usertraits.firstName : '';
+        document.getElementById('lastName').value = usertraits.lastName ? usertraits.lastName : '';
+        document.getElementById('username').value = usertraits.username ? usertraits.username : '';
+        document.getElementById('phone').value = usertraits.phone ? usertraits.phone : '';
+        document.getElementById('email').value = usertraits.email ? usertraits.email : '';
         
     });
+    
 
     </script>
    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKHZZPMN4Y"></script>
     <script>
+        // ------------------------------------
+        // GA4 PROTOCOLS MEASURES : CAMPAIGN DATA
+        //      GA4 DOCS : https://support.google.com/analytics/answer/11242841?hl=en#zippy=%2Cin-this-article
+        //      GSHEET : https://docs.google.com/spreadsheets/d/1mjVdj5VtywFVOPWFvvoJywKpMBznLIiRbAgn4oHLUss/edit?usp=sharing
+        //  Google tag (gtag.js) -->
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
         gtag('config', 'G-BKHZZPMN4Y'), { 'debug_mode':true };
 
-        
+        // GTAG Segment Doc : Set up consent mod
+        // https://segment.com/docs/connections/destinations/catalog/google-ads-gtag/#set-up-consent-mode
         analytics.ready(function() {
             window.gtag('consent', 'default', {
                 'ad_storage': 'granted',
@@ -77,8 +89,7 @@
             });
 
     
-        // Segment retrieve Google's session data : session stitching server-side   -->
-
+        // Segment retrieve Google's session data : session stitching server-side   
             const sessionIdPromise =  new  Promise(resolve => {gtag('get', 'G-BKHZZPMN4Y', 'session_id', resolve)});
             const sessionNumPromise =  new  Promise(resolve => {gtag('get', 'G-BKHZZPMN4Y', 'session_number', resolve)});
     
@@ -87,124 +98,160 @@
                 sessionNumber = session_data[1]
             });    
     
-        // Segment retrieve Google's client_id : session stitching server-side -->
-    
-
+        // Segment retrieve Google's client_id : session stitching server-side 
             const retrieved = new Promise(resolve => {
             gtag('get', 'G-BKHZZPMN4Y', 'client_id', resolve)
             });
             retrieved.then((client_id) => {
             cid = client_id
+            clientId = client_id
             })
         });
-         //Google tag (gtag.js) -->
-    
+        // ------------------------------------
     </script>
+    <!-- STYLESHEET FOR BOOTSTRAP ICONS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.x.x/font/bootstrap-icons.css">
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+
+
 </head>
 <body>
-
+    <!-- NAV BAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">Segment Demo</a>
-        </nav>
+        <h3 class="segment-green-text"><a class="navbar-brand" href="#">Segment Demo</a></h3>
+        <span class="segment-green-text">_ __ ___ </span>
+        <i class="bi bi-scooter" style="font-size: 2rem; color:#4fb58b;"></i>
 
+        </nav>
+    <!-- BODY -->
     <div class="container-fluid">
         <div class="row">
-
+            <!-- LEFT SIDEBAR -->
             <nav class="col-md-3 sidebar sidebar-left">
                 <h5>User Profile</h5>
+                <div class="extra-buttons">
+                    <button type="button" class="btn btn-info" id="check-data">Check Data</button>
+                </div>
                 <div id="user-profile">
                 </div>
             </nav>
 
             <main role="main" class="col-md-6 main container">
+                <!-- USER DETAILS FORM -->
+                <div class="form-container">
+                    <form id="myForm">
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" name="firstName" class="form-control" id="firstName" >
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" name="lastName" class="form-control" id="lastName" >
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username:</label>
+                            <input type="text" name="username" class="form-control" id="username" >
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone:</label>
+                            <input type="text" name="phone" class="form-control" id="phone" >
+                        </div>
+                        <div class="form-group" id="email-row">
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" class="form-control" id="email" >
+                        </div>
+                        <div class="form-group">
+                            <label for="stree-address">Street Address:</label>
+                            <input type="text" name="stree-address" class="form-control" id="state" >
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City:</label>
+                            <input type="text" name="city" class="form-control" id="city" >
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State:</label>
+                            <input type="text" name="state" class="form-control" id="state" >
+                        </div>
+                        <div class="form-group">
+                            <label for="zipcode">Zipcode:</label>
+                            <input type="text" name="zipcode" class="form-control" id="zipcode" >
+                        </div>
+                        
+                        <div class="button-row">
+                            <button type="submit" class="btn btn-primary">Identify : AnonymousId</button>
+                            <button type="submit" class="btn btn-primary">Identify : UserId</button>
+                        </div>
+                        
+                        <!-- Extra Buttons or Other Actions (optional) -->
+                        <!-- Button Row: Update Profile and Clear Form -->
 
-                <form id="myForm">
-                    <div class="form-group">
-                        <label for="firstName">First Name:</label>
-                        <input type="text" class="form-control" id="firstName" >
+                        <div class="extra-buttons">
+                            <button type="button" class="btn btn-secondary" id="clearForm">Clear Form</button>
+                            <button type="button" class="btn btn-warning" id="reset-ajs-user">Reset AJS User</button>
+                        </div>
+                        <div class="button-row">
+                            <button type="button" id="generateUserData" class="btn btn-success">
+                                <i  onclick="" class="bi bi-lightning-charge"></i>
+                            </button>
+                    </form>
                     </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name:</label>
-                        <input type="text" class="form-control" id="lastName" >
-                    </div>
-                    <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input type="text" class="form-control" id="username" >
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone:</label>
-                        <input type="text" class="form-control" id="phone" >
-                    </div>
-                    <div class="form-group" id="email-row">
-                        <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" >
-                    </div>
-                    <!-- <button type="submit" class="btn btn-primary">Update Profile</button>
-                    <button type="button" class="btn btn-secondary" id="clearForm">Clear Form</button> -->
-                            <!-- Button Row: Update Profile and Clear Form -->
-                    <div class="button-row">
-                        <button type="submit" class="btn btn-primary">Update Profile</button>
-                        <button type="button" class="btn btn-secondary" id="clearForm">Clear Form</button>
-                    </div>
+                </div>
 
-                    <!-- Extra Buttons or Other Actions (optional) -->
-                    <div class="extra-buttons">
-                        <button type="button" class="btn btn-info" id="check-data">Check Data</button>
-                        <button type="button" class="btn btn-warning" id="reset-ajs-user">Reset AJS User</button>
-                    </div>
-                </form>
-                <div id="campaign-fields">
-                    <div class="form-group" id="campaignId-row">
-                        <label for="campaignId">campaignId:</label>
-                        <input type="campaignId" name="utm_id" class="form-control" id="campaignId-input" >
-                    </div>
-                    <div class="form-group" id="campaign-row">
-                        <label for="campaign">campaign:</label>
-                        <input type="campaign" name="utm_campaign" class="form-control" id="campaign-input" >
-                    </div>
-                    <div class="form-group" id="campaignSource-row">
-                        <label for="campaignSource">campaignSource:</label>
-                        <input type="campaignSource" class="form-control" name="utm_source" id="campaignSource-input" >
-                    </div>
-                    <div class="form-group" id="campaignMedium-row">
-                        <label for="campaignMedium">campaignMedium:</label>
-                        <input type="campaignMedium" class="form-control" name="utm_medium" id="campaignMedium-input" >
-                    </div>
-                    <div class="form-group" id="campaignTerm-row">
-                        <label for="campaignTerm">campaignTerm:</label>
-                        <input type="campaignTerm" class="form-control" name="utm_term" id="campaignTerm-input" >
-                    </div>
-                    <div class="form-group" id="campaignContent-row">
-                        <label for="campaignContent">campaignContent:</label>
-                        <input type="campaignContent" class="form-control" name="utm_content" id="campaignContent-input" >
-                    </div>
-                    <div class="form-group" id="referrer-row">
-                        <label for="referrer">referrer:</label>
-                        <input type="referrer" name="referrer"  class="form-control" id="referrer-input" >
-                    </div>
-                    <div class="form-group" id="sessionId-row">
-                        <label for="sessionId">sessionId:</label>
-                        <input type="sessionId" name="sessionId" class="form-control" id="sessionId-input" >
-                    </div>
-                    <div class="form-group" id="sessionNumber-row">
-                        <label for="sessionNumber">sessionNumber:</label>
-                        <input type="sessionNumber" name="sessionNumber" class="form-control" id="sessionNumber-input" >
-                    </div>
-                    <div class="form-group" id="client_id-row">
-                        <label for="client_id">client_id:</label>
-                        <input type="client_id" name="client_id" class="form-control" id="client_id-input" >
-                    </div>
-                    <!-- Display Query String -->
-                    <div id="querystring-display">
-                        <p></p>
-                    </div>
-                    <div class="button-container">
-                        <!-- <div class="form-group" id="new-campaign-row"> -->
-                            <button class="btn btn-info" id="newCampaign">New Campaign Data</button>
-                        <!-- </div>
-                        <div class="form-group" id="use-campaign-row"> -->
-                            <button class="btn btn-info" id="useCampaign">Use Campaign Data</button>
-                        <!-- </div> -->
+                <!-- CAMPAIGN FORM -->
+                <div class="form-container">
+                    <div id="campaign-fields">
+                        <div class="form-group" id="campaignId-row">
+                            <label for="campaignId">campaignId:</label>
+                            <input type="campaignId" name="utm_id" class="form-control" id="campaignId-input" >
+                        </div>
+                        <div class="form-group" id="campaign-row">
+                            <label for="campaign">campaign:</label>
+                            <input type="campaign" name="utm_campaign" class="form-control" id="campaign-input" >
+                        </div>
+                        <div class="form-group" id="campaignSource-row">
+                            <label for="campaignSource">campaignSource:</label>
+                            <input type="campaignSource" class="form-control" name="utm_source" id="campaignSource-input" >
+                        </div>
+                        <div class="form-group" id="campaignMedium-row">
+                            <label for="campaignMedium">campaignMedium:</label>
+                            <input type="campaignMedium" class="form-control" name="utm_medium" id="campaignMedium-input" >
+                        </div>
+                        <div class="form-group" id="campaignTerm-row">
+                            <label for="campaignTerm">campaignTerm:</label>
+                            <input type="campaignTerm" class="form-control" name="utm_term" id="campaignTerm-input" >
+                        </div>
+                        <div class="form-group" id="campaignContent-row">
+                            <label for="campaignContent">campaignContent:</label>
+                            <input type="campaignContent" class="form-control" name="utm_content" id="campaignContent-input" >
+                        </div>
+                        <div class="form-group" id="referrer-row">
+                            <label for="referrer">referrer:</label>
+                            <input type="referrer" name="referrer"  class="form-control" id="referrer-input" >
+                        </div>
+                        <div class="form-group" id="sessionId-row">
+                            <label for="sessionId">sessionId:</label>
+                            <input type="sessionId" name="sessionId" class="form-control" id="sessionId-input" >
+                        </div>
+                        <div class="form-group" id="sessionNumber-row">
+                            <label for="sessionNumber">sessionNumber:</label>
+                            <input type="sessionNumber" name="sessionNumber" class="form-control" id="sessionNumber-input" >
+                        </div>
+                        <div class="form-group" id="client_id-row">
+                            <label for="client_id">client_id:</label>
+                            <input type="client_id" name="client_id" class="form-control" id="client_id-input" >
+                        </div>
+                        <!-- Display Query String -->
+                        <div id="querystring-display">
+                            <p></p>
+                        </div>
+                        <div class="button-container">
+                            <!-- <div class="form-group" id="new-campaign-row"> -->
+                                <button class="btn btn-info" id="newCampaign" onclick="updateFormAndQueryString()">New Campaign Data</button>
+                            <!-- </div>
+                            <div class="form-group" id="use-campaign-row"> -->
+                                <button class="btn btn-info" id="useCampaign">Use Campaign Data</button>
+                            <!-- </div> -->
+                        </div>
                     </div>
                 </div>
                 
@@ -212,6 +259,8 @@
                 </div> -->
             </main>
 
+
+            <!-- RIGHT SIDEBAR -->
             <nav class="col-md-3 sidebar sidebar-right">
                 <div class="resizer right">
 
@@ -236,7 +285,6 @@
                     <p><button class="btn btn-secondary" id="groupTraits-cookie-get" data-target="groupTraits-p">groupTraits</button>
                     : </p><p class="click-mouse" id="groupTraits-p" onclick="copyToClipboard('groupTraits-p')"></p>
                 </div>
-
                 <!-- Toast notification element -->
                 <div id="toast" class="toast">Copied to clipboard!</div>
 
@@ -245,6 +293,7 @@
         </div>
     </div>
 
+    <!-- FOOTER -->
     <footer class="footer">
         <!-- <div class="container text-center">
             <span class="text-muted">&copy; Liz Kane</span>
@@ -256,12 +305,10 @@
 
 
 
-<script src="stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
-<script src="path/to/uuidv4.min.js"></script> 
-<script src="./segment-demo.js"></script> 
+ 
+<!-- <script src="./campaignData.js"></script> -->
+<!-- <script src="./userData.js"></script> -->
+<script src="./segment-demo.js" type="module"></script> 
 
 
 <!-- ENVIRONMENT VARIABLES -->
