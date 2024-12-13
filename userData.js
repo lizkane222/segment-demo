@@ -1698,3 +1698,5 @@ const userData = [
       }
     }
   ]
+
+  export { userData };

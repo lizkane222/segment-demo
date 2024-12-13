@@ -4,6 +4,37 @@
 
 // import { campaignData, generateCampaignData, matchedCampaign, campaignId } from './campaignData.js';
 import { campaignData } from './campaignData.js';
+import { userData } from './userData.js';
+
+// import { userData } from './userData.js';
+// import fakerUserData  from './users.json';
+
+// let fakerUserData;
+
+// fetch('./users.json')
+//     .then(response => response.json())
+//     .then(data => {
+        // fakerUserData = data;
+        // console.log('Loaded fakerUserData:', fakerUserData);
+//     })
+//     .catch(error => console.error('Error loading users.json:', error));
+
+// fetch('./users.json') // Relative path for `http-server`
+// .then(response => response.json())
+// .then(users => {
+//     // Select a random user from the array
+//     const randomIndex = Math.floor(Math.random() * users.length);
+//     const user = users[randomIndex];
+
+//     // Display the random user in the DOM
+//     const userItem = document.createElement('li');
+//     userItem.textContent = `${user.firstName} ${user.lastName}, Username: ${user.username}, Phone: ${user.phone}, Email: ${user.email}, Address: ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`;
+//     userList.appendChild(userItem);
+// })
+// .catch(err => console.error('Error fetching user data:', err));
+
+
+
 // import { v4 as uuidv4 } from 'uuid';
 
 // const uuid = uuidv4();
@@ -106,11 +137,34 @@ let Alias = (userId, previousId, context, callback) => {
 
 // START // GLOBAL VARIABLES
 
-let firstName
-let lastName
-let username
-let phone
-let email
+// let firstName
+// let lastName
+// let username
+// let phone
+// let street
+// let city
+// let state
+// let zipcode
+// let email
+
+
+
+let firstName = document.getElementById('firstName').value;
+let lastName = document.getElementById('lastName').value;
+let username = document.getElementById('username').value;
+let phone = document.getElementById('phone').value;
+let street = document.getElementById('street').value;
+let city = document.getElementById('city').value;
+let state = document.getElementById('state').value;
+let zipcode = document.getElementById('zipcode').value;
+let email = document.getElementById('email').value;
+
+
+document.getElementById('sessionId-input').value = sessionId;
+document.getElementById('sessionNumber-input').value = sessionNumber;
+document.getElementById('client_id-input').value = clientId;
+
+let userFormFields = {firstName, lastName, username, phone, street, city, state, zipcode, email}
 
   // GLOBAL VARIABLES FOUND IN INDEX.HTML FILE'S <HEAD>
   // let userId
@@ -190,6 +244,10 @@ function updateProfile(event) {
     lastName = document.getElementById('lastName').value;
     username = document.getElementById('username').value;
     phone = document.getElementById('phone').value;
+    streetAddress = document.getElementById('street').value;
+    city = document.getElementById('city').value;
+    state = document.getElementById('state').value;
+    zipcode = document.getElementById('zipcode').value;
     email = document.getElementById('email').value;
 
 
@@ -362,17 +420,17 @@ displaySegmentRequests();
 
 
 // Function to update the layout based on sidebar widths
-function updateLayout() {
-    const leftSidebar = document.querySelector('.sidebar');
-    const rightSidebar = document.querySelector('.sidebar-right');
-    const mainContent = document.querySelector('.main');
+// function updateLayout() {
+//     const leftSidebar = document.querySelector('.sidebar');
+//     const rightSidebar = document.querySelector('.sidebar-right');
+//     const mainContent = document.querySelector('.main');
 
-    const leftSidebarWidth = leftSidebar.offsetWidth;
-    const rightSidebarWidth = rightSidebar.offsetWidth;
+//     const leftSidebarWidth = leftSidebar.offsetWidth;
+//     const rightSidebarWidth = rightSidebar.offsetWidth;
 
-    mainContent.style.marginLeft = leftSidebarWidth + 'px';
-    mainContent.style.marginRight = rightSidebarWidth + 'px';
-}
+//     mainContent.style.marginLeft = leftSidebarWidth + 'px';
+//     mainContent.style.marginRight = rightSidebarWidth + 'px';
+// }
 
 
 // Function to save form data to localStorage
@@ -437,7 +495,8 @@ function loadFormData() {
   if (matchedCampaign) {
       const referrerInput = campaignForm.querySelector('input[name="referrer"]');
       if (referrerInput) {
-          referrerInput.value = matchedCampaign.utm.referrer; // Populate the referrer with the matching campaign data
+        referrer = matchedCampaign.utm.referrer;  
+        referrerInput.value = matchedCampaign.utm.referrer; // Populate the referrer with the matching campaign data
       }
   }
 
@@ -474,43 +533,43 @@ form.addEventListener('submit', saveFormData); // Save on submit
 // START // RESIZING SIDEBARS
 
 // Function to handle sidebar resizing
-function makeResizable(sidebar, side) {
-    let initialX; 
-    let initialWidth;
+// function makeResizable(sidebar, side) {
+//     let initialX; 
+//     let initialWidth;
 
-    const dragElement = document.createElement('div');
-    dragElement.classList.add('resizer', side);
-    sidebar.appendChild(dragElement);
+//     const dragElement = document.createElement('div');
+//     dragElement.classList.add('resizer', side);
+//     sidebar.appendChild(dragElement);
 
-    dragElement.addEventListener('mousedown', (e) => {
-        initialX = e.clientX;
-        initialWidth = sidebar.offsetWidth;
-        document.addEventListener('mousemove', resize);
-        document.addEventListener('mouseup', stopResize);
-    });
+//     dragElement.addEventListener('mousedown', (e) => {
+//         initialX = e.clientX;
+//         initialWidth = sidebar.offsetWidth;
+//         document.addEventListener('mousemove', resize);
+//         document.addEventListener('mouseup', stopResize);
+//     });
 
-    function resize(e) {
-        const newWidth = initialWidth + (side === 'left' ? initialX - e.clientX : e.clientX - initialX);
-        const minWidth = window.innerWidth * 0.05; // Minimum 5% width
-        sidebar.style.width = Math.max(minWidth, newWidth) + 'px';
-        updateLayout();
-    }
+//     function resize(e) {
+//         const newWidth = initialWidth + (side === 'left' ? initialX - e.clientX : e.clientX - initialX);
+//         const minWidth = window.innerWidth * 0.05; // Minimum 5% width
+//         sidebar.style.width = Math.max(minWidth, newWidth) + 'px';
+//         updateLayout();
+//     }
 
-    function stopResize() {
-        document.removeEventListener('mousemove', resize);
-        document.removeEventListener('mouseup', stopResize);
-    }
-}
+//     function stopResize() {
+//         document.removeEventListener('mousemove', resize);
+//         document.removeEventListener('mouseup', stopResize);
+//     }
+// }
 
 // Make sidebars resizable
-makeResizable(document.querySelector('.sidebar'), 'left');
-makeResizable(document.querySelector('.sidebar-right'), 'right');
+// makeResizable(document.querySelector('.sidebar'), 'left');
+// makeResizable(document.querySelector('.sidebar-right'), 'right');
 
 // Initial layout update
-updateLayout();
+// updateLayout();
 
 // Update layout on window resize
-window.addEventListener('resize', updateLayout);
+// window.addEventListener('resize', updateLayout);
 
 // START // RESIZING SIDEBARS
 
@@ -531,6 +590,10 @@ function updateFormAndQueryString() {
     console.log('Generated Campaign Data:', data);
 
     const utmParams = data.utm;
+    // const campaignReferrer = utmParams.referrer
+    // console.log('594', campaignReferrer , utmParams.referrer)
+    // referrer = campaignReferrer
+    // document.getElementById('referrer-in').value = campaignReferrer
 
     // Update form fields
     for (const key in utmParams) {
@@ -547,12 +610,12 @@ function updateFormAndQueryString() {
 
 
     // If a matching campaign is found, update the referrer field
-    let referrer
+    // let referrer
     if (matchedCampaign) {
         const referrerInput = campaignForm.querySelector('input[name="referrer"]');
         if (referrerInput) {
             referrer = matchedCampaign.utm.referrer; 
-            referrerInput.value = matchedCampaign.utm.referrer; // Populate the referrer with the matching campaign data
+            referrerInput.value = referrer; // Populate the referrer with the matching campaign data
         }
     }
 
@@ -595,14 +658,36 @@ function updateFormAndQueryString() {
         // sessionNumber: sessionNumber,
         // client_id: cid
     }
-    // console.log('Segment page call:', segmentPayload); // Log Segment call
+    console.log('Segment page call'); // Log Segment call
     Page = ({name : pageName, category : "Campaign", properties : properties, context : context} ) 
     let resData = {pageName : pageName, context : context, properties : properties, campaignData : data}
     return resData
 }
-document.getElementById('newCampaign').addEventListener('click', updateFormAndQueryString);
+// document.getElementById('newCampaign').addEventListener('click', updateFormAndQueryString);
 
 
+// Function to populate the form with random user data
+function populateFormWithUserData() {
+    console.log("inside populateFormWithUserData")
+    // Select a random user from the userData array
+    const randomIndex = Math.floor(Math.random() * userData.length);
+    const randomUser = userData[randomIndex];
+
+    // Populate form fields with the selected user data
+    document.getElementById('firstName').value = randomUser.traits.firstName || '';
+    document.getElementById('lastName').value = randomUser.traits.lastName || '';
+    document.getElementById('username').value = randomUser.traits.username || '';
+    document.getElementById('email').value = randomUser.traits.email || '';
+    document.getElementById('state').value = randomUser.traits.state || '';
+    document.getElementById('zipcode').value = randomUser.traits.zipcode || '';
+    // Add more fields as needed
+}
+
+// Add an event listener to the "Generate User Data" button
+// document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
+document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
+
+document.getElementById('generateFakerUserData').addEventListener('click', getUserData);
 
 
 

@@ -24,6 +24,13 @@
         let usertraits
         let groupId
         let groupTraits
+        let utm_id
+        let utm_campaign
+        let utm_source
+        let utm_medium
+        let utm_term
+        let utm_content
+        let referrer
         let sessionId
         let sessionNumber
         let clientId
@@ -62,12 +69,8 @@
         document.getElementById('phone').value = usertraits.phone ? usertraits.phone : '';
         document.getElementById('email').value = usertraits.email ? usertraits.email : '';
         
-        function generateCampaignData() {
-            // Generate random index to select data
-            const randomIndex = Math.floor(Math.random() * campaignData.length);
-            return campaignData[randomIndex];
-          }
-          analytics.page();
+        
+        analytics.page();
     });
     
 
@@ -104,6 +107,8 @@
             Promise.all([sessionIdPromise, sessionNumPromise]).then(function(session_data) {
                 sessionId = session_data[0]
                 sessionNumber = session_data[1]
+                document.getElementById('sessionId-input').value = sessionId;
+                document.getElementById('sessionNumber-input').value = sessionNumber;
             });    
     
         // Segment retrieve Google's client_id : session stitching server-side 
@@ -114,6 +119,7 @@
             cid = client_id
             clientId = client_id
             })
+            document.getElementById('client_id-input').value = clientId;
         });
         // ------------------------------------
     </script>
@@ -121,6 +127,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.x.x/font/bootstrap-icons.css">
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 
+    <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker"></script>
+    <script src="./users.json" type="module"></script> 
 
 </head>
 <body>
@@ -142,6 +150,55 @@
                 </div>
                 <div id="user-profile">
                 </div>
+
+                <h3>User Data</h3>
+                <ul id="user-list"></ul>
+                <script>
+                    const userList = document.getElementById('user-list');
+                    let fakerUserData;
+                    // Fetch users from the JSON file
+                    const getUserData = () => {
+                        console.log('inside getUserData')
+                        fetch('users.json') // Relative path for `http-server`
+                            .then(response => response.json())
+                            .then(users => {
+                                // Select a random user from the array
+                                const randomIndex = Math.floor(Math.random() * users.length);
+                                const user = users[randomIndex];
+                    
+                                // Display the random user in the DOM
+                                const userItem = document.createElement('li');
+                                userItem.textContent = `${user.firstName} ${user.lastName}, Username: ${user.username}, Phone: ${user.phone}, Email: ${user.email}, Address: ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`;
+                                userList.appendChild(userItem);
+                                fakerUserData = user;
+                                console.log('Loaded fakerUserData:', fakerUserData);
+
+                                firstName = user.firstName;
+                                lastName = user.lastName;
+                                username = user.username;
+                                phone = user.phone;
+                                streetAddress = user.streetAddress;
+                                city = user.city;
+                                state = user.state;
+                                zipcode = user.zipcode;
+                                email = user.email;
+                                document.getElementById('firstName').value = firstName;
+                                document.getElementById('lastName').value = lastName;
+                                document.getElementById('username').value = username;
+                                document.getElementById('phone').value = phone;
+                                document.getElementById('street').value = streetAddress;
+                                document.getElementById('city').value = city;
+                                document.getElementById('state').value = state;
+                                document.getElementById('zipcode').value = zipcode;
+                                document.getElementById('email').value = email;
+
+                                document.getElementById('sessionId-input').value = sessionId;
+                                document.getElementById('sessionNumber-input').value = sessionNumber;
+                                document.getElementById('client_id-input').value = clientId;
+                            })
+                            .catch(err => console.error('Error fetching user data:', err));
+                    }
+                </script>
             </nav>
 
             <main role="main" class="col-md-6 main container">
@@ -169,8 +226,8 @@
                             <input type="email" name="email" class="form-control" id="email" >
                         </div>
                         <div class="form-group">
-                            <label for="stree-address">Street Address:</label>
-                            <input type="text" name="stree-address" class="form-control" id="state" >
+                            <label for="street">Street Address:</label>
+                            <input type="text" name="street" class="form-control" id="street" >
                         </div>
                         <div class="form-group">
                             <label for="city">City:</label>
@@ -198,8 +255,11 @@
                             <button type="button" class="btn btn-warning" id="reset-ajs-user">Reset AJS User</button>
                         </div>
                         <div class="button-row">
+                            <button type="button" id="generateFakerUserData" class="btn btn-warning">
+                                <i   class="bi bi-lightning-charge"></i>
+                            </button>
                             <button type="button" id="generateUserData" class="btn btn-success">
-                                <i  onclick="" class="bi bi-lightning-charge"></i>
+                                <i   class="bi bi-lightning-charge"></i>
                             </button>
                     </form>
                     </div>
@@ -316,10 +376,10 @@
  
 <!-- <script src="./campaignData.js"></script> -->
 <!-- <script src="./userData.js"></script> -->
+
 <script src="./segment-demo.js" type="module"></script> 
 
 
-<!-- ENVIRONMENT VARIABLES -->
 <!-- <script>
     // Function to fetch environment variables from the server
     async function getEnvVars() {
