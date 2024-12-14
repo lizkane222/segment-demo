@@ -81,7 +81,7 @@ nav.navbar-dark .segment-green-text a.navbar-brand {
     padding-top:1em;
     bottom: 0;
     left: 0;
-    width: 20vw;
+    width: 0vw;
     overflow-y: auto;
     border-right: 1px solid #eee;
     box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1);
@@ -107,6 +107,8 @@ nav.navbar-dark .segment-green-text a.navbar-brand {
     right: 0;
     width: 20vw;
     margin-left: 2vw;
+    min-width: 25%;
+
     /* left: auto; */
     /* right: 0; */
     /* margin-left: 2vw; */
@@ -122,6 +124,8 @@ nav.navbar-dark .segment-green-text a.navbar-brand {
     left: 0;
     margin-right: 2vw;
     padding-top: 1em;
+    min-width: 25%;
+
 }
 
 

@@ -36,6 +36,19 @@
         let clientId
         let cid
 
+        let currentUser = {}
+
+        let firstName
+        let lastName
+        let username
+        let phone
+        let street
+        let city
+        let state
+        let zipcode
+        let email
+
+
         !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
         analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3");
         
@@ -51,6 +64,9 @@
         usertraits = analytics.user().traits();
         groupId = analytics.group().id();
         groupTraits = analytics.group().traits();
+
+        currentUser= {...currentUser, userId, anonymousId, usertraits, groupId, groupTraits, }
+        console.log('currentUser : ',currentUser)
 
         console.log("ANALYTICS.JS IS READY");
 
@@ -103,12 +119,15 @@
         // Segment retrieve Google's session data : session stitching server-side   
             const sessionIdPromise =  new  Promise(resolve => {gtag('get', 'G-BKHZZPMN4Y', 'session_id', resolve)});
             const sessionNumPromise =  new  Promise(resolve => {gtag('get', 'G-BKHZZPMN4Y', 'session_number', resolve)});
-    
+
             Promise.all([sessionIdPromise, sessionNumPromise]).then(function(session_data) {
                 sessionId = session_data[0]
                 sessionNumber = session_data[1]
                 document.getElementById('sessionId-input').value = sessionId;
                 document.getElementById('sessionNumber-input').value = sessionNumber;
+                //console.log('sessionId : ',sessionId)
+                //console.log('sessionNumber : ',sessionNumber)
+                
             });    
     
         // Segment retrieve Google's client_id : session stitching server-side 
@@ -118,8 +137,21 @@
             retrieved.then((client_id) => {
             cid = client_id
             clientId = client_id
+            document.getElementById('clientId-input').value = clientId;
+            if(clientId || cid){
+                console.log('clientId exists', clientId, 'cid exist', cid)
+                document.getElementById('clientId-input').value = clientId
+                document.getElementById('clientId-input').value = cid
+                //let clientIdInputValue = document.getElementById('clientId-input').value
+                const label = document.getElementById('clientIdLabel');
+                label.addEventListener('click', ()=> {document.getElementById('clientId-input').value = cid})
+                const clickLabelSession = () => {}
+            }
+            else{
+                console.log('clientId does not exist')
+            }
+
             })
-            document.getElementById('client_id-input').value = clientId;
         });
         // ------------------------------------
     </script>
@@ -158,46 +190,77 @@
                     let fakerUserData;
                     // Fetch users from the JSON file
                     const getUserData = () => {
-                        console.log('inside getUserData')
-                        fetch('users.json') // Relative path for `http-server`
-                            .then(response => response.json())
+                        console.log('Fetching user data...');
+                        fetch('users.json') // Adjust path if necessary based on server setup
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.json();
+                            })
                             .then(users => {
+                                if (users.length === 0) {
+                                    console.log('No users found in users.json.');
+                                    alert('No users found. Please append users first!');
+                                    return;
+                                }
+                    
                                 // Select a random user from the array
                                 const randomIndex = Math.floor(Math.random() * users.length);
                                 const user = users[randomIndex];
                     
-                                // Display the random user in the DOM
+                                // Display the random user in the DOM (Optional)
                                 const userItem = document.createElement('li');
-                                userItem.textContent = `${user.firstName} ${user.lastName}, Username: ${user.username}, Phone: ${user.phone}, Email: ${user.email}, Address: ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`;
+                                userItem.textContent = `
+                                    ${user.firstName} ${user.lastName} 
+                                    Username: ${user.username} 
+                                    Phone: ${user.phone} 
+                                    Email: ${user.email} 
+                                    Address: ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`;
                                 userList.appendChild(userItem);
-                                fakerUserData = user;
-                                console.log('Loaded fakerUserData:', fakerUserData);
+                                
+                                const referrerInput = document.getElementById('referrer-input');
+                                referrerInput.value = user.referrer || '';
+                                console.log('Referrer input set to:', referrerInput.value);
+                                console.log('Random user added to the list:', user);
+                                
 
-                                firstName = user.firstName;
-                                lastName = user.lastName;
-                                username = user.username;
-                                phone = user.phone;
-                                streetAddress = user.streetAddress;
-                                city = user.city;
-                                state = user.state;
-                                zipcode = user.zipcode;
-                                email = user.email;
-                                document.getElementById('firstName').value = firstName;
-                                document.getElementById('lastName').value = lastName;
-                                document.getElementById('username').value = username;
-                                document.getElementById('phone').value = phone;
-                                document.getElementById('street').value = streetAddress;
-                                document.getElementById('city').value = city;
-                                document.getElementById('state').value = state;
-                                document.getElementById('zipcode').value = zipcode;
-                                document.getElementById('email').value = email;
 
-                                document.getElementById('sessionId-input').value = sessionId;
-                                document.getElementById('sessionNumber-input').value = sessionNumber;
-                                document.getElementById('client_id-input').value = clientId;
+
+                                // Populate form fields
+                                document.getElementById('firstName').value = user.firstName;
+                                document.getElementById('lastName').value = user.lastName;
+                                document.getElementById('username').value = user.username;
+                                document.getElementById('phone').value = user.phone;
+                                document.getElementById('street').value = user.streetAddress;
+                                document.getElementById('city').value = user.city;
+                                document.getElementById('state').value = user.state;
+                                document.getElementById('zipcode').value = user.zipcode;
+                                document.getElementById('email').value = user.email;
+                                document.getElementById('referrer-input').value = user.referrer || ''; // Update referrer field
+
+                                
+
+                                // Update Global Variables
+                                firstName = user.firstName
+                                lastName = user.lastName
+                                username = user.username
+                                phone = user.phone
+                                street = user.streetAddress
+                                city = user.city
+                                state = user.state
+                                zipcode = user.zipcode
+                                email = user.email
+                                
+                                currentUser= {...currentUser, firstName,lastName,username,phone,street,city,state,zipcode,email, }
+                                console.log('currentUser : ',currentUser);
                             })
-                            .catch(err => console.error('Error fetching user data:', err));
-                    }
+                            .catch(err => {
+                                console.error('Error fetching user data:', err);
+                                alert('Error fetching user data. Check console for details.');
+                            });
+                            
+                    };
                 </script>
             </nav>
 
@@ -206,52 +269,52 @@
                 <div class="form-container">
                     <form id="myForm">
                         <div class="form-group">
-                            <label for="firstName">First Name:</label>
+                            <label id="firstNameLabel" for="firstName">First Name: </label>
                             <input type="text" name="firstName" class="form-control" id="firstName" >
                         </div>
                         <div class="form-group">
-                            <label for="lastName">Last Name:</label>
+                            <label id="lastNameLabel" for="lastName">Last Name: </label>
                             <input type="text" name="lastName" class="form-control" id="lastName" >
                         </div>
                         <div class="form-group">
-                            <label for="username">Username:</label>
+                            <label id="usernameLabel" for="username">Username: </label>
                             <input type="text" name="username" class="form-control" id="username" >
                         </div>
                         <div class="form-group">
-                            <label for="phone">Phone:</label>
+                            <label id="phoneLabel" for="phone">Phone: </label>
                             <input type="text" name="phone" class="form-control" id="phone" >
                         </div>
                         <div class="form-group" id="email-row">
-                            <label for="email">Email:</label>
+                            <label id="emailLabel" for="email">Email: </label>
                             <input type="email" name="email" class="form-control" id="email" >
                         </div>
                         <div class="form-group">
-                            <label for="street">Street Address:</label>
+                            <label id="streetLabel" for="street">Street Address: </label>
                             <input type="text" name="street" class="form-control" id="street" >
                         </div>
                         <div class="form-group">
-                            <label for="city">City:</label>
+                            <label id="cityLabel" for="city">City: </label>
                             <input type="text" name="city" class="form-control" id="city" >
                         </div>
                         <div class="form-group">
-                            <label for="state">State:</label>
+                            <label id="stateLabel" for="state">State: </label>
                             <input type="text" name="state" class="form-control" id="state" >
                         </div>
                         <div class="form-group">
-                            <label for="zipcode">Zipcode:</label>
+                            <label id="zipcodeLabel" for="zipcode">Zipcode: </label>
                             <input type="text" name="zipcode" class="form-control" id="zipcode" >
                         </div>
                         
                         <div class="button-row">
-                            <button type="submit" class="btn btn-primary">Identify : AnonymousId</button>
-                            <button type="submit" class="btn btn-primary">Identify : UserId</button>
+                            <button type="submit" id="identifyAnonymousId" class="btn btn-primary">Identify : AnonymousId</button>
+                            <button type="submit" id="identifyUserId" class="btn btn-primary">Identify : UserId</button>
                         </div>
                         
                         <!-- Extra Buttons or Other Actions (optional) -->
                         <!-- Button Row: Update Profile and Clear Form -->
 
                         <div class="extra-buttons">
-                            <button type="button" class="btn btn-secondary" id="clearForm">Clear Form</button>
+                            <button type="button" class="btn btn-secondary" id="clearUserForm">Clear Form</button>
                             <button type="button" class="btn btn-warning" id="reset-ajs-user">Reset AJS User</button>
                         </div>
                         <div class="button-row">
@@ -267,46 +330,46 @@
 
                 <!-- CAMPAIGN FORM -->
                 <div class="form-container">
-                    <div id="campaign-fields">
+                    <form id="campaign-fields">
                         <div class="form-group" id="campaignId-row">
-                            <label for="campaignId">campaignId:</label>
+                            <label for="campaignId">campaignId: </label>
                             <input type="campaignId" name="utm_id" class="form-control" id="campaignId-input" >
                         </div>
                         <div class="form-group" id="campaign-row">
-                            <label for="campaign">campaign:</label>
+                            <label for="campaign">campaign: </label>
                             <input type="campaign" name="utm_campaign" class="form-control" id="campaign-input" >
                         </div>
                         <div class="form-group" id="campaignSource-row">
-                            <label for="campaignSource">campaignSource:</label>
-                            <input type="campaignSource" class="form-control" name="utm_source" id="campaignSource-input" >
+                            <label for="campaignSource">campaignSource: </label>
+                            <input type="campaignSource" name="utm_source" class="form-control" id="campaignSource-input" >
                         </div>
                         <div class="form-group" id="campaignMedium-row">
-                            <label for="campaignMedium">campaignMedium:</label>
-                            <input type="campaignMedium" class="form-control" name="utm_medium" id="campaignMedium-input" >
+                            <label for="campaignMedium">campaignMedium: </label>
+                            <input type="campaignMedium" name="utm_medium" class="form-control"id="campaignMedium-input" >
                         </div>
                         <div class="form-group" id="campaignTerm-row">
-                            <label for="campaignTerm">campaignTerm:</label>
-                            <input type="campaignTerm" class="form-control" name="utm_term" id="campaignTerm-input" >
+                            <label for="campaignTerm">campaignTerm: </label>
+                            <input type="campaignTerm" name="utm_term" class="form-control" id="campaignTerm-input" >
                         </div>
                         <div class="form-group" id="campaignContent-row">
-                            <label for="campaignContent">campaignContent:</label>
-                            <input type="campaignContent" class="form-control" name="utm_content" id="campaignContent-input" >
+                            <label for="campaignContent">campaignContent: </label>
+                            <input type="campaignContent" name="utm_content" class="form-control" id="campaignContent-input" >
                         </div>
                         <div class="form-group" id="referrer-row">
-                            <label for="referrer">referrer:</label>
+                            <label for="referrer">referrer: </label>
                             <input type="referrer" name="referrer"  class="form-control" id="referrer-input" >
                         </div>
                         <div class="form-group" id="sessionId-row">
-                            <label for="sessionId">sessionId:</label>
+                            <label id="sessionIdLabel" for="sessionId">sessionId: </label>
                             <input type="sessionId" name="sessionId" class="form-control" id="sessionId-input" >
                         </div>
                         <div class="form-group" id="sessionNumber-row">
-                            <label for="sessionNumber">sessionNumber:</label>
+                            <label id="sessionNumberLabel" for="sessionNumber">sessionNumber: </label>
                             <input type="sessionNumber" name="sessionNumber" class="form-control" id="sessionNumber-input" >
                         </div>
-                        <div class="form-group" id="client_id-row">
-                            <label for="client_id">client_id:</label>
-                            <input type="client_id" name="client_id" class="form-control" id="client_id-input" >
+                        <div class="form-group" id="clientId-row">
+                            <label id="clientIdLabel" for="clientId">clientId: </label>
+                            <input type="clientId" name="clientId" class="form-control" id="clientId-input" >
                         </div>
                         <!-- Display Query String -->
                         <div id="querystring-display">
@@ -314,13 +377,14 @@
                         </div>
                         <div class="button-container">
                             <!-- <div class="form-group" id="new-campaign-row"> -->
-                                <button class="btn btn-info" id="newCampaign" onclick="updateFormAndQueryString()">New Campaign Data</button>
+                                <button class="btn btn-info" id="newCampaign" >New Campaign</button>
                             <!-- </div>
                             <div class="form-group" id="use-campaign-row"> -->
-                                <button class="btn btn-info" id="useCampaign">Use Campaign Data</button>
+                                <button type="button" class="btn btn-info" id="useCampaign">Use Campaign</button>
+                                <button type="button" class="btn btn-secondary" id="clearCampaignForm">Clear Form</button>
                             <!-- </div> -->
                         </div>
-                    </div>
+                    </form>
                 </div>
                 
                 <!-- <div id="dynamic-buttons">
@@ -343,15 +407,15 @@
                 <div id="segment-network-requests"></div>
                 <div>
                     <p><button class="btn btn-secondary" id="userId-cookie-get" data-target="userId-p">userId</button>
-                    : </p><p class="click-mouse" id="userId-p" onclick="copyToClipboard('userId-p')"></p>
+                    : </p><p class="click-mouse" id="userId-p"></p>
                     <p><button class="btn btn-secondary" id="anonymousId-cookie-get" data-target="anonymousId-p">anonymousId</button>
-                    : </p><p class="click-mouse" id="anonymousId-p" onclick="copyToClipboard('anonymousId-p')"></p>
+                    : </p><p class="click-mouse" id="anonymousId-p"></p>
                     <p><button class="btn btn-secondary" id="traits-cookie-get" data-target="traits-p">traits</button>
-                    : </p><p class="click-mouse" id="traits-p" onclick="copyToClipboard('traits-p')"></p>
+                    : </p><p class="click-mouse" id="traits-p"></p>
                     <p><button class="btn btn-secondary" id="groupId-cookie-get" data-target="groupId-p">groupId</button>
-                    : </p><p class="click-mouse" id="groupId-p" onclick="copyToClipboard('groupId-p')"></p>
+                    : </p><p class="click-mouse" id="groupId-p"></p>
                     <p><button class="btn btn-secondary" id="groupTraits-cookie-get" data-target="groupTraits-p">groupTraits</button>
-                    : </p><p class="click-mouse" id="groupTraits-p" onclick="copyToClipboard('groupTraits-p')"></p>
+                    : </p><p class="click-mouse" id="groupTraits-p"></p>
                 </div>
                 <!-- Toast notification element -->
                 <div id="toast" class="toast">Copied to clipboard!</div>
