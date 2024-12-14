@@ -287,7 +287,7 @@ function updateProfile(event, button) {
             console.log('USERID CREATED : ', analytics.user().id())
         }
     }
-    // let data = updateFormAndQueryString()
+    let data = updateFormAndQueryString()
 
     let traits = {
         // firstName : firstName,

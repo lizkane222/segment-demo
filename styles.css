@@ -449,13 +449,16 @@ button:hover{
 
 }
 
-/* footer {
+footer {
+    /* position:absolute; */
+    /* bottom:0; */
     padding:0;
     height: 2.5vh;
     max-height: fit-content;
     display: flex;
+    background-color: black;
 
-} */
+}
 
 footer button {
     position:absolute;
