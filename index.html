@@ -35,6 +35,7 @@
         let sessionNumber
         let clientId
         let cid
+        let campaign = {utm_id,utm_campaign, utm_source, utm_medium, utm_term, utm_content }
 
         let currentUser = {}
 
@@ -47,6 +48,10 @@
         let state
         let zipcode
         let email
+
+        let currentSourceSelected = 'CLIENT';
+
+ 
 
 
         !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
@@ -87,6 +92,7 @@
         
         
         analytics.page();
+        console.log('currentSourceSelected : ',currentSourceSelected)
     });
     
 
@@ -159,9 +165,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.x.x/font/bootstrap-icons.css">
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 
-    <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker"></script>
-    <script src="./users.json" type="module"></script> 
+    <!-- ONLY UNCOMMENT FAKER SCRIPT WHEN GENERATING NEW USERS -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@latest/dist/browser/umd.min.js"></script>
 
+    
+    <script src="./users.json" ></script> 
+
+
+    
 </head>
 <body>
     <!-- NAV BAR -->
@@ -169,8 +181,20 @@
         <h3 class="segment-green-text"><a class="navbar-brand" href="#">Segment Demo</a></h3>
         <span class="segment-green-text">_ __ ___ </span>
         <i class="bi bi-scooter" style="font-size: 2rem; color:#4fb58b;"></i>
-
+        
+           <!-- CLIENT vs SERVER toggle -->
+        <div class="toggle-container">
+            <!-- CODEPEN TOGGLE : https://codepen.io/mallendeo/pen/QWKrEL -->
+            <ul class="tg-list">
+                <li class="tg-list-item">
+                  <!-- <h4>Flip</h4> -->
+                  <input id="source-selection" class="tgl tgl-flip" type="checkbox" checked>
+                  <label class="tgl-btn" data-tg-off="SERVER" data-tg-on="CLIENT" for="source-selection"></label>
+                </li>
+              </ul>
+        </div>
         </nav>
+        
     <!-- BODY -->
     <div class="container-fluid">
         <div class="row">
@@ -180,77 +204,13 @@
                 <div class="extra-buttons">
                     <button type="button" class="btn btn-info" id="check-data">Check Data</button>
                 </div>
+             
                 <div id="user-profile">
                 </div>
 
                 <h3>User Data</h3>
                 <ul id="user-list"></ul>
-                <script>
-                    const userList = document.getElementById('user-list');
-                    let fakerUserData;
-                    // Fetch users from the JSON file
-                    const getUserData = () => {
-                        console.log('Fetching user data...');
-                        fetch('users.json') // Adjust path if necessary based on server setup
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error(`HTTP error! status: ${response.status}`);
-                                }
-                                return response.json();
-                            })
-                            .then(users => {
-                                if (users.length === 0) {
-                                    console.log('No users found in users.json.');
-                                    alert('No users found. Please append users first!');
-                                    return;
-                                }
-                    
-                                // Select a random user from the array
-                                const randomIndex = Math.floor(Math.random() * users.length);
-                                const user = users[randomIndex];
-                    
-                                // Display the random user in the DOM (Optional)
-                                const userItem = document.createElement('li');
-                                userItem.textContent = `
-                                    ${user.firstName} ${user.lastName} 
-                                    Username: ${user.username} 
-                                    Phone: ${user.phone} 
-                                    Email: ${user.email} 
-                                    Address: ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`;
-                                userList.appendChild(userItem);
-
-                                // Populate form fields
-                                document.getElementById('firstName').value = user.firstName;
-                                document.getElementById('lastName').value = user.lastName;
-                                document.getElementById('username').value = user.username;
-                                document.getElementById('phone').value = user.phone;
-                                document.getElementById('street').value = user.streetAddress;
-                                document.getElementById('city').value = user.city;
-                                document.getElementById('state').value = user.state;
-                                document.getElementById('zipcode').value = user.zipcode;
-                                document.getElementById('email').value = user.email;
-
-                                // Update Global Variables
-                                firstName = user.firstName
-                                lastName = user.lastName
-                                username = user.username
-                                phone = user.phone
-                                street = user.streetAddress
-                                city = user.city
-                                state = user.state
-                                zipcode = user.zipcode
-                                email = user.email
-                                
-                                currentUser= {...currentUser, firstName, lastName, username, phone, street, city, state, zipcode, email, }
-                                console.log('currentUser : ',currentUser);
-                            })
-                            .catch(err => {
-                                console.error('Error fetching user data:', err);
-                                alert('Error fetching user data. Check console for details.');
-                            });
-                            
-                    };
-                </script>
+                
             </nav>
 
             <main role="main" class="col-md-6 main container">
@@ -431,8 +391,76 @@
 <!-- <script src="./campaignData.js"></script> -->
 <!-- <script src="./userData.js"></script> -->
 
-<script src="./segment-demo.js" type="module"></script> 
 
+<!-- FAKERS USERS.JSON FILE -->
+<script>
+    // Fetch JSON data from users.json
+    const userList = document.getElementById('user-list');
+    let fakerUserData;
+    // Fetch users from the JSON file
+    const getUserData = () => {
+        console.log('Fetching user data...');
+        fetch('./users.json') // Adjust path if necessary based on server setup
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(users => {
+                if (users.length === 0) {
+                    console.log('No users found in users.json.');
+                    alert('No users found. Please append users first!');
+                    return;
+                }
+    
+                // Select a random user from the array
+                const randomIndex = Math.floor(Math.random() * users.length);
+                const user = users[randomIndex];
+    
+                // Display the random user in the DOM (Optional)
+                const userItem = document.createElement('li');
+                userItem.textContent = `
+                    ${user.firstName} ${user.lastName} 
+                    Username: ${user.username} 
+                    Phone: ${user.phone} 
+                    Email: ${user.email} 
+                    Address: ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`;
+                userList.appendChild(userItem);
+
+                // Populate form fields
+                document.getElementById('firstName').value = user.firstName;
+                document.getElementById('lastName').value = user.lastName;
+                document.getElementById('username').value = user.username;
+                document.getElementById('phone').value = user.phone;
+                document.getElementById('street').value = user.streetAddress;
+                document.getElementById('city').value = user.city;
+                document.getElementById('state').value = user.state;
+                document.getElementById('zipcode').value = user.zipcode;
+                document.getElementById('email').value = user.email;
+
+                // Update Global Variables
+                firstName = user.firstName
+                lastName = user.lastName
+                username = user.username
+                phone = user.phone
+                street = user.streetAddress
+                city = user.city
+                state = user.state
+                zipcode = user.zipcode
+                email = user.email
+                
+                currentUser= {...currentUser, firstName, lastName, username, phone, street, city, state, zipcode, email, }
+                console.log('currentUser : ',currentUser);
+            })
+            .catch(err => {
+                console.error('Error fetching user data:', err);
+                alert('Error fetching user data. Check console for details.');
+            });
+                
+        };
+</script>
+<script src="./segment-demo.js" type="module"></script> 
 
 <!-- <script>
     // Function to fetch environment variables from the server

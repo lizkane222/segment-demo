@@ -1,11 +1,12 @@
 {
+  "type": "module",
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
     "@segment/analytics-node": "^2.2.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "dotenv": "^16.4.7",
-    "uuid": "^11.0.3",
-    "type": "module"
+    "express": "^4.21.2",
+    "uuid": "^11.0.3"
   }
 }

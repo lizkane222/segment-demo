@@ -468,5 +468,278 @@ footer button {
     margin-bottom: .75vh;
 }
 
+/* SOURCE TOGGLE */
+
+ul .tg-list,
+li .tg-list-item{
+	list-style: none;
+	margin: 0;
+    align-self: center;
+	padding: 0;
+}
+
+.tg-list {
+	text-align: center;
+	display: flex;
+	align-items: center;
+}
+
+.tg-list-item {
+	margin: 0 2em;
+}
+
+.tgl {
+    display: none;
+    /* Add default box-sizing for this scope */
+  }
+  .tgl,
+  .tgl:after,
+  .tgl:before,
+  .tgl *,
+  .tgl *:after,
+  .tgl *:before,
+  .tgl + .tgl-btn {
+    box-sizing: border-box;
+  }
+  .tgl::selection,
+  .tgl:after::selection,
+  .tgl:before::selection,
+  .tgl *::selection,
+  .tgl *:after::selection,
+  .tgl *:before::selection,
+  .tgl + .tgl-btn::selection {
+    background: none;
+  }
+  .tgl + .tgl-btn {
+    outline: 0;
+    display: block;
+    width: 4.75em;
+    height: 2em;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+  .tgl + .tgl-btn:after,
+  .tgl + .tgl-btn:before {
+    position: relative;
+    display: block;
+    content: "";
+    width: 50%;
+    height: 100%;
+  }
+  .tgl + .tgl-btn:after {
+    left: 0;
+  }
+  .tgl + .tgl-btn:before {
+    display: none;
+  }
+  .tgl:checked + .tgl-btn:after {
+    right: 5%;
+  }
+  
+  ul.tg-list, 
+  li.tg-list-item {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .tg-list {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .tg-list-item {
+    margin: 0 2em;
+  }
+  
+  .tgl-flip + .tgl-btn {
+    padding: 2px;
+    transition: all 0.2s ease;
+    font-family: sans-serif;
+    perspective: 100px;
+  }
+  .tgl-flip + .tgl-btn:after,
+  .tgl-flip + .tgl-btn:before {
+    display: inline-block;
+    transition: all 0.4s ease;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    line-height: 2em;
+    font-weight: bold;
+    color: #fff;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden;
+    border-radius: 4px;
+  }
+  .tgl-flip + .tgl-btn:after {
+    content: attr(data-tg-on);
+    background: --segment-green;
+    transform: rotateY(-180deg);
+  }
+  .tgl-flip + .tgl-btn:before {
+    background: #66b5ff;
+    content: attr(data-tg-off);
+  }
+  .tgl-flip + .tgl-btn:active:before {
+    transform: rotateY(-20deg);
+  }
+  .tgl-flip:checked + .tgl-btn:before {
+    transform: rotateY(180deg);
+  }
+  .tgl-flip:checked + .tgl-btn:after {
+    transform: rotateY(0);
+    left: 0;
+    background: #7FC6A6;
+  }
+  .tgl-flip:checked + .tgl-btn:active:after {
+    transform: rotateY(20deg);
+  }
+  
+  /* Center / Align right toggle button in the navbar */
+  .toggle-container {
+    display: flex;
+    /* justify-content: center; */ /* Center button in nav */
+    justify-content: flex-end;  /* Position button on right side in nav */
+    align-items: center;
+    flex: 1;
+  }
+
+  
 
 
+/*  ↓ W3Schools Toggle ↓  */
+
+/* The switch - the box around the slider */
+/* .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  } */
+  
+  /* Hide default HTML checkbox */
+  /* .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  } */
+  
+  /* The slider */
+  /* .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  } */
+  
+  /* Rounded sliders */
+  /* .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  } */
+
+
+/* ↓ GPT TOGGLE ↓ */
+
+/* .toggle-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .toggle {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 40px;
+  }
+  
+  .toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 32px;
+    width: 32px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  input:checked + .slider {
+    background-color: #4caf50;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(60px);
+  }
+  
+  .label-left,
+  .label-right {
+    z-index: 0; /* Ensure text is under the slider thumb */
+    /* user-select: none;
+  } */

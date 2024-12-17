@@ -5,6 +5,7 @@
 // import { campaignData, generateCampaignData, matchedCampaign, campaignId } from './campaignData.js';
 import { campaignData } from './campaignData.js';
 import { userData } from './userData.js';
+// import {trackServer, identifyServer, pageServer, groupServer} from './server-events-node.js'
 
 // import { userData } from './userData.js';
 // import fakerUserData  from './users.json';
@@ -52,33 +53,82 @@ console.log("JS FILE")
 //    The Track method follows this format :
 //    analytics.track(event, [properties], [options], [callback]);
 let Track = (event, properties, context, callback) => {
-  analytics.page(
-    event,
-    ...(properties ? properties : {}),
-    ...(context ? {...context,campaign} : {}),
-    ...(callback ? callback : {})
-  )
+  const payload = {
+    event: event,
+    properties: properties || {},
+    context: { ...context, campaign },
+};
+
+if (currentSourceSelected === 'CLIENT') {
+    analytics.track(
+        event,
+        ...(properties ? properties : {}),
+        ...(context ? {...context,campaign} : {}),
+        ...(callback ? callback : {})
+      )
+    // analytics.track(event, payload.properties, payload.context, callback);
+    console.log('Client-side Track:', payload);
+} else {
+    fetch('/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    }).then(response => console.log('Server-side Track:', response));
+}
 }
 
 // Spec Identify : https://segment.com/docs/connections/spec/identify/
 //    The Identify method follows this format : 
 //    analytics.identify([userId], [traits], [options], [callback]);
-let Identify = (userId, traits, context, callback) => {
-    // console.log('IDENTIFY TRAITS ',traits)
-    // console.log('IDENTIFY CONTEXT',context)
-    analytics.identify(
-        (userId ? userId : {}),
-        (traits ? {
-          ...traits
-        //   ...(traits.firstName ? { firstName : traits.firstName } : {}),
-        //   ...(traits.lastName ? { lastName : traits.lastName } : {}),
-        //   ...(traits.email ? { email : traits.email } : {}),
-        //   ...(traits.username ? { username : traits.username } : {}),
-        //   ...(traits.phone ? { phone : traits.phone } : {})
-        } : {}),
-        context || undefined,
-        callback || undefined
-       )
+let Identify = (userId, anonymousId, traits, context, callback) => {
+    console.log('IDENTIFY userId : ',userId)
+    console.log('IDENTIFY anonymousId : ',anonymousId)
+    console.log('IDENTIFY traits : ',traits)
+    console.log('IDENTIFY context : ',context)
+    console.log('IDENTIFY campaign : ',campaign)
+
+    const payload = {
+        userId: userId,
+        anonymousId: anonymousId,
+        traits: traits || {},
+        context: { ...context, campaign },
+    };
+    if (currentSourceSelected==='CLIENT') {
+        // Send data client-side via Segment's analytics.js library
+        analytics.identify(
+            (userId ? userId : {}),
+            (anonymousId ? anonymousId : {}),
+            (traits ? {
+            ...traits
+            //   ...(traits.firstName ? { firstName : traits.firstName } : {}),
+            //   ...(traits.lastName ? { lastName : traits.lastName } : {}),
+            //   ...(traits.email ? { email : traits.email } : {}),
+            //   ...(traits.username ? { username : traits.username } : {}),
+            //   ...(traits.phone ? { phone : traits.phone } : {})
+            } : {}),
+            context || undefined
+        )
+    }
+    else {
+        // Send data to the server via Segment's Node.js library
+        fetch('/identify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Server-side identify response:', data);
+                if (callback) callback(data);
+            })
+            .catch((err, req) => {
+                console.error('Error triggering server-side identify:', err)
+                console.log(JSON.stringify(payload))
+            })
+    }
+    // if(callback){{
+    //     callback()
+    // }
     usertraits = {...usertraits, ...traits}
     currentUser.traits = usertraits
 }
@@ -87,38 +137,89 @@ let Identify = (userId, traits, context, callback) => {
 //    The Page method follows this format : 
 //    analytics.page([category], [name], [properties], [options], [callback]);
 let Page = (name, category, properties, context, callback) => {
-  analytics.page(
-    name,
-    ...(category ? category : {}),
-    ...(properties ? properties : {}),
-    ...(context ? {...context,campaign} : {}),
-    ...(callback ? callback : {})
-  )
+  const payload = {
+    name: name,
+    category: category || '',
+    properties: properties || {},
+    context: { ...context, campaign },
+};
+
+if (currentSourceSelected === 'CLIENT') {
+    // analytics.page(payload.name, payload.category, payload.properties, payload.context, callback);
+    analytics.page(
+        name,
+        ...(category ? category : {}),
+        ...(properties ? properties : {}),
+        ...(context ? {...context,campaign} : {}),
+        ...(callback ? callback : {})
+      )
+    console.log('Client-side Page:', payload);
+} else {
+    fetch('/page', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    }).then(response => console.log('Server-side Page:', response));
+}
+
 }
 
 // Spec Group : https://segment.com/docs/connections/spec/group/
 //    The Group method follows this format : 
 //    analytics.group(groupId, [traits], [options], [callback]);
 let Group = (groupId, traits, context, callback) => {
-  analytics.group(
-    groupId,
-    ...(traits ? {traits} : {}),
-    ...(context ? context : {}),
-    ...(callback ? callback : {})
-  )
   console.log("GROUP TRAITS : ", groupTraits)
+
+  const payload = {
+    groupId: groupId,
+    traits: traits || {},
+    context: context || {},
+};
+
+if (currentSourceSelected === 'CLIENT') {
+    // analytics.group(groupId, payload.traits, payload.context, callback);
+    analytics.group(
+        groupId,
+        ...(traits ? {traits} : {}),
+        ...(context ? context : {}),
+        ...(callback ? callback : {})
+      )
+    console.log('Client-side Group:', payload);
+} else {
+    fetch('/group', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    }).then(response => console.log('Server-side Group:', response));
+}
 }
 
 // Spec Alias : https://segment.com/docs/connections/spec/alias/
 //    The Alias method follows this format : 
 //    analytics.alias(userId, [previousId], [options], [callback]);
 let Alias = (userId, previousId, context, callback) => {
-  analytics.alias(
-      userId,
-      previousId,
-      ...(context ? context : {}),
-      ...(callback ? callback : {})
-     )
+     const payload = {
+        userId: userId,
+        previousId: previousId,
+        context: context || {},
+    };
+
+    if (currentSourceSelected === 'CLIENT') {
+        // analytics.alias(payload.userId, payload.previousId, payload.context, callback);
+        analytics.alias(
+            userId,
+            previousId,
+            ...(context ? context : {}),
+            ...(callback ? callback : {})
+           )
+        console.log('Client-side Alias:', payload);
+    } else {
+        fetch('/alias', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        }).then(response => console.log('Server-side Alias:', response));
+    }
 }
 
 // END // SEGMENT'S ANALYTICS.JS EVENTS
@@ -157,6 +258,18 @@ document.getElementById('clientId-input').value = clientId;
 let userFormFields = {firstName, lastName, username, phone, street, city, state, zipcode, email}
 
 
+// Get the toggle checkbox element
+const toggleCheckbox = document.getElementById('source-selection');
+
+// Function to handle toggle state and update global variable
+const updateSourceSelected = () => {
+    // Update the global variable based on the checkbox state
+    currentSourceSelected = toggleCheckbox.checked ? 'CLIENT' : 'SERVER';
+    console.log('currentSourceSelected : ',currentSourceSelected)
+};
+
+// Event listener for the toggle input
+toggleCheckbox.addEventListener('change', updateSourceSelected);
 
 
 
@@ -284,6 +397,7 @@ function updateProfile(event, button) {
             let tempUserId = uuidv4()
             console.log('tempUserId : ',tempUserId)
             analytics.user().id(tempUserId);
+            userId=tempUserId;
             console.log('USERID CREATED : ', analytics.user().id())
         }
     }
@@ -316,7 +430,9 @@ function updateProfile(event, button) {
     }
     console.log('TRAITS : ',traits)
 
-    Identify(traits, data.context)
+    // currentSourceSelected==='CLIENT'? Identify(traits, data.context) : identifyServer(userId, traits, context=data.context)
+    Identify(userId || analytics.user().id() || null, anonymousId || analytics.user().anonymousId() || null, traits, data.context)
+    // Identify(traits, data.context)
     autoUpdate()
 }
 
