@@ -157,17 +157,31 @@ nav.navbar-dark .segment-green-text a.navbar-brand {
     /* Centers the content */
 }
 
+.forms-wrapper {
+    display: flex;
+    flex: 1; /* Ensures both forms take equal space */
+    min-width: 300px; /* Minimum width for each form */
+    justify-content: space-between; /* Adjusts space between forms */
+    gap: 20px; /* Adds space between the forms */
+}
+
 .form-container {
+    flex: 1; /* Ensures both forms take equal space */
     display: flex;
     flex-direction: column;
-    align-items: stretch; /* Ensures the form stretches correctly */
+    /* align-items: stretch;  */
+    /* Ensures the form stretches correctly */
     width: 100%; /* Full width of the container */
     margin-bottom: 20px; /* Adds space between form sections */
     /* position: relative; */
 }
 
 form {
-    flex: 1; /* Takes up most of the space */
+    /* flex: 1; */ /* Takes up most of the space */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
 .generate-user-data {
@@ -204,12 +218,13 @@ form {
     grid-template-columns: 1fr 1fr; /* Two columns for input fields */
     gap: 1em; /* Space between input fields */
     align-items: center; /* Align items vertically in the middle */
-    width: 100%;
+    /* width: 100%; */
     max-width: 65vw; /* Make sure form doesn't stretch too wide */
     margin: 0 auto; /* Center the form horizontally */
     background-color: #fff;
     box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.2); 
     border-radius: 10px;
+    height: 55vh;
 }
 
 .form-group {

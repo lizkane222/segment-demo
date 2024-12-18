@@ -96,41 +96,47 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
     if (currentSourceSelected==='CLIENT') {
         // Send data client-side via Segment's analytics.js library
         analytics.identify(
-            (userId ? userId : {}),
-            (anonymousId ? anonymousId : {}),
-            (traits ? {
-            ...traits
+            (payload.userId ? payload.userId : {}),
+            (payload.anonymousId ? payload.anonymousId : {}),
+            (payload.traits ? {
+            ...payload.traits
             //   ...(traits.firstName ? { firstName : traits.firstName } : {}),
             //   ...(traits.lastName ? { lastName : traits.lastName } : {}),
             //   ...(traits.email ? { email : traits.email } : {}),
             //   ...(traits.username ? { username : traits.username } : {}),
             //   ...(traits.phone ? { phone : traits.phone } : {})
             } : {}),
-            context || undefined
+            payload.context ? payload.context : {}
         )
     }
     else {
+        // Send data to the server via Segment's Node.js library
         // Send data to the server via Segment's Node.js library
         fetch('/identify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Server-side identify response:', data);
-                if (callback) callback(data);
-            })
-            .catch((err, req) => {
-                console.error('Error triggering server-side identify:', err)
-                console.log(JSON.stringify(payload))
-            })
-    }
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log('Server-side identify response:', data);
+            if (callback) callback(data);
+        })
+        .catch((err) => {
+            console.error('Error triggering server-side identify:', err);
+            console.log(JSON.stringify(payload));
+        });
     // if(callback){{
     //     callback()
     // }
     usertraits = {...usertraits, ...traits}
     currentUser.traits = usertraits
+    }
 }
 
 // Spec Page : https://segment.com/docs/connections/spec/page/
