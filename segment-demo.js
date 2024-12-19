@@ -81,52 +81,62 @@ let Track = (event, properties, context, callback) => {
 //    The Identify method follows this format : 
 //    analytics.identify([userId], [traits], [options], [callback]);
 let Identify = (userId, anonymousId, traits, context, callback) => {
+
     console.log('IDENTIFY userId : ',userId)
     console.log('IDENTIFY anonymousId : ',anonymousId)
     console.log('IDENTIFY traits : ',traits)
     console.log('IDENTIFY context : ',context)
     console.log('IDENTIFY campaign : ',campaign)
 
-    if(document.getElementById('user-list').children.length>0){
-        // document.getElementById('phone').value = randomUser.traits.phone || '';
-        userList.innerHTML = '';
+    userList.innerHTML = '';
 
-                // Create and append individual <li> elements for each piece of user information
-        const userInfo = [
-            firstName || lastName ? `<span class="bold">Name: </span> ${firstName} ${lastName}` : '',
-            username?`<span class="bold">Username: </span>${username}` :'',
-            phone? `<span class="bold">Phone: </span>${phone}` : '',
-            email?`<span class="bold">Email: </span>${email}` : '',
-            street || city || state || zipcode?`<span class="bold">Address: </span> ${street}, ${city}, ${state}, ${zipcode}` : ''
-        ];
+    const userInfo = [
+        firstName || lastName ? `<span class="bold">Name: </span> ${firstName} ${lastName}` : '',
+        username?`<span class="bold">Username: </span>${username}` :'',
+        phone? `<span class="bold">Phone: </span>${phone}` : '',
+        email?`<span class="bold">Email: </span>${email}` : '',
+        street || city || state || zipcode?`<span class="bold">Address: </span> ${street}, ${city}, ${state}, ${zipcode}` : ''
+    ];
 
-        userInfo.forEach(info => {
-            const userItem = document.createElement('li');
-            userItem.innerHTML = info;
-            userList.appendChild(userItem);
-        });
-    }
+    userInfo.forEach(info => {
+        const userItem = document.createElement('li');
+        userItem.innerHTML = info;
+        userList.appendChild(userItem);
+    });
+    // const tempUserInfo = [
+    //     firstName || lastName ? `<span class="bold">Name: </span> ${firstName} ${lastName}` : '',
+    //     username?`<span class="bold">Username: </span>${username}` :'',
+    //     phone? `<span class="bold">Phone: </span>${phone}` : '',
+    //     email?`<span class="bold">Email: </span>${email}` : '',
+    //     street || city || state || zipcode?`<span class="bold">Address: </span> ${street}, ${city}, ${state}, ${zipcode}` : ''
+    // ];
+
+    // tempUserInfo.forEach(info => {
+    //     const userItem = document.createElement('li');
+    //     userItem.innerHTML = info;
+    //     userList.appendChild(userItem);
+    // });
 
     const payload = {
         userId: userId,
         anonymousId: anonymousId,
-        traits: traits || {},
+        traits: traits,
         context: { ...context, campaign },
     };
+    console.log('payload : ', payload)
     if (currentSourceSelected==='CLIENT') {
         // Send data client-side via Segment's analytics.js library
         analytics.identify(
             (payload.userId ? payload.userId : {}),
-            (payload.anonymousId ? payload.anonymousId : {}),
-            (payload.traits ? {
-            ...payload.traits
+            // (payload.anonymousId ? payload.anonymousId : {}),
+            (payload.traits ? payload.traits
             //   ...(traits.firstName ? { firstName : traits.firstName } : {}),
             //   ...(traits.lastName ? { lastName : traits.lastName } : {}),
             //   ...(traits.email ? { email : traits.email } : {}),
             //   ...(traits.username ? { username : traits.username } : {}),
             //   ...(traits.phone ? { phone : traits.phone } : {})
-            } : {}),
-            payload.context ? payload.context : {}
+             : {}),
+            payload.context ? {...payload['context'], anonymousId : payload.anonymousId} : {}
         )
     }
     else {
@@ -405,9 +415,25 @@ function updateProfile(event, button) {
         console.log()
     }
 
+    userList.innerHTML = '';
 
-    const profileDiv = document.getElementById('user-profile');
-    profileDiv.innerHTML = `<p><strong>First Name:</strong> ${firstName}</p><p><strong>Last Name:</strong> ${lastName}</p><p><strong>Username:</strong> ${username}</p><p><strong>Email:</strong> ${email}</p><p><strong>Phone:</strong> ${phone}</p>`;
+    const tempUserInfo = [
+        `<span class="bold">Name: </span> ${firstName} ${lastName}`,
+        `<span class="bold">Username: </span>${username}` ,
+        `<span class="bold">Phone: </span>${phone}` ,
+        `<span class="bold">Email: </span>${email}` ,
+        `<span class="bold">Address: </span> ${street}, ${city}, ${state}, ${zipcode}`
+    ];
+
+    tempUserInfo.forEach(info => {
+        const userItem = document.createElement('li');
+        userItem.innerHTML = info;
+        userList.appendChild(userItem);
+    });
+
+
+    // const profileDiv = document.getElementById('user-profile');
+    // profileDiv.innerHTML = `<p><strong>First Name:</strong> ${firstName}</p><p><strong>Last Name:</strong> ${lastName}</p><p><strong>Username:</strong> ${username}</p><p><strong>Email:</strong> ${email}</p><p><strong>Phone:</strong> ${phone}</p>`;
     
     // IF IDENTIFY:USERID IS CLICKED OR IF PII IS INCLUDED IN FORM THEN FORCE USERID GENERATION
     if(type==='userId' ||  forceType==='userId'){
@@ -419,9 +445,9 @@ function updateProfile(event, button) {
             console.log('USERID CREATED : ', analytics.user().id())
         }
     }
-    let data = updateFormAndQueryString()
+    let data = updateCampaignFormAndQueryString()
 
-    let traits = {
+    let tempTraits = {
         // firstName : firstName,
         ...(firstName ? { firstName } : {}),
         // lastName : lastName,
@@ -446,10 +472,10 @@ function updateProfile(event, button) {
         ...(clientId ? { clientId } : {}),
         ...(cid ? { cid } : {})
     }
-    console.log('TRAITS : ',traits)
+    console.log('TEMP TRAITS : ',tempTraits)
 
     // currentSourceSelected==='CLIENT'? Identify(traits, data.context) : identifyServer(userId, traits, context=data.context)
-    Identify(userId || analytics.user().id() || null, anonymousId || analytics.user().anonymousId() || null, traits, data.context)
+    Identify(userId || analytics.user().id() || null, anonymousId || analytics.user().anonymousId() || null, tempTraits, data.context)
     // Identify(traits, data.context)
     autoUpdate()
 }
@@ -675,35 +701,66 @@ function saveFormData() {
 // Function to load form data from localStorage & querystring
 // Function to load form data from localStorage & querystring
 function loadFormData() {
-    const form = document.getElementById('userForm');
-    const campaignForm = document.getElementById('campaign-fields');
+    let userForm = document.getElementById('userForm');
+    let campaignForm = document.getElementById('campaignForm');
     const queryParams = new URLSearchParams(window.location.search);
-
+    
     // Populate User Form Fields from localStorage
-    const inputs = form.querySelectorAll('input, textarea, select');
-    inputs.forEach(input => {
-        const savedValue = localStorage.getItem(input.name);
-        if (savedValue !== null) {
-            input.value = savedValue;
-        }
-    });
+    if (userForm) {
+        const userFormInputs = userForm.querySelectorAll('input, textarea, select');
+        userFormInputs.forEach(input => {
+            const savedValue = localStorage.getItem(input.name);
+            if (savedValue !== null) {
+                input.value = savedValue;
+            }
+        });
+    } else {
+        console.error('User form element not found');
+    }
 
     // Populate Campaign Form Fields from localStorage
-    const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
-    campaignInputs.forEach(input => {
-        const savedValue = localStorage.getItem(input.name);
-        if (savedValue !== null) {
-            input.value = savedValue;
-        }
-    });
+    // const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
+    // campaignInputs.forEach(input => {
+    //     const savedValue = localStorage.getItem(input.name);
+    //     if (savedValue !== null) {
+    //         input.value = savedValue;
+    //     }
+    // });
 
-    // Populate Campaign Form Fields from Query String
-    campaignInputs.forEach(input => {
-        const paramValue = queryParams.get(input.name);
-        if (paramValue !== null) {
-            input.value = paramValue;
+    // // Populate Campaign Form Fields from Query String
+    // campaignInputs.forEach(input => {
+    //     const paramValue = queryParams.get(input.name);
+    //     if (paramValue !== null) {
+    //         input.value = paramValue;
+    //     }
+    // });
+
+    if(campaignForm){
+        // Check if any of the campaignForm's fields have a value
+        const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
+        let hasValue = false;
+        campaignInputs.forEach(input => {
+            if (input.value.trim() !== '') {
+                hasValue = true;
+            }
+        });
+        // Populate Campaign Form Fields from Query String
+        campaignInputs.forEach(input => {
+            const paramValue = queryParams.get(input.name);
+            if (paramValue !== null) {
+                input.value = paramValue;
+            }
+        });
+        if(hasValue){
+            // Populate Campaign Form Fields from localStorage
+            campaignInputs.forEach(input => {
+                const savedValue = localStorage.getItem(input.name);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                }
+            });
         }
-    });
+    }
 
     // Display Query String
     const queryStringDisplay = document.getElementById('querystring-display');
@@ -883,8 +940,8 @@ document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariabl
 
 
 // Call the loadFormData function on DOM load
-document.addEventListener('DOMContentLoaded', () => {loadFormData()});
-// document.addEventListener('DOMContentLoaded', loadFormData);
+// document.addEventListener('DOMContentLoaded', () => {loadFormData()});
+document.addEventListener('DOMContentLoaded', loadFormData);
 
 // Event listeners to save and load form data
 //   const form = document.getElementById('userForm');
@@ -1074,7 +1131,7 @@ function generateCampaignData() {
 
 // ------------------------------------
 
-function updateFormAndQueryString() {
+function updateCampaignFormAndQueryString() {
     console.log('Button clicked'); // Debug log
 
     const data = generateCampaignData();
@@ -1105,22 +1162,22 @@ function updateFormAndQueryString() {
     let pageName = window.document.title
     let context = {
         campaign: {
-        id: utmParams.campaignId,
-        name: utmParams.campaign,
-        source: utmParams.campaignSource,
-        medium: utmParams.campaignMedium,
-        term: utmParams.campaignTerm,
-        content: utmParams.campaignContent,
+            id: utmParams.campaignId,
+            name: utmParams.campaign,
+            source: utmParams.campaignSource,
+            medium: utmParams.campaignMedium,
+            term: utmParams.campaignTerm,
+            content: utmParams.campaignContent,
         },
         page : {
             referrer : referrer
         },
         google : {
-        // referrer: utmParams.referrer,
-        ...(referrer ? referrer : {}),
-        ...(sessionId ? { sessionId } : {}),
-        ...(sessionNumber ? { sessionNumber } : {}),
-        ...(clientId ? { cid } : {})
+            // referrer: utmParams.referrer,
+            ...(referrer ? referrer : {}),
+            ...(sessionId ? { sessionId } : {}),
+            ...(sessionNumber ? { sessionNumber } : {}),
+            ...(clientId ? { cid } : {})
         }
     }
     let properties = {
@@ -1143,10 +1200,10 @@ function updateFormAndQueryString() {
     let resData = {pageName : pageName, context : context, properties : properties, campaignData : data}
     return resData
 }
-// document.getElementById('newCampaign').addEventListener('click', updateFormAndQueryString);
+// document.getElementById('newCampaign').addEventListener('click', updateCampaignFormAndQueryString);
 document.getElementById('newCampaign').addEventListener('click', (event) => {
     event.preventDefault(); // Prevent form submission and page reload
-    updateFormAndQueryString();
+    updateCampaignFormAndQueryString();
 });
 
 // document.getElementById('useCampaign').addEventListener('click', (event) => {
@@ -1176,6 +1233,6 @@ function populateFormWithUserData() {
 
 // Add an event listener to the "Generate User Data" button
 // document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
-document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
+// document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
 
 document.getElementById('generateFakerUserData').addEventListener('click', getUserData);
