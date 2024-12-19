@@ -54,27 +54,27 @@ console.log("JS FILE")
 //    analytics.track(event, [properties], [options], [callback]);
 let Track = (event, properties, context, callback) => {
     const payload = {
-        event: event,
-        properties: properties || {},
-        context: { ...context, campaign },
-    };
-
-    if (currentSourceSelected === 'CLIENT') {
-        analytics.track(
-            event,
-            ...(properties ? properties : {}),
-            ...(context ? {...context,campaign} : {}),
-            ...(callback ? callback : {})
+      event: event,
+      properties: properties || {},
+      context: { ...context, campaign },
+  };
+  
+  if (currentSourceSelected === 'CLIENT') {
+      analytics.track(
+          event,
+          ...(properties ? properties : {}),
+          ...(context ? {...context,campaign} : {}),
+          ...(callback ? callback : {})
         )
-        // analytics.track(event, payload.properties, payload.context, callback);
-        console.log('Client-side Track:', payload);
-    } else {
-        fetch('/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        }).then(response => console.log('Server-side Track:', response));
-    }
+      // analytics.track(event, payload.properties, payload.context, callback);
+      console.log('Client-side Track:', payload);
+  } else {
+      fetch('/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+      }).then(response => console.log('Server-side Track:', response));
+  }
 }
 
 // Spec Identify : https://segment.com/docs/connections/spec/identify/
@@ -87,20 +87,12 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
     console.log('IDENTIFY context : ',context)
     console.log('IDENTIFY campaign : ',campaign)
 
-    
-    document.addEventListener('DOMContentLoaded', () => {
-
-    let userListUl = document.getElementById('user-list');
-    // if (!userListUl) {
-    //     console.error('User list element not found');
-    //     return;
-    // }
-
-    // if(document.getElementById('user-list').innerHTML ===''){
-        userListUl.innerHTML = '';
+    if(document.getElementById('user-list').children.length>0){
+        // document.getElementById('phone').value = randomUser.traits.phone || '';
+        userList.innerHTML = '';
 
                 // Create and append individual <li> elements for each piece of user information
-        userInfo = [
+        const userInfo = [
             firstName || lastName ? `<span class="bold">Name: </span> ${firstName} ${lastName}` : '',
             username?`<span class="bold">Username: </span>${username}` :'',
             phone? `<span class="bold">Phone: </span>${phone}` : '',
@@ -111,9 +103,9 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
         userInfo.forEach(info => {
             const userItem = document.createElement('li');
             userItem.innerHTML = info;
-            userListUl.appendChild(userItem);
+            userList.appendChild(userItem);
         });
-    // }
+    }
 
     const payload = {
         userId: userId,
@@ -139,6 +131,7 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
     }
     else {
         // Send data to the server via Segment's Node.js library
+        // Send data to the server via Segment's Node.js library
         fetch('/identify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -158,102 +151,100 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
             console.error('Error triggering server-side identify:', err);
             console.log(JSON.stringify(payload));
         });
-        // if(callback){{
-        //     callback()
-        // }
-        usertraits = {...usertraits, ...traits}
-        currentUser.traits = usertraits
-        saveFormData()
+    // if(callback){{
+    //     callback()
+    // }
+    usertraits = {...usertraits, ...traits}
+    currentUser.traits = usertraits
     }
-})
+}
 
 // Spec Page : https://segment.com/docs/connections/spec/page/
 //    The Page method follows this format : 
 //    analytics.page([category], [name], [properties], [options], [callback]);
 let Page = (name, category, properties, context, callback) => {
-  const payload = {
-    name: name,
-    category: category || '',
-    properties: properties || {},
-    context: { ...context, campaign },
-};
-
-if (currentSourceSelected === 'CLIENT') {
-    // analytics.page(payload.name, payload.category, payload.properties, payload.context, callback);
-    analytics.page(
-        name,
-        ...(category ? category : {}),
-        ...(properties ? properties : {}),
-        ...(context ? {...context,campaign} : {}),
-        ...(callback ? callback : {})
-      )
-    console.log('Client-side Page:', payload);
-} else {
-    fetch('/page', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-    }).then(response => console.log('Server-side Page:', response));
-}
-
+    const payload = {
+      name: name,
+      category: category || '',
+      properties: properties || {},
+      context: { ...context, campaign },
+  };
+  
+  if (currentSourceSelected === 'CLIENT') {
+      // analytics.page(payload.name, payload.category, payload.properties, payload.context, callback);
+      analytics.page(
+          name,
+          ...(category ? category : {}),
+          ...(properties ? properties : {}),
+          ...(context ? {...context,campaign} : {}),
+          ...(callback ? callback : {})
+        )
+      console.log('Client-side Page:', payload);
+  } else {
+      fetch('/page', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+      }).then(response => console.log('Server-side Page:', response));
+  }
 }
 
 // Spec Group : https://segment.com/docs/connections/spec/group/
 //    The Group method follows this format : 
 //    analytics.group(groupId, [traits], [options], [callback]);
 let Group = (groupId, traits, context, callback) => {
-  console.log("GROUP TRAITS : ", groupTraits)
-
-  const payload = {
-    groupId: groupId,
-    traits: traits || {},
-    context: context || {},
-};
-
-if (currentSourceSelected === 'CLIENT') {
-    // analytics.group(groupId, payload.traits, payload.context, callback);
-    analytics.group(
-        groupId,
-        ...(traits ? {traits} : {}),
-        ...(context ? context : {}),
-        ...(callback ? callback : {})
-      )
-    console.log('Client-side Group:', payload);
-} else {
-    fetch('/group', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-    }).then(response => console.log('Server-side Group:', response));
-}
+    console.log("GROUP TRAITS : ", groupTraits)
+  
+    const payload = {
+      groupId: groupId,
+      traits: traits || {},
+      context: context || {},
+  };
+  
+  if (currentSourceSelected === 'CLIENT') {
+      // analytics.group(groupId, payload.traits, payload.context, callback);
+      analytics.group(
+          groupId,
+          ...(traits ? {traits} : {}),
+          ...(context ? context : {}),
+          ...(callback ? callback : {})
+        )
+      console.log('Client-side Group:', payload);
+  } else {
+      fetch('/group', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+      }).then(response => console.log('Server-side Group:', response));
+  }
 }
 
 // Spec Alias : https://segment.com/docs/connections/spec/alias/
 //    The Alias method follows this format : 
 //    analytics.alias(userId, [previousId], [options], [callback]);
 let Alias = (userId, previousId, context, callback) => {
-     const payload = {
-        userId: userId,
-        previousId: previousId,
-        context: context || {},
-    };
+    const payload = {
+       userId: userId,
+       previousId: previousId,
+       context: context || {},
+   };
 
-    if (currentSourceSelected === 'CLIENT') {
-        // analytics.alias(payload.userId, payload.previousId, payload.context, callback);
-        analytics.alias(
-            userId,
-            previousId,
-            ...(context ? context : {}),
-            ...(callback ? callback : {})
-           )
-        console.log('Client-side Alias:', payload);
-    } else {
-        fetch('/alias', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        }).then(response => console.log('Server-side Alias:', response));
-    }
+   if (currentSourceSelected === 'CLIENT') {
+       // analytics.alias(payload.userId, payload.previousId, payload.context, callback);
+       analytics.alias(
+           userId,
+           previousId,
+           ...(context ? context : {}),
+           ...(callback ? callback : {})
+          )
+       console.log('Client-side Alias:', payload);
+   } else {
+       fetch('/alias', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify(payload),
+       }).then(response => console.log('Server-side Alias:', response));
+   }
 }
 
 // END // SEGMENT'S ANALYTICS.JS EVENTS
@@ -283,6 +274,7 @@ let Alias = (userId, previousId, context, callback) => {
 // let zipcode
 // let email
 
+
 document.getElementById('sessionId-input').value = sessionId;
 document.getElementById('sessionNumber-input').value = sessionNumber;
 document.getElementById('clientId-input').value = clientId;
@@ -299,9 +291,9 @@ const updateSourceSelected = () => {
     currentSourceSelected = toggleCheckbox.checked ? 'CLIENT' : 'SERVER';
     console.log('currentSourceSelected : ',currentSourceSelected)
 };
+
 // Event listener for the toggle input
 toggleCheckbox.addEventListener('change', updateSourceSelected);
-
 
   // GLOBAL VARIABLES FOUND IN INDEX.HTML FILE'S <HEAD>
   // let userId
@@ -358,7 +350,6 @@ function showToast() {
     }, 2000);
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
     // document.getElementById('userId-p').addEventListener('click', () => copyToClipboard('userId-p'));
     // document.getElementById('anonymousId-p').addEventListener('click', () => copyToClipboard('anonymousId-p'));
@@ -378,6 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("groupTraits-cookie-get").addEventListener("click", () => updateCookie(groupTraits, "groupTraits-p"));
     document.getElementById("groupTraits-p").addEventListener("click", () => copyToClipboard("groupTraits-p"));
 });
+
 
 
 // Function to update user profile (LEFT SIDEBAR)
@@ -460,16 +452,15 @@ function updateProfile(event, button) {
     Identify(userId || analytics.user().id() || null, anonymousId || analytics.user().anonymousId() || null, traits, data.context)
     // Identify(traits, data.context)
     autoUpdate()
-    // Add submit event listener to the form
 }
 
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    // Call the function with the button.id
-    updateProfile(event, event.submitter.id);
-});
+// form.addEventListener('submit', (event) => {
+//     event.preventDefault();
+//     // Call the function with the button.id
+//     updateProfile(event, event.submitter.id);
+// });
 
-// Function to clear the form and reset the traits object
+/// Function to clear the form and reset the traits object
 window.clearForm = (formId) => {
     const form = document.getElementById(formId);
 
@@ -495,7 +486,7 @@ window.clearForm = (formId) => {
         // Clear the traits object using analytics.js method
         analytics.user().traits({}); // This clears all user traits
         console.log('User form and traits reset.');
-    } else if (formId === 'campaignForm') {
+    } else if (formId === 'campaign-fields') {
         // Clear localStorage and query string display for the campaign form
         inputs.forEach(input => {
             if (!['sessionId', 'sessionNumber', 'clientId'].includes(input.name)) {
@@ -512,8 +503,8 @@ window.clearForm = (formId) => {
         console.log('Campaign form cleared, localStorage and query string display reset.');
     }
 };
-document.getElementById('clearUserForm').addEventListener('click', () => clearForm('userForm'));
-document.getElementById('clearCampaignForm').addEventListener('click', () => clearForm('campaignForm'));
+// document.getElementById('clearUserForm').addEventListener('click', () => clearForm('userForm'));
+// document.getElementById('clearCampaignForm').addEventListener('click', () => clearForm('campaignForm'));
 
 
 const checkData = () => {
@@ -524,39 +515,8 @@ const checkData = () => {
     updateCookie(groupId, "groupId-p")
     updateCookie(groupTraits, "groupTraits-p")
     autoUpdate()
-
 }
-document.getElementById('check-data').addEventListener('click', checkData);
-
-// START // LABEL CHECK FIELDS EXIST
-
-// Function to update the input field when the label is clicked
-// const setupLabelClickHandler = (variable, inputId) => {
-//     const label = document.querySelector(`label[for="${inputId}"]`);
-//     if (!label) {
-//         console.error(`Label for ${inputId} not found.`);
-//         return;
-//     }
-
-//     label.addEventListener('click', () => {
-//         console.log(`Label clicked. Updating ${inputId} with variable:`, variable);
-//         const inputField = document.getElementById(inputId);
-//         if (inputField) {
-//             inputField.value = variable || '';
-//             console.log(`${inputId} field updated with:`, variable);
-//         } else {
-//             console.error(`${inputId} field not found.`);
-//         }
-//     });
-// };
-
-// // Example usage with global variables
-// document.addEventListener('DOMContentLoaded', () => {
-//     const globalClientId = '123456789'; // Replace with your global variable
-//     setupLabelClickHandler(globalClientId, 'clientId-input');
-// });
-
-// END //LABEL CHECK FIELDS EXIST
+// document.getElementById('check-data').addEventListener('click', checkData);
 
 const resetAjsUser = () => {
     localStorage.clear()
@@ -572,7 +532,21 @@ const resetAjsUser = () => {
     window.location.reload(true);
     // autoUpdate()
 }
+// document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser);
+
+
+// Add event listener to the Clear Form button
+// document.getElementById('clearUserForm').addEventListener('click', clearForm('userForm'));
+document.getElementById('check-data').addEventListener('click', checkData);
 document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser);
+
+// document.getElementById('clearCampaignForm').addEventListener('click', clearForm,'clearCampaignForm');
+
+document.getElementById('clearUserForm').addEventListener('click', () => clearForm('userForm'));
+document.getElementById('clearCampaignForm').addEventListener('click', () => clearForm('campaign-fields'));
+
+
+
 
 // ANALYTICS RESET
     // const reset = () => {
@@ -624,7 +598,6 @@ document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser
 
 
 // Function to display cookies
-
 function displayCookies(cookieType, containerId) {
     const cookieList = document.getElementById(containerId);
     const cookies = cookieType === 'localStorage' ? Object.entries(localStorage) : document.cookie.split(';');
@@ -648,6 +621,7 @@ function displayCookies(cookieType, containerId) {
     });
 }
 
+
 // Function to display Segment network requests (replace with actual implementation)
 function displaySegmentRequests() {
     const requestDiv = document.getElementById('segment-network-requests');
@@ -661,7 +635,11 @@ const form = document.getElementById('userForm');
 const identifyAnonymousIdButton = document.getElementById('identifyAnonymousId');
 const identifyUserIdButton = document.getElementById('identifyUserId');
 
-
+// Add submit event listener to the form
+form.addEventListener('submit', (event) => {
+    // Call the function with the button.id
+    updateProfile(event, event.submitter.id);
+});
 
 
 const autoUpdate = () => {
@@ -675,8 +653,10 @@ const autoUpdate = () => {
 // Display cookies on page load
 displayCookies('localStorage', 'local-storage-cookies');
 displayCookies('client', 'client-cookies');
+
 // Display Segment network requests
 displaySegmentRequests();
+
 
 // Function to save form data to localStorage
 function saveFormData() {
@@ -693,55 +673,37 @@ function saveFormData() {
 
 
 // Function to load form data from localStorage & querystring
+// Function to load form data from localStorage & querystring
 function loadFormData() {
-    const userForm = document.getElementById('userForm');
-    const campaignForm = document.getElementById('campaignForm');
+    const form = document.getElementById('userForm');
+    const campaignForm = document.getElementById('campaign-fields');
     const queryParams = new URLSearchParams(window.location.search);
 
     // Populate User Form Fields from localStorage
-    if (userForm) {
-        const userFormInputs = userForm.querySelectorAll('input, textarea, select');
-        userFormInputs.forEach(input => {
-            const savedValue = localStorage.getItem(input.name);
-            if (savedValue !== null) {
-                input.value = savedValue;
-            }
-        });
-    } else {
-        console.error('User form element not found');
-    }
-
-    if (campaignForm) {
-        // Check if any of the campaignForm's fields have a value
-        const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
-        let hasValue = false;
-
-        campaignInputs.forEach(input => {
-            if (input.value.trim() !== '') {
-                hasValue = true;
-            }
-        });
-
-        if (hasValue) {
-            // Populate Campaign Form Fields from localStorage
-            campaignInputs.forEach(input => {
-                const savedValue = localStorage.getItem(input.name);
-                if (savedValue !== null) {
-                    input.value = savedValue;
-                }
-            });
-
-            // Populate Campaign Form Fields from Query String
-            campaignInputs.forEach(input => {
-                const paramValue = queryParams.get(input.name);
-                if (paramValue !== null) {
-                    input.value = paramValue;
-                }
-            });
+    const inputs = form.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+        const savedValue = localStorage.getItem(input.name);
+        if (savedValue !== null) {
+            input.value = savedValue;
         }
-    } else {
-        console.error('Campaign form element not found');
-    }
+    });
+
+    // Populate Campaign Form Fields from localStorage
+    const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
+    campaignInputs.forEach(input => {
+        const savedValue = localStorage.getItem(input.name);
+        if (savedValue !== null) {
+            input.value = savedValue;
+        }
+    });
+
+    // Populate Campaign Form Fields from Query String
+    campaignInputs.forEach(input => {
+        const paramValue = queryParams.get(input.name);
+        if (paramValue !== null) {
+            input.value = paramValue;
+        }
+    });
 
     // Display Query String
     const queryStringDisplay = document.getElementById('querystring-display');
@@ -773,8 +735,8 @@ function loadFormData() {
         console.log('clientId does not exist')
     }
 }
-// Call `loadFormData` on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', loadFormData);
+/// Call `loadFormData` on DOMContentLoaded
+// document.addEventListener('DOMContentLoaded', loadFormData);
 
 // CLICK LABEL UPDATES INPUT BY GLOBAL VARIABLE VALUE
 const clickLabelUpdateInputGlobalVariable = (labelId, inputId, variable) => {
@@ -782,7 +744,7 @@ const clickLabelUpdateInputGlobalVariable = (labelId, inputId, variable) => {
     console.log(labelId, inputId, variable)
     const label = document.getElementById(labelId);
     // label.addEventListener('click', ()=> {console.log(labelId, inputId, variable)})
-    // {document.getElementById(inputId).value = variable})
+        // {document.getElementById(inputId).value = variable})
 }
 
 document.addEventListener('DOMContentLoaded', ()=> {
@@ -916,7 +878,17 @@ document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariabl
 
 
 
+// ------------------------------------
+// RESOLVING } BRACE ERROR
 
+
+// Call the loadFormData function on DOM load
+document.addEventListener('DOMContentLoaded', () => {loadFormData()});
+// document.addEventListener('DOMContentLoaded', loadFormData);
+
+// Event listeners to save and load form data
+//   const form = document.getElementById('userForm');
+form.addEventListener('submit', saveFormData); // Save on submit
   
 // ------------------------------------
 
@@ -933,11 +905,19 @@ function makeResizable(resizer, direction) {
     const MAX_WIDTH = window.innerWidth * 0.2; // Maximum width constraint (20% of viewport)
     const MIN_WIDTH = 0; // Minimum width constraint
     let startX
+    // let startX, startWidth;
 
 
     resizer.addEventListener('mousedown', (e) => {
         e.preventDefault(); // Prevent text selection
         startX = e.clientX;
+
+        // Save the initial width of the target sidebar
+        // if (direction === 'left') {
+        //     startWidth = parseInt(window.getComputedStyle(leftSidebar).width, 10);
+        // } else if (direction === 'right') {
+        //     startWidth = parseInt(window.getComputedStyle(rightSidebar).width, 10);
+        // }
 
         // Add active class for visual feedback
         resizer.classList.add('active');
@@ -949,8 +929,8 @@ function makeResizable(resizer, direction) {
     function resize(e) {
         if (direction === 'left') {
             // Calculate the new width for the left sidebar
-            const newWidth = e.clientX;
             // const newWidth = startWidth + (e.clientX - startX);
+            const newWidth = e.clientX;
 
             if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
             // if (newWidth >= 50 && newWidth <= window.innerWidth * 0.5) {
@@ -971,8 +951,8 @@ function makeResizable(resizer, direction) {
             }
         } else if (direction === 'right') {
             // Calculate the new width for the right sidebar
-            const newWidth = window.innerWidth - e.clientX;
             // const newWidth = startWidth - (e.clientX - startX);
+            const newWidth = window.innerWidth - e.clientX;
 
             if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
             // if (newWidth >= 50 && newWidth <= window.innerWidth * 0.5) {
