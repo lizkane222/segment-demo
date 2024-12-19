@@ -53,28 +53,28 @@ console.log("JS FILE")
 //    The Track method follows this format :
 //    analytics.track(event, [properties], [options], [callback]);
 let Track = (event, properties, context, callback) => {
-  const payload = {
-    event: event,
-    properties: properties || {},
-    context: { ...context, campaign },
-};
+    const payload = {
+        event: event,
+        properties: properties || {},
+        context: { ...context, campaign },
+    };
 
-if (currentSourceSelected === 'CLIENT') {
-    analytics.track(
-        event,
-        ...(properties ? properties : {}),
-        ...(context ? {...context,campaign} : {}),
-        ...(callback ? callback : {})
-      )
-    // analytics.track(event, payload.properties, payload.context, callback);
-    console.log('Client-side Track:', payload);
-} else {
-    fetch('/track', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-    }).then(response => console.log('Server-side Track:', response));
-}
+    if (currentSourceSelected === 'CLIENT') {
+        analytics.track(
+            event,
+            ...(properties ? properties : {}),
+            ...(context ? {...context,campaign} : {}),
+            ...(callback ? callback : {})
+        )
+        // analytics.track(event, payload.properties, payload.context, callback);
+        console.log('Client-side Track:', payload);
+    } else {
+        fetch('/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        }).then(response => console.log('Server-side Track:', response));
+    }
 }
 
 // Spec Identify : https://segment.com/docs/connections/spec/identify/
@@ -87,12 +87,20 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
     console.log('IDENTIFY context : ',context)
     console.log('IDENTIFY campaign : ',campaign)
 
-    if(!document.getElementById('user-list').innerHTML){
-        // document.getElementById('phone').value = randomUser.traits.phone || '';
-        userList.innerHTML = '';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+
+    let userListUl = document.getElementById('user-list');
+    // if (!userListUl) {
+    //     console.error('User list element not found');
+    //     return;
+    // }
+
+    // if(document.getElementById('user-list').innerHTML ===''){
+        userListUl.innerHTML = '';
 
                 // Create and append individual <li> elements for each piece of user information
-        const userInfo = [
+        userInfo = [
             firstName || lastName ? `<span class="bold">Name: </span> ${firstName} ${lastName}` : '',
             username?`<span class="bold">Username: </span>${username}` :'',
             phone? `<span class="bold">Phone: </span>${phone}` : '',
@@ -103,9 +111,9 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
         userInfo.forEach(info => {
             const userItem = document.createElement('li');
             userItem.innerHTML = info;
-            userList.appendChild(userItem);
+            userListUl.appendChild(userItem);
         });
-    }
+    // }
 
     const payload = {
         userId: userId,
@@ -131,7 +139,6 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
     }
     else {
         // Send data to the server via Segment's Node.js library
-        // Send data to the server via Segment's Node.js library
         fetch('/identify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -151,13 +158,14 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
             console.error('Error triggering server-side identify:', err);
             console.log(JSON.stringify(payload));
         });
-    // if(callback){{
-    //     callback()
-    // }
-    usertraits = {...usertraits, ...traits}
-    currentUser.traits = usertraits
+        // if(callback){{
+        //     callback()
+        // }
+        usertraits = {...usertraits, ...traits}
+        currentUser.traits = usertraits
+        saveFormData()
     }
-}
+})
 
 // Spec Page : https://segment.com/docs/connections/spec/page/
 //    The Page method follows this format : 
@@ -275,8 +283,6 @@ let Alias = (userId, previousId, context, callback) => {
 // let zipcode
 // let email
 
-
-
 document.getElementById('sessionId-input').value = sessionId;
 document.getElementById('sessionNumber-input').value = sessionNumber;
 document.getElementById('clientId-input').value = clientId;
@@ -293,13 +299,8 @@ const updateSourceSelected = () => {
     currentSourceSelected = toggleCheckbox.checked ? 'CLIENT' : 'SERVER';
     console.log('currentSourceSelected : ',currentSourceSelected)
 };
-
 // Event listener for the toggle input
 toggleCheckbox.addEventListener('change', updateSourceSelected);
-
-
-
-
 
 
   // GLOBAL VARIABLES FOUND IN INDEX.HTML FILE'S <HEAD>
@@ -346,8 +347,6 @@ function copyToClipboard(pId) {
     showToast();
 }
 
-// document.addEventListener('DOMContentLoaded', copyToClipboard)
-
 // Function to display the toast message
 function showToast() {
     var toast = document.getElementById("toast");
@@ -358,7 +357,8 @@ function showToast() {
         toast.classList.remove("show");
     }, 2000);
 }
-// document.addEventListener('DOMContentLoaded', showToast)
+
+
 document.addEventListener('DOMContentLoaded', () => {
     // document.getElementById('userId-p').addEventListener('click', () => copyToClipboard('userId-p'));
     // document.getElementById('anonymousId-p').addEventListener('click', () => copyToClipboard('anonymousId-p'));
@@ -460,8 +460,14 @@ function updateProfile(event, button) {
     Identify(userId || analytics.user().id() || null, anonymousId || analytics.user().anonymousId() || null, traits, data.context)
     // Identify(traits, data.context)
     autoUpdate()
+    // Add submit event listener to the form
 }
 
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    // Call the function with the button.id
+    updateProfile(event, event.submitter.id);
+});
 
 // Function to clear the form and reset the traits object
 window.clearForm = (formId) => {
@@ -489,7 +495,7 @@ window.clearForm = (formId) => {
         // Clear the traits object using analytics.js method
         analytics.user().traits({}); // This clears all user traits
         console.log('User form and traits reset.');
-    } else if (formId === 'campaign-fields') {
+    } else if (formId === 'campaignForm') {
         // Clear localStorage and query string display for the campaign form
         inputs.forEach(input => {
             if (!['sessionId', 'sessionNumber', 'clientId'].includes(input.name)) {
@@ -506,17 +512,9 @@ window.clearForm = (formId) => {
         console.log('Campaign form cleared, localStorage and query string display reset.');
     }
 };
+document.getElementById('clearUserForm').addEventListener('click', () => clearForm('userForm'));
+document.getElementById('clearCampaignForm').addEventListener('click', () => clearForm('campaignForm'));
 
-
-// // Function to clear the form and reset the traits object
-// const clearForm = () => {
-//     // Reset form fields
-//     document.getElementById('userForm').reset();
-
-    // // Clear the traits object using analytics.js method
-    // analytics.user().traits({}); // This clears all user traits
-
-// };
 
 const checkData = () => {
     // Bind buttons to update respective <p> tags
@@ -528,6 +526,7 @@ const checkData = () => {
     autoUpdate()
 
 }
+document.getElementById('check-data').addEventListener('click', checkData);
 
 // START // LABEL CHECK FIELDS EXIST
 
@@ -573,7 +572,7 @@ const resetAjsUser = () => {
     window.location.reload(true);
     // autoUpdate()
 }
-
+document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser);
 
 // ANALYTICS RESET
     // const reset = () => {
@@ -603,17 +602,6 @@ const resetAjsUser = () => {
     // }
 
 
-// Add event listener to the Clear Form button
-// document.getElementById('clearUserForm').addEventListener('click', clearForm('userForm'));
-document.getElementById('check-data').addEventListener('click', checkData);
-document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser);
-
-// document.getElementById('clearCampaignForm').addEventListener('click', clearForm,'clearCampaignForm');
-
-document.getElementById('clearUserForm').addEventListener('click', () => clearForm('userForm'));
-document.getElementById('clearCampaignForm').addEventListener('click', () => clearForm('campaign-fields'));
-
-
 
 // Function to create dynamic buttons
 // function createButtons(buttonNames) {
@@ -629,8 +617,14 @@ document.getElementById('clearCampaignForm').addEventListener('click', () => cle
 //         buttonContainer.appendChild(button);
 //     });
 // }
+// Example button names
+// const buttonNames = ['Button 1', 'Button 2', 'Button 3'];
+// createButtons(buttonNames);
+
+
 
 // Function to display cookies
+
 function displayCookies(cookieType, containerId) {
     const cookieList = document.getElementById(containerId);
     const cookies = cookieType === 'localStorage' ? Object.entries(localStorage) : document.cookie.split(';');
@@ -667,15 +661,7 @@ const form = document.getElementById('userForm');
 const identifyAnonymousIdButton = document.getElementById('identifyAnonymousId');
 const identifyUserIdButton = document.getElementById('identifyUserId');
 
-// Add submit event listener to the form
-form.addEventListener('submit', (event) => {
-    // Call the function with the button.id
-    updateProfile(event, event.submitter.id);
-});
 
-// Example button names
-// const buttonNames = ['Button 1', 'Button 2', 'Button 3'];
-// createButtons(buttonNames);
 
 
 const autoUpdate = () => {
@@ -689,24 +675,8 @@ const autoUpdate = () => {
 // Display cookies on page load
 displayCookies('localStorage', 'local-storage-cookies');
 displayCookies('client', 'client-cookies');
-
 // Display Segment network requests
 displaySegmentRequests();
-
-
-// Function to update the layout based on sidebar widths
-// function updateLayout() {
-//     const leftSidebar = document.querySelector('.sidebar');
-//     const rightSidebar = document.querySelector('.sidebar-right');
-//     const mainContent = document.querySelector('.main');
-
-//     const leftSidebarWidth = leftSidebar.offsetWidth;
-//     const rightSidebarWidth = rightSidebar.offsetWidth;
-
-//     mainContent.style.marginLeft = leftSidebarWidth + 'px';
-//     mainContent.style.marginRight = rightSidebarWidth + 'px';
-// }
-
 
 // Function to save form data to localStorage
 function saveFormData() {
@@ -718,39 +688,60 @@ function saveFormData() {
       localStorage.setItem(key, value);
     }
 }
+// Event listener to save form data
+// form.addEventListener('submit', saveFormData); // Save on submit
 
 
 // Function to load form data from localStorage & querystring
 function loadFormData() {
-    const form = document.getElementById('userForm');
-    const campaignForm = document.getElementById('campaign-fields');
+    const userForm = document.getElementById('userForm');
+    const campaignForm = document.getElementById('campaignForm');
     const queryParams = new URLSearchParams(window.location.search);
 
     // Populate User Form Fields from localStorage
-    const inputs = form.querySelectorAll('input, textarea, select');
-    inputs.forEach(input => {
-        const savedValue = localStorage.getItem(input.name);
-        if (savedValue !== null) {
-            input.value = savedValue;
-        }
-    });
+    if (userForm) {
+        const userFormInputs = userForm.querySelectorAll('input, textarea, select');
+        userFormInputs.forEach(input => {
+            const savedValue = localStorage.getItem(input.name);
+            if (savedValue !== null) {
+                input.value = savedValue;
+            }
+        });
+    } else {
+        console.error('User form element not found');
+    }
 
-    // Populate Campaign Form Fields from localStorage
-    const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
-    campaignInputs.forEach(input => {
-        const savedValue = localStorage.getItem(input.name);
-        if (savedValue !== null) {
-            input.value = savedValue;
-        }
-    });
+    if (campaignForm) {
+        // Check if any of the campaignForm's fields have a value
+        const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
+        let hasValue = false;
 
-    // Populate Campaign Form Fields from Query String
-    campaignInputs.forEach(input => {
-        const paramValue = queryParams.get(input.name);
-        if (paramValue !== null) {
-            input.value = paramValue;
+        campaignInputs.forEach(input => {
+            if (input.value.trim() !== '') {
+                hasValue = true;
+            }
+        });
+
+        if (hasValue) {
+            // Populate Campaign Form Fields from localStorage
+            campaignInputs.forEach(input => {
+                const savedValue = localStorage.getItem(input.name);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                }
+            });
+
+            // Populate Campaign Form Fields from Query String
+            campaignInputs.forEach(input => {
+                const paramValue = queryParams.get(input.name);
+                if (paramValue !== null) {
+                    input.value = paramValue;
+                }
+            });
         }
-    });
+    } else {
+        console.error('Campaign form element not found');
+    }
 
     // Display Query String
     const queryStringDisplay = document.getElementById('querystring-display');
@@ -782,10 +773,6 @@ function loadFormData() {
         console.log('clientId does not exist')
     }
 }
-
-
-
-
 // Call `loadFormData` on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', loadFormData);
 
@@ -795,7 +782,7 @@ const clickLabelUpdateInputGlobalVariable = (labelId, inputId, variable) => {
     console.log(labelId, inputId, variable)
     const label = document.getElementById(labelId);
     // label.addEventListener('click', ()=> {console.log(labelId, inputId, variable)})
-        // {document.getElementById(inputId).value = variable})
+    // {document.getElementById(inputId).value = variable})
 }
 
 document.addEventListener('DOMContentLoaded', ()=> {
@@ -871,7 +858,7 @@ document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariabl
 //   });
   
 //   // Select the campaign fields form
-//   const campaignForm = document.getElementById('campaign-fields');
+//   const campaignForm = document.getElementById('campaignForm');
 //   const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
 
 //   // Populate from localStorage (for campaign form fields)
@@ -927,15 +914,9 @@ document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariabl
 //     loadFormData();  // Trigger the loadFormData function to populate the form when the button is clicked
 // });
 
-// Call the loadFormData function on DOM load
-document.addEventListener('DOMContentLoaded', () => {
-    loadFormData();
-});
 
-// Event listeners to save and load form data
-//   const form = document.getElementById('userForm');
-form.addEventListener('submit', saveFormData); // Save on submit
-// window.addEventListener('load', loadFormData); // Load on page load
+
+
   
 // ------------------------------------
 
@@ -952,19 +933,11 @@ function makeResizable(resizer, direction) {
     const MAX_WIDTH = window.innerWidth * 0.2; // Maximum width constraint (20% of viewport)
     const MIN_WIDTH = 0; // Minimum width constraint
     let startX
-    // let startX, startWidth;
 
 
     resizer.addEventListener('mousedown', (e) => {
         e.preventDefault(); // Prevent text selection
         startX = e.clientX;
-
-        // Save the initial width of the target sidebar
-        // if (direction === 'left') {
-        //     startWidth = parseInt(window.getComputedStyle(leftSidebar).width, 10);
-        // } else if (direction === 'right') {
-        //     startWidth = parseInt(window.getComputedStyle(rightSidebar).width, 10);
-        // }
 
         // Add active class for visual feedback
         resizer.classList.add('active');
@@ -976,8 +949,8 @@ function makeResizable(resizer, direction) {
     function resize(e) {
         if (direction === 'left') {
             // Calculate the new width for the left sidebar
-            // const newWidth = startWidth + (e.clientX - startX);
             const newWidth = e.clientX;
+            // const newWidth = startWidth + (e.clientX - startX);
 
             if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
             // if (newWidth >= 50 && newWidth <= window.innerWidth * 0.5) {
@@ -998,8 +971,8 @@ function makeResizable(resizer, direction) {
             }
         } else if (direction === 'right') {
             // Calculate the new width for the right sidebar
-            // const newWidth = startWidth - (e.clientX - startX);
             const newWidth = window.innerWidth - e.clientX;
+            // const newWidth = startWidth - (e.clientX - startX);
 
             if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
             // if (newWidth >= 50 && newWidth <= window.innerWidth * 0.5) {
@@ -1110,123 +1083,13 @@ function toggleSidebar(sidebar, icon, resizer) {
     }, 300); // Match the duration of the transition
 }
 
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     loadFormData();
-
-//     // Initialize resizable sidebars
-//     const resizerRight = document.getElementById('resizer-right');
-//     const sidebarRight = document.getElementById('sidebar-right');
-//     if (resizerRight && sidebarRight) {
-//         makeResizable(sidebarRight, resizerRight);
-//     }
-
-    // // Add event listener to the toggle icon
-    // const toggleIcon = document.getElementById('toggleRightSidebar');
-    // if (toggleIcon) {
-    //     toggleIcon.addEventListener('click', () => {
-    //         sidebarRight.classList.toggle('hidden');
-    //     });
-    // }
-// });
-
-// const resizerLeft = document.querySelector("#resizer-left");
-// const resizerRight = document.querySelector("#resizer-right");
-// const sidebarLeft = document.querySelector(".sidebar-left");
-// const sidebarRight = document.querySelector(".sidebar-right");
-// const sidebarLeftContent = document.querySelector("#leftSidebarContent");
-// const sidebarRightContent = document.querySelector("#rightSidebarContent");
-
-// resizer needs to reference either resizerLeft or resizerRight
-// sidebar needs to reference either sidebarLeft or sidebarRight
-// #main-content needs to reference either sidebarLeftContent or sidebarRightContent
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     loadFormData();
-
-//     // Initialize resizable sidebars
-//     const resizerLeft = document.querySelector("#resizer-left");
-//     const resizerRight = document.querySelector("#resizer-right");
-//     const sidebarLeft = document.querySelector(".sidebar-left");
-//     const sidebarRight = document.querySelector(".sidebar-right");
-
-//     if (resizerLeft && sidebarLeft) {
-//         makeResizable(sidebarLeft, resizerLeft);
-//     }
-
-//     if (resizerRight && sidebarRight) {
-//         makeResizable(sidebarRight, resizerRight);
-//     }
-
-    // // Add event listener to the toggle icon
-    // const toggleIcon = document.getElementById('toggleRightSidebar');
-    // if (toggleIcon) {
-    //     toggleIcon.addEventListener('click', () => {
-    //         sidebarRight.classList.toggle('hidden');
-    //     });
-    // }
-// });
-
-// // Function to make the sidebar resizable
-// function makeResizable(sidebar, resizer) {
-//     let isResizing = false;
-
-//     resizer.addEventListener("mousedown", (event) => {
-//         isResizing = true;
-//         document.addEventListener("mousemove", resize, false);
-//         document.addEventListener("mouseup", stopResize, false);
-//     });
-
-//     function resize(e) {
-//         if (isResizing) {
-//             const size = `${e.clientX - sidebar.getBoundingClientRect().left}px`;
-//             sidebar.style.flexBasis = size;
-//         }
-//     }
-
-//     function stopResize() {
-//         isResizing = false;
-//         document.removeEventListener("mousemove", resize, false);
-//         document.removeEventListener("mouseup", stopResize, false);
-//     }
-
-//     sidebar.style.flexBasis = '325px';
-//     const mainContent = document.querySelector("#main-content");
-// }
-
-
-// Function to make the sidebar resizable
-// function makeResizable(sidebar, resizer) {
-//     let isResizing = false;
-
-//     resizer.addEventListener("mousedown", (event) => {
-//         document.addEventListener("mousemove", resize, false);
-//         document.addEventListener("mouseup", () => {
-//           document.removeEventListener("mousemove", resize, false);
-//         }, false);
-//       });
-
-//     function resize(e) {
-//         const size = `${e.x}px`;
-//         sidebar.style.flexBasis = size;
-//     }
-
-//     sidebar.style.flexBasis = '325px';
-//     const mainContent = document.querySelector("#main-content");
-
-// }
-
-
-
 // END // RESIZING SIDEBARS
 
 function generateCampaignData() {
-  // Generate random index to select data
-  const randomIndex = Math.floor(Math.random() * campaignData.length);
-  return campaignData[randomIndex];
+    // Generate random index to select data
+    const randomIndex = Math.floor(Math.random() * campaignData.length);
+    return campaignData[randomIndex];
 }
-
 
 
 // ------------------------------------
@@ -1336,7 +1199,3 @@ function populateFormWithUserData() {
 document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
 
 document.getElementById('generateFakerUserData').addEventListener('click', getUserData);
-
-
-
-

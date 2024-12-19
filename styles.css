@@ -62,6 +62,9 @@ html, body {
     color: var(--segment-green);
 }
 
+.bkgrdSegmentGreen {
+    background-color: var(--segment-green);
+}
 
 /* medium green */
 nav.navbar-dark .segment-green-text a.navbar-brand { 
@@ -466,7 +469,7 @@ form {
 
 
 /* USER FORM / CAMPAIGN FORM */
-main .forms-wrapper .form-container form , #campaign-fields{
+main .forms-wrapper .form-container form , #campaignForm{
     padding: 1em;
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two columns for input fields */
@@ -483,6 +486,17 @@ main .forms-wrapper .form-container form , #campaign-fields{
 
     /* min-height: 60vh; */
     /* height: auto; */
+}
+
+#userForm {
+    border-radius: 0 10px 10px 0; /* Curved edges on the right side only */
+    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); /* Optional: Add a shadow to the form */
+    box-shadow: 5px 0px 12px rgba(0, 0, 245, 0.1); /* Shadow only on the right side */
+}
+
+#campaignForm {
+    border-radius: 10px 0 0 10px; /* Curved edges on the left side only */
+    box-shadow: -5px 0px 12px rgba(0, 0, 245, 0.1); /* Shadow only on the left side */
 }
 
 .form-group {
@@ -511,7 +525,7 @@ main .forms-wrapper .form-container form , #campaign-fields{
     margin: 0;
 }
 
-.main .form-container form .form-group label, #campaign-fields label {
+.main .form-container form .form-group label, #campaignForm label {
     font-weight: bold;
 }
 
@@ -537,17 +551,43 @@ main .forms-wrapper .form-container form , #campaign-fields{
     margin-top: 1vh;
 }
 
+#identifyAnonymousId:hover, #identifyUserId:hover {
+    background-color: #357e5f; /* Change background color on hover */
+}
+
 .main .form-container form .extra-buttons button {
     width: 48%; /* Buttons take up almost half the row each */
 }
 
-#campaign-fields div{
+/* form's side buttons */
+#generateFakerUserData{
+    width: 3em;
+    border-radius: 10px 0px 0px 10px; /* Curved edges on the right side only */
+    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); /* Add shadow to the button */
+    color: var(--text-white);
+    display: flex; /* Use Flexbox to center the icon */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+
+#newCampaign {
+    width: 3em;
+    border-radius: 0px 10px 10px 0px; /* Curved edges on the right side only */
+    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); /* Add shadow to the button */
+    color: var(--text-white);
+    display: flex; /* Use Flexbox to center the icon */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+/* form's side buttons */
+
+#campaignForm div{
     margin-top: .5em;
     padding:0;
 }
 
 /* Campaign Fields div: apply margin and padding for spacing */
-#campaign-fields div {
+#campaignForm div {
     margin-top: .5em;
     padding: 0;
 }
@@ -559,6 +599,21 @@ main .forms-wrapper .form-container form , #campaign-fields{
     justify-content: center; /* Center the buttons horizontally */
     gap: 10px; /* Space between buttons */
     padding: 1em; /* Optional: Add padding around the button row */
+}
+
+.button-container #generateFakerUserData {
+    /* position: absolute; */
+    display: flex; /* Flexbox to align buttons side by side */
+    justify-content: center; 
+    
+    /* top: 10px; */
+    /* right: 10px; */
+}
+
+.side-button-container{
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 /* Style buttons to ensure they are side by side with proper width */
