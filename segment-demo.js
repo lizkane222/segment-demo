@@ -87,6 +87,26 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
     console.log('IDENTIFY context : ',context)
     console.log('IDENTIFY campaign : ',campaign)
 
+    if(!document.getElementById('user-list').innerHTML){
+        // document.getElementById('phone').value = randomUser.traits.phone || '';
+        userList.innerHTML = '';
+
+                // Create and append individual <li> elements for each piece of user information
+        const userInfo = [
+            firstName || lastName ? `<span class="bold">Name: </span> ${firstName} ${lastName}` : '',
+            username?`<span class="bold">Username: </span>${username}` :'',
+            phone? `<span class="bold">Phone: </span>${phone}` : '',
+            email?`<span class="bold">Email: </span>${email}` : '',
+            street || city || state || zipcode?`<span class="bold">Address: </span> ${street}, ${city}, ${state}, ${zipcode}` : ''
+        ];
+
+        userInfo.forEach(info => {
+            const userItem = document.createElement('li');
+            userItem.innerHTML = info;
+            userList.appendChild(userItem);
+        });
+    }
+
     const payload = {
         userId: userId,
         anonymousId: anonymousId,
@@ -465,7 +485,7 @@ window.clearForm = (formId) => {
     });
 
     // Clear additional data based on the form ID
-    if (formId === 'myForm') {
+    if (formId === 'userForm') {
         // Clear the traits object using analytics.js method
         analytics.user().traits({}); // This clears all user traits
         console.log('User form and traits reset.');
@@ -491,7 +511,7 @@ window.clearForm = (formId) => {
 // // Function to clear the form and reset the traits object
 // const clearForm = () => {
 //     // Reset form fields
-//     document.getElementById('myForm').reset();
+//     document.getElementById('userForm').reset();
 
     // // Clear the traits object using analytics.js method
     // analytics.user().traits({}); // This clears all user traits
@@ -584,13 +604,13 @@ const resetAjsUser = () => {
 
 
 // Add event listener to the Clear Form button
-// document.getElementById('clearUserForm').addEventListener('click', clearForm('myForm'));
+// document.getElementById('clearUserForm').addEventListener('click', clearForm('userForm'));
 document.getElementById('check-data').addEventListener('click', checkData);
 document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser);
 
 // document.getElementById('clearCampaignForm').addEventListener('click', clearForm,'clearCampaignForm');
 
-document.getElementById('clearUserForm').addEventListener('click', () => clearForm('myForm'));
+document.getElementById('clearUserForm').addEventListener('click', () => clearForm('userForm'));
 document.getElementById('clearCampaignForm').addEventListener('click', () => clearForm('campaign-fields'));
 
 
@@ -614,6 +634,9 @@ document.getElementById('clearCampaignForm').addEventListener('click', () => cle
 function displayCookies(cookieType, containerId) {
     const cookieList = document.getElementById(containerId);
     const cookies = cookieType === 'localStorage' ? Object.entries(localStorage) : document.cookie.split(';');
+
+    // Clear the existing list items
+    cookieList.innerHTML = '';
 
     cookies.forEach(cookie => {
         if (cookieType === 'localStorage') {
@@ -639,7 +662,7 @@ function displaySegmentRequests() {
 }
 
 // Event listener for form submission
-const form = document.getElementById('myForm');
+const form = document.getElementById('userForm');
 // form.addEventListener('submit', updateProfile(this));
 const identifyAnonymousIdButton = document.getElementById('identifyAnonymousId');
 const identifyUserIdButton = document.getElementById('identifyUserId');
@@ -688,7 +711,7 @@ displaySegmentRequests();
 // Function to save form data to localStorage
 function saveFormData() {
     event.preventDefault()
-    const form = document.getElementById('myForm');
+    const form = document.getElementById('userForm');
     const formData = new FormData(form);
   
     for (const [key, value] of formData.entries()) {
@@ -699,7 +722,7 @@ function saveFormData() {
 
 // Function to load form data from localStorage & querystring
 function loadFormData() {
-    const form = document.getElementById('myForm');
+    const form = document.getElementById('userForm');
     const campaignForm = document.getElementById('campaign-fields');
     const queryParams = new URLSearchParams(window.location.search);
 
@@ -836,7 +859,7 @@ document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariabl
 // // Function to load form data from localStorage & querystring
 // function loadFormData() {
 //   // Select the form and its input fields
-//   const form = document.getElementById('myForm');
+//   const form = document.getElementById('userForm');
 //   const inputs = form.querySelectorAll('input, textarea, select');
   
 //   // Populate from localStorage
@@ -899,10 +922,10 @@ document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariabl
 // }
 
 // Event listener for the "Use Campaign Data" button
-document.getElementById('useCampaign').addEventListener('click', () => {
-    event.preventDefault()
-    loadFormData();  // Trigger the loadFormData function to populate the form when the button is clicked
-});
+// document.getElementById('useCampaign').addEventListener('click', () => {
+//     event.preventDefault()
+//     loadFormData();  // Trigger the loadFormData function to populate the form when the button is clicked
+// });
 
 // Call the loadFormData function on DOM load
 document.addEventListener('DOMContentLoaded', () => {
@@ -910,54 +933,293 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Event listeners to save and load form data
-//   const form = document.getElementById('myForm');
+//   const form = document.getElementById('userForm');
 form.addEventListener('submit', saveFormData); // Save on submit
 // window.addEventListener('load', loadFormData); // Load on page load
   
 // ------------------------------------
 
 // START // RESIZING SIDEBARS
+// since both of my sidebars, how do I prevent the resizer from exceeding 20%
 
-// Function to handle sidebar resizing
-// function makeResizable(sidebar, side) {
-//     let initialX; 
-//     let initialWidth;
 
-//     const dragElement = document.createElement('div');
-//     dragElement.classList.add('resizer', side);
-//     sidebar.appendChild(dragElement);
+function makeResizable(resizer, direction) {
+    const leftSidebar = document.querySelector('#leftSidebarWrapper');
+    const rightSidebar = document.querySelector('#rightSidebarWrapper');
+    const sidebarLeftContent = document.querySelector("#leftSidebarContent");
+    const sidebarRightContent = document.querySelector("#rightSidebarContent");
 
-//     dragElement.addEventListener('mousedown', (e) => {
-//         initialX = e.clientX;
-//         initialWidth = sidebar.offsetWidth;
-//         document.addEventListener('mousemove', resize);
-//         document.addEventListener('mouseup', stopResize);
+    const MAX_WIDTH = window.innerWidth * 0.2; // Maximum width constraint (20% of viewport)
+    const MIN_WIDTH = 0; // Minimum width constraint
+    let startX
+    // let startX, startWidth;
+
+
+    resizer.addEventListener('mousedown', (e) => {
+        e.preventDefault(); // Prevent text selection
+        startX = e.clientX;
+
+        // Save the initial width of the target sidebar
+        // if (direction === 'left') {
+        //     startWidth = parseInt(window.getComputedStyle(leftSidebar).width, 10);
+        // } else if (direction === 'right') {
+        //     startWidth = parseInt(window.getComputedStyle(rightSidebar).width, 10);
+        // }
+
+        // Add active class for visual feedback
+        resizer.classList.add('active');
+
+        document.addEventListener('mousemove', resize);
+        document.addEventListener('mouseup', stopResize);
+    });
+
+    function resize(e) {
+        if (direction === 'left') {
+            // Calculate the new width for the left sidebar
+            // const newWidth = startWidth + (e.clientX - startX);
+            const newWidth = e.clientX;
+
+            if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
+            // if (newWidth >= 50 && newWidth <= window.innerWidth * 0.5) {
+                leftSidebar.style.width = `${newWidth}px`;
+                sidebarLeftContent.style.width = `${newWidth}px`;
+                resizer.style.left = `${newWidth}px`; // Move resizer with sidebar
+
+            // Adjust resizer width dynamically
+            if (newWidth < 20) {
+                leftSidebar.style.display = newWidth === 0 ? 'none' : 'block';
+                resizer.style.width = `${Math.max(2, 20 - newWidth)}px`; // Increase resizer width as sidebar shrinks
+            } else {
+                resizer.style.width = `2px`; // Reset resizer width
+            }
+
+            resizer.style.left = `${newWidth}px`; // Move resizer with sidebar
+                
+            }
+        } else if (direction === 'right') {
+            // Calculate the new width for the right sidebar
+            // const newWidth = startWidth - (e.clientX - startX);
+            const newWidth = window.innerWidth - e.clientX;
+
+            if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
+            // if (newWidth >= 50 && newWidth <= window.innerWidth * 0.5) {
+                rightSidebar.style.width = `${newWidth}px`;
+                sidebarRightContent.style.width = `${newWidth}px`;
+                resizer.style.right = `${newWidth}px`; // Move resizer with sidebar
+
+                // Adjust resizer width dynamically
+                if (newWidth < 20) {
+                    rightSidebar.style.display = newWidth === 0 ? 'none' : 'block';
+                    rightSidebar.style.maxWidth = '0px' ;
+                    resizer.style.width = `${Math.max(2, 20 - newWidth)}px`; // Increase resizer width as sidebar shrinks
+                } else {
+                    resizer.style.width = `2px`; // Reset resizer width
+                }
+
+                resizer.style.right = `${newWidth}px`; // Move resizer with sidebar
+                
+            }
+        }
+    }
+
+    function stopResize() {
+        // Remove active class for visual feedback
+        resizer.classList.remove('active');
+
+        document.removeEventListener('mousemove', resize);
+        document.removeEventListener('mouseup', stopResize);
+    }
+
+    // Add ARIA attributes for accessibility
+    resizer.setAttribute('role', 'separator');
+    resizer.setAttribute('aria-orientation', 'vertical');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const leftResizer = document.querySelector('.resizer.left');
+    const rightResizer = document.querySelector('.resizer.right');
+    const leftSidebar = document.querySelector('#leftSidebarWrapper');
+    const rightSidebar = document.querySelector('#rightSidebarWrapper');
+    const leftIcon = document.querySelector('.toggle-icon.left'); // Left sidebar icon
+    const rightIcon = document.querySelector('.toggle-icon.right'); // Right sidebar icon
+    const DEFAULT_WIDTH = window.innerWidth * 0.2; // 20% of viewport width
+
+    // Make the sidebars resizable
+    makeResizable(leftResizer, 'right');
+    makeResizable(rightResizer, 'left');
+
+    // const newWidth = e.clientX;
+
+    // Add event listener to the toggle icons
+    if (leftIcon) {
+        leftIcon.addEventListener('click', () => {
+            toggleSidebar(leftSidebar, leftIcon, rightResizer);
+        });
+    }
+
+    if (rightIcon) {
+        rightIcon.addEventListener('click', () => {
+            toggleSidebar(rightSidebar, rightIcon, leftResizer);
+        });
+    }
+});
+
+// Function to toggle the visibility of the sidebar
+function toggleSidebar(sidebar, icon, resizer) {
+    const DEFAULT_WIDTH = window.innerWidth * 0.2; // 20% of viewport width
+    
+    sidebar.style.transition = 'flex-basis 0.3s ease, width 0.3s ease';
+    resizer.style.transition = 'left 0.3s ease, right 0.3s ease, width 0.3s ease';
+    sidebar.classList.toggle('hidden');
+
+    if (sidebar.classList.contains('hidden')) {
+        icon.style.position = 'absolute';
+        icon.style.top = '10px';
+        if (sidebar === document.querySelector("#leftSidebarWrapper")) {
+            icon.style.left = '10px';
+            icon.style.right = 'auto';
+            resizer.style.left = `0px`; // Move resizer with sidebar
+        } else {
+            icon.style.left = 'auto';
+            icon.style.right = '10px';
+            resizer.style.right = `0px`; // Move resizer with sidebar
+        }
+        icon.style.zIndex = '1000';
+        resizer.style.width = `${Math.max(2, 20 - 0)}px`; // Increase resizer width as sidebar shrinks
+            
+    } else {
+        icon.style.position = 'absolute';
+        icon.style.top = '10px';
+        if (sidebar === document.querySelector("#leftSidebarWrapper")) {
+            icon.style.left = '10px';
+            icon.style.right = 'auto';
+            resizer.style.left = `${DEFAULT_WIDTH}px`; // Move resizer with sidebar
+        } else if (sidebar === document.querySelector("#rightSidebarWrapper")) {
+            icon.style.left = 'auto';
+            icon.style.right = '10px';
+            resizer.style.right = `${DEFAULT_WIDTH}px`; // Move resizer with sidebar
+        }
+        icon.style.zIndex = '10';
+        resizer.style.width = `2px`; // Reset resizer width
+
+    }
+    // Remove transition styles after the transition duration
+    setTimeout(() => {
+        sidebar.style.transition = 'flex-basis 0.3s ease, width 0.3s ease';
+        resizer.style.transition = 'left 0.3s ease, right 0.3s ease, width 0.3s ease';
+    }, 300); // Match the duration of the transition
+}
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     loadFormData();
+
+//     // Initialize resizable sidebars
+//     const resizerRight = document.getElementById('resizer-right');
+//     const sidebarRight = document.getElementById('sidebar-right');
+//     if (resizerRight && sidebarRight) {
+//         makeResizable(sidebarRight, resizerRight);
+//     }
+
+    // // Add event listener to the toggle icon
+    // const toggleIcon = document.getElementById('toggleRightSidebar');
+    // if (toggleIcon) {
+    //     toggleIcon.addEventListener('click', () => {
+    //         sidebarRight.classList.toggle('hidden');
+    //     });
+    // }
+// });
+
+// const resizerLeft = document.querySelector("#resizer-left");
+// const resizerRight = document.querySelector("#resizer-right");
+// const sidebarLeft = document.querySelector(".sidebar-left");
+// const sidebarRight = document.querySelector(".sidebar-right");
+// const sidebarLeftContent = document.querySelector("#leftSidebarContent");
+// const sidebarRightContent = document.querySelector("#rightSidebarContent");
+
+// resizer needs to reference either resizerLeft or resizerRight
+// sidebar needs to reference either sidebarLeft or sidebarRight
+// #main-content needs to reference either sidebarLeftContent or sidebarRightContent
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     loadFormData();
+
+//     // Initialize resizable sidebars
+//     const resizerLeft = document.querySelector("#resizer-left");
+//     const resizerRight = document.querySelector("#resizer-right");
+//     const sidebarLeft = document.querySelector(".sidebar-left");
+//     const sidebarRight = document.querySelector(".sidebar-right");
+
+//     if (resizerLeft && sidebarLeft) {
+//         makeResizable(sidebarLeft, resizerLeft);
+//     }
+
+//     if (resizerRight && sidebarRight) {
+//         makeResizable(sidebarRight, resizerRight);
+//     }
+
+    // // Add event listener to the toggle icon
+    // const toggleIcon = document.getElementById('toggleRightSidebar');
+    // if (toggleIcon) {
+    //     toggleIcon.addEventListener('click', () => {
+    //         sidebarRight.classList.toggle('hidden');
+    //     });
+    // }
+// });
+
+// // Function to make the sidebar resizable
+// function makeResizable(sidebar, resizer) {
+//     let isResizing = false;
+
+//     resizer.addEventListener("mousedown", (event) => {
+//         isResizing = true;
+//         document.addEventListener("mousemove", resize, false);
+//         document.addEventListener("mouseup", stopResize, false);
 //     });
 
 //     function resize(e) {
-//         const newWidth = initialWidth + (side === 'left' ? initialX - e.clientX : e.clientX - initialX);
-//         const minWidth = window.innerWidth * 0.05; // Minimum 5% width
-//         sidebar.style.width = Math.max(minWidth, newWidth) + 'px';
-//         updateLayout();
+//         if (isResizing) {
+//             const size = `${e.clientX - sidebar.getBoundingClientRect().left}px`;
+//             sidebar.style.flexBasis = size;
+//         }
 //     }
 
 //     function stopResize() {
-//         document.removeEventListener('mousemove', resize);
-//         document.removeEventListener('mouseup', stopResize);
+//         isResizing = false;
+//         document.removeEventListener("mousemove", resize, false);
+//         document.removeEventListener("mouseup", stopResize, false);
 //     }
+
+//     sidebar.style.flexBasis = '325px';
+//     const mainContent = document.querySelector("#main-content");
 // }
 
-// Make sidebars resizable
-// makeResizable(document.querySelector('.sidebar'), 'left');
-// makeResizable(document.querySelector('.sidebar-right'), 'right');
 
-// Initial layout update
-// updateLayout();
+// Function to make the sidebar resizable
+// function makeResizable(sidebar, resizer) {
+//     let isResizing = false;
 
-// Update layout on window resize
-// window.addEventListener('resize', updateLayout);
+//     resizer.addEventListener("mousedown", (event) => {
+//         document.addEventListener("mousemove", resize, false);
+//         document.addEventListener("mouseup", () => {
+//           document.removeEventListener("mousemove", resize, false);
+//         }, false);
+//       });
 
-// START // RESIZING SIDEBARS
+//     function resize(e) {
+//         const size = `${e.x}px`;
+//         sidebar.style.flexBasis = size;
+//     }
+
+//     sidebar.style.flexBasis = '325px';
+//     const mainContent = document.querySelector("#main-content");
+
+// }
+
+
+
+// END // RESIZING SIDEBARS
 
 function generateCampaignData() {
   // Generate random index to select data
@@ -1044,10 +1306,10 @@ document.getElementById('newCampaign').addEventListener('click', (event) => {
     updateFormAndQueryString();
 });
 
-document.getElementById('useCampaign').addEventListener('click', (event) => {
-    event.preventDefault(); // Prevent form submission and page reload
-    loadFormData(); // Trigger the loadFormData function to populate the form when the button is clicked
-});
+// document.getElementById('useCampaign').addEventListener('click', (event) => {
+//     event.preventDefault(); // Prevent form submission and page reload
+//     loadFormData(); // Trigger the loadFormData function to populate the form when the button is clicked
+// });
 
 
 
@@ -1066,6 +1328,7 @@ function populateFormWithUserData() {
     document.getElementById('state').value = randomUser.traits.state || '';
     document.getElementById('zipcode').value = randomUser.traits.zipcode || '';
     // Add more fields as needed
+
 }
 
 // Add an event listener to the "Generate User Data" button

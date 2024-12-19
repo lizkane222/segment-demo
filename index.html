@@ -182,41 +182,54 @@
         <span class="segment-green-text">_ __ ___ </span>
         <i class="bi bi-scooter" style="font-size: 2rem; color:#4fb58b;"></i>
         
-           <!-- CLIENT vs SERVER toggle -->
+        <!-- CLIENT vs SERVER toggle -->
         <div class="toggle-container">
             <!-- CODEPEN TOGGLE : https://codepen.io/mallendeo/pen/QWKrEL -->
             <ul class="tg-list">
                 <li class="tg-list-item">
-                  <!-- <h4>Flip</h4> -->
-                  <input id="source-selection" class="tgl tgl-flip" type="checkbox" checked>
-                  <label class="tgl-btn" data-tg-off="SERVER" data-tg-on="CLIENT" for="source-selection"></label>
+                    <!-- <h4>Flip</h4> -->
+                    <input id="source-selection" class="tgl tgl-flip" type="checkbox" checked>
+                    <label class="tgl-btn" data-tg-off="SERVER" data-tg-on="CLIENT" for="source-selection"></label>
                 </li>
-              </ul>
+            </ul>
         </div>
-        </nav>
+    </nav>
         
     <!-- BODY -->
     <div class="container-fluid">
-        <div class="row">
+        <div class="row" id="main-content">
             <!-- LEFT SIDEBAR -->
-            <nav class="col-md-3 sidebar sidebar-left">
-                <h5>User Profile</h5>
-                <div class="extra-buttons">
-                    <button type="button" class="btn btn-info" id="check-data">Check Data</button>
+            <div id="leftSidebarWrapper">
+                <div id="sidebar-container">
+                <!-- <div class="sidebar-content"> -->
+                    <nav class="col-md-3 sidebar sidebar-left" id="leftSidebarContent">
+                        <div class="left-sidebar-content">
+                            <i id=toggleLeftSidebar class="bi bi-person toggle-icon left" style="font-size: 2rem;"></i>
+                            <h3 id="userProfileHeader">User Profile</h3>
+                            <!-- <div class="extra-buttons"> -->
+                                <!-- </div> -->
+                            </div>
+                            <button type="button" class="btn btn-info" id="check-data">Check Data</button>
+                                        
+                        <div id="user-profile">
+                            <h5>User Data</h5>
+                            <ul id="user-list">
+                                <!-- user form data added as li -->
+                            </ul>
+                        </div>
+                    </nav>
                 </div>
-             
-                <div id="user-profile">
-                </div>
+            </div>
+        </div>
+        <div id="resizer-left" class="resizer left"></div>
 
-                <h3>User Data</h3>
-                <ul id="user-list"></ul>
-                
-            </nav>
 
-            <main role="main" class="col-md-6 main container forms-wrapper">
+        <main role="main" id="main" class="col-md-6 main container">
+            <div class="forms-wrapper">
+
                 <!-- USER DETAILS FORM -->
                 <div class="form-container">
-                    <form id="myForm">
+                    <form id="userForm">
                         <div class="form-group">
                             <label id="firstNameLabel" for="firstName">First Name: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
                             <input type="text" name="firstName" class="form-control" id="firstName" >
@@ -273,8 +286,8 @@
                             <button type="button" id="generateUserData" class="btn btn-success">
                                 <i   class="bi bi-lightning-charge"></i>
                             </button>
+                        </div>
                     </form>
-                    </div>
                 </div>
 
                 <!-- CAMPAIGN FORM -->
@@ -329,47 +342,54 @@
                                 <button class="btn btn-info" id="newCampaign" >New Campaign</button>
                             <!-- </div>
                             <div class="form-group" id="use-campaign-row"> -->
-                                <button type="button" class="btn btn-info" id="useCampaign">Use Campaign</button>
+                                <!-- <button type="button" class="btn btn-info" id="useCampaign">Use Campaign</button> -->
                                 <button type="button" class="btn btn-secondary" id="clearCampaignForm">Clear Form</button>
                             <!-- </div> -->
                         </div>
                     </form>
                 </div>
-                
-                <!-- <div id="dynamic-buttons">
-                </div> -->
-            </main>
+            </div>
+            
+            <!-- <div id="dynamic-buttons">
+            </div> -->
+        </main>
 
 
-            <!-- RIGHT SIDEBAR -->
-            <nav class="col-md-3 sidebar sidebar-right">
-                <div class="resizer right">
-
-                    <h5>Local Storage Cookies</h5>
-                    <ul class="cookie-list" id="local-storage-cookies">
-                    </ul>
-                    
-                    <h5>Client Cookies</h5>
-                <ul class="cookie-list" id="client-cookies">
-                </ul>
-                <h5>Segment Network Requests</h5>
-                <div id="segment-network-requests"></div>
-                <div>
-                    <p><button class="btn btn-secondary" id="userId-cookie-get" data-target="userId-p">userId</button>
-                    : </p><p class="click-mouse" id="userId-p"></p>
-                    <p><button class="btn btn-secondary" id="anonymousId-cookie-get" data-target="anonymousId-p">anonymousId</button>
-                    : </p><p class="click-mouse" id="anonymousId-p"></p>
-                    <p><button class="btn btn-secondary" id="traits-cookie-get" data-target="traits-p">traits</button>
-                    : </p><p class="click-mouse" id="traits-p"></p>
-                    <p><button class="btn btn-secondary" id="groupId-cookie-get" data-target="groupId-p">groupId</button>
-                    : </p><p class="click-mouse" id="groupId-p"></p>
-                    <p><button class="btn btn-secondary" id="groupTraits-cookie-get" data-target="groupTraits-p">groupTraits</button>
-                    : </p><p class="click-mouse" id="groupTraits-p"></p>
-                </div>
-                
-
-            </nav>
-
+        <!-- RIGHT SIDEBAR -->
+        <!-- <div class="sidebar-content"> -->
+        <div id="resizer-right" class="resizer right"></div>
+        <div id="rightSidebarWrapper">
+            <div class="sidebar-container">
+                <nav class="col-md-3 sidebar sidebar-right" id="rightSidebarContent">
+                    <i id=toggleRightSidebar class="bi bi-cookie toggle-icon right" style="font-size: 3rem; color:#4fb58b;"></i>
+                    <div>
+                        <h5>Local Storage Cookies</h5>
+                        <ul class="cookie-list" id="local-storage-cookies">
+                        </ul>
+                    </div>
+                    <div>
+                        <h5>Client Cookies</h5>
+                        <ul class="cookie-list" id="client-cookies">
+                        </ul>
+                    </div>
+                    <div>
+                        <h5>Segment Network Requests</h5>
+                        <div id="segment-network-requests"></div>
+                    </div>
+                    <div>
+                        <p><button class="btn btn-secondary" id="userId-cookie-get" data-target="userId-p">userId</button>
+                        : </p><p class="click-mouse" id="userId-p"></p>
+                        <p><button class="btn btn-secondary" id="anonymousId-cookie-get" data-target="anonymousId-p">anonymousId</button>
+                        : </p><p class="click-mouse" id="anonymousId-p"></p>
+                        <p><button class="btn btn-secondary" id="traits-cookie-get" data-target="traits-p">traits</button>
+                        : </p><p class="click-mouse" id="traits-p"></p>
+                        <p><button class="btn btn-secondary" id="groupId-cookie-get" data-target="groupId-p">groupId</button>
+                        : </p><p class="click-mouse" id="groupId-p"></p>
+                        <p><button class="btn btn-secondary" id="groupTraits-cookie-get" data-target="groupTraits-p">groupTraits</button>
+                        : </p><p class="click-mouse" id="groupTraits-p"></p>
+                    </div>
+                </nav>
+            </div>
         </div>
     </div>
 
@@ -400,7 +420,7 @@
     // Fetch users from the JSON file
     const getUserData = () => {
         console.log('Fetching user data...');
-        fetch('./users.json') // Adjust path if necessary based on server setup
+        fetch('users.json') // Adjust path if necessary based on server setup
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -419,14 +439,31 @@
                 const user = users[randomIndex];
     
                 // Display the random user in the DOM (Optional)
-                const userItem = document.createElement('li');
-                userItem.textContent = `
-                    ${user.firstName} ${user.lastName} 
-                    Username: ${user.username} 
-                    Phone: ${user.phone} 
-                    Email: ${user.email} 
-                    Address: ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`;
-                userList.appendChild(userItem);
+                // const userItem = document.// createElement('li');
+                // userItem.textContent = `
+                //     ${user.firstName} ${user.// lastName} 
+                //     Username: ${user.username} 
+                //     Phone: ${user.phone} 
+                //     Email: ${user.email} 
+                //     Address: ${user.streetAddress}, $// {user.city}, ${user.state}, $// {user.zipcode}`;
+                // userList.appendChild(userItem);
+                userList.innerHTML = '';
+
+                // Create and append individual <li> elements for each piece of user information
+                const userInfo = [
+                    `<span class="bold">Name: </span> ${user.firstName} ${user.lastName}`,
+                    `<span class="bold">Username: </span>${user.username}` ,
+                    `<span class="bold">Phone: </span>${user.phone}` ,
+                    `<span class="bold">Email: </span>${user.email}` ,
+                    `<span class="bold">Address: </span> ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`
+                ];
+
+                userInfo.forEach(info => {
+                    const userItem = document.createElement('li');
+                    userItem.innerHTML = info;
+                    userList.appendChild(userItem);
+                });
+
 
                 // Populate form fields
                 document.getElementById('firstName').value = user.firstName;
