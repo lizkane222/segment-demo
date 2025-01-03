@@ -27,26 +27,34 @@
     </script>
 
     <header class="ecommerce-header">
-        <h1>Ecommerce</h1>
+        <!-- <h1>Ecommerce</h1> -->
         <!-- <h1>Ecommerce Store</h1> -->
-        <input type="text" id="searchBar" placeholder="Search for products...">
+        <input type="text" id="searchBar" placeholder=" Search for products...">
         <div id="tags">
             <!-- Tags will be dynamically added here -->
         </div>
     </header>
     <main>
         <section id="products">
-            <!-- Product categories and products will be dynamically added here -->
+            <!-- Product categories and products will be dynamically added here by ecommerce.js loadProducts(./data/products.json) & renderProducts()-->
             <div class="product-list">
                 <!-- Example Product -->
-                <div class="product" data-product-id="1">
-                    <h3>Product Name</h3>
-                    <p>Product Description</p>
-                    <!-- <div> -->
-                        <i class="bi bi-cart product-cart" style="font-size: 3rem; color:#44a27b;"></i>
-                        <!-- <i class="bi bi-cart product-cart"></i> -->
-                        <i class="bi bi-bookmark product-bookmark"></i>
-                    <!-- </div> -->
+                <div class="carousel">
+                    <h3>Category Name</h3>
+                    <button class="carousel-button left">&lt;</button>
+                    <div class="carousel-wrapper">
+                        <div class="product-row">
+                            <div class="product" data-product-id="1">
+                                <img src="laptop.jpg" alt="Laptop">
+                                <h4>Laptop</h4>
+                                <p class="price">$999</p>
+                                <i class="bi bi-cart product-cart" style="font-size: 3rem; color:#44a27b;"></i>
+                                <i class="bi bi-bookmark product-bookmark"></i>
+                            </div>
+                            <!-- Repeat for other products in the category -->
+                        </div>
+                    </div>
+                    <button class="carousel-button right">&gt;</button>
                 </div>
                 <!-- Repeat for other products -->
             </div>
@@ -63,16 +71,9 @@
     </aside>
 
     <!-- Footer for bookmarked products -->
-    <!-- <footer class="bookmark-footer">
-        <div id="bookmarked-products">
-            <i class="bi bi-bookmarks toggle-bookmark-footer"></i>
-            <div class="bookmarked-list"></div>
-        </div>
-    </footer> -->
     <footer class="bookmark-footer">
         <div id="bookmarked-products">
             <i class="bi bi-bookmarks toggle-bookmark-footer" style="font-size: 3rem; color:#4fb58b;"></i>
-            <!-- <i class="bi bi-bookmarks toggle-bookmark-footer"></i> -->
             <div class="bookmarked-list">
                 <!-- Bookmarked products will appear here -->
             </div>

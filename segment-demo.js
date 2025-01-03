@@ -259,7 +259,7 @@ let Page = (name, category, properties, context, campaign, userId, anonymousId, 
         category: category? category : null,
         properties: properties? properties : {},
         context: context ? {...context, campaign} : {},
-        ...(userId ? { userId } : analytics.user().id() ||  {}),
+        ...(userId ?  userId  : analytics.user().id() ||  ''),
         // userId : userId ? userId : analytics.user().id() ||  '',
         anonymousId : anonymousId ? anonymousId : analytics.user().anonymousId(),
   };
@@ -1268,14 +1268,14 @@ function toggleSidebar(sidebar, icon, resizer) {
 
     if (sidebar.classList.contains('hidden')) {
         icon.style.position = 'absolute';
-        icon.style.top = '10px';
+        icon.style.top = '0';
         if (sidebar === document.querySelector("#leftSidebarWrapper")) {
-            icon.style.left = '10px';
+            icon.style.left = '.5em';
             icon.style.right = 'auto';
             resizer.style.left = `0px`; // Move resizer with sidebar
         } else {
             icon.style.left = 'auto';
-            icon.style.right = '10px';
+            icon.style.right = '.5em';
             resizer.style.right = `0px`; // Move resizer with sidebar
         }
         icon.style.zIndex = '1000';
@@ -1283,14 +1283,14 @@ function toggleSidebar(sidebar, icon, resizer) {
             
     } else {
         icon.style.position = 'absolute';
-        icon.style.top = '10px';
+        icon.style.top = '0';
         if (sidebar === document.querySelector("#leftSidebarWrapper")) {
-            icon.style.left = '10px';
+            icon.style.left = '.5em';
             icon.style.right = 'auto';
             resizer.style.left = `${DEFAULT_WIDTH}px`; // Move resizer with sidebar
         } else if (sidebar === document.querySelector("#rightSidebarWrapper")) {
             icon.style.left = 'auto';
-            icon.style.right = '10px';
+            icon.style.right = '.5em';
             resizer.style.right = `${DEFAULT_WIDTH}px`; // Move resizer with sidebar
         }
         icon.style.zIndex = '10';

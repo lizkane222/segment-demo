@@ -23,6 +23,7 @@ html, body {
     --segment-green: #4fb58b;
     --text-white: #ffffff;
     --text-dark: #333333;
+    --green-transparent: #b7e1cf;
     /* 
     #edf7f3
     #dbf0e7
@@ -88,17 +89,22 @@ nav.navbar-dark .segment-green-text a.navbar-brand {
 }
 
 
-.nav-page a{
+.user-nav a, .ecommerce-nav a {
     text-decoration: none !important;
     color: #44a27b;
 }
 
-.nav-page {
+.user-nav {
+    margin: 0 1em 0 10em;
+}
+
+.ecommerce-nav{
     margin: 0 1em;
 }
 
 .zoom {
     padding-top: 9px;
+    margin-left: -4.5em;
 }
 
 
@@ -235,7 +241,10 @@ nav.navbar-dark .segment-green-text a.navbar-brand {
     bottom: 0;
     width: 2px; /* Adjust as needed */
     cursor: col-resize;
-    background-color: #ccc;
+    /* background-color: #ccc; */
+    /* background-color: #49bcbe; */
+    /* background-color: var(--segment-green); */
+    background-color: var(--green-transparent);
     z-index: 10;
     transition: left 0.3s ease, right 0.3s ease, width 0.3s ease; /* Add transition for sliding effect */
 
@@ -293,17 +302,19 @@ nav.navbar-dark .segment-green-text a.navbar-brand {
 .toggle-icon {
     visibility : visible !important;
     position: absolute;
-    top: 10px; /* Adjust for consistent vertical alignment */
+    top: 0; /* Adjust for consistent vertical alignment */
     cursor: pointer;
     z-index: 100; /* Ensure visibility above other elements */
 }
 
 .toggle-icon.left {
-    left: 10px; /* Adjust to stay near the left sidebar */
+    top: 0; /* Adjust for consistent vertical alignment */
+    left: .5em; /* Adjust to stay near the left sidebar */
 }
 
 .toggle-icon.right {
-    right: 10px; /* Adjust to stay near the right sidebar */
+    top: 0; /* Adjust for consistent vertical alignment */
+    right: .5em; /* Adjust to stay near the right sidebar */
 }
 
 /* #toggleRightSidebar {
