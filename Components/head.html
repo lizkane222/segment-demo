@@ -1,0 +1,174 @@
+<!-- <head> -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
+    <!-- <script src="path/to/uuidv4.min.js"></script> -->
+
+    <!-- <link rel="stylesheet" href="https://lizkane222.github.io/segment-demo/styles.css">
+    <script src="https://lizkane222.github.io/segment-demo/segment-demo.js"></script> -->
+
+    <script>
+
+        let userId
+        let anonymousId
+        let usertraits = {}
+        let groupId
+        let groupTraits
+        let utm_id
+        let utm_campaign
+        let utm_source
+        let utm_medium
+        let utm_term
+        let utm_content
+        let referrer
+        let sessionId
+        let sessionNumber
+        let clientId
+        let cid
+        let campaign = {utm_id, utm_campaign, utm_source, utm_medium, utm_term, utm_content }
+
+        let currentUser = {}
+
+        let firstName
+        let lastName
+        let username
+        let phone
+        let street
+        let city
+        let state
+        let zipcode
+        let email
+
+        let currentSourceSelected = 'CLIENT';
+        let generateGA4ContextReady = false
+ 
+
+
+        !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
+        analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3");
+        
+        
+        //analytics.page();
+    
+        }}();
+
+            // Wait for analytics to be ready before assigning values
+    analytics.ready(function() {
+        userId = analytics.user().id();
+        anonymousId = analytics.user().anonymousId();
+        usertraits = analytics.user().traits();
+        groupId = analytics.group().id();
+        groupTraits = analytics.group().traits();
+
+        currentUser= {...currentUser, userId, anonymousId, usertraits, groupId, groupTraits, }
+        console.log('currentUser : ',currentUser)
+
+        console.log("ANALYTICS.JS IS READY");
+
+        // Log values to check
+        console.log("User ID: " + userId);
+        console.log("Anonymous ID: " + anonymousId);
+        console.log("Traits: " + JSON.stringify(usertraits, null, 2));
+        console.log("Group ID: " + groupId);
+        console.log("Group Traits: " + JSON.stringify(groupTraits, null, 2));
+
+
+        // Use ternary operator to assign values to form fields
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('firstName').value = usertraits.firstName ? usertraits.firstName : '';
+            document.getElementById('lastName').value = usertraits.lastName ? usertraits.lastName : '';
+            document.getElementById('username').value = usertraits.username ? usertraits.username : '';
+            document.getElementById('phone').value = usertraits.phone ? usertraits.phone : '';
+            document.getElementById('email').value = usertraits.email ? usertraits.email : '';
+        });
+        
+        //generateGA4ContextReady = true;
+        analytics.page();
+        console.log('currentSourceSelected : ',currentSourceSelected)
+    });
+    
+
+    </script>
+   
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKHZZPMN4Y"></script>
+    <script>
+        // ------------------------------------
+        // GA4 PROTOCOLS MEASURES : CAMPAIGN DATA
+        //      GA4 DOCS : https://support.google.com/analytics/answer/11242841?hl=en#zippy=%2Cin-this-article
+        //      GSHEET : https://docs.google.com/spreadsheets/d/1mjVdj5VtywFVOPWFvvoJywKpMBznLIiRbAgn4oHLUss/edit?usp=sharing
+        //  Google tag (gtag.js) -->
+        //window.dataLayer = window.dataLayer || [];
+        //function gtag(){dataLayer.push(arguments);}
+        //gtag('js', new Date());
+        
+        //gtag('config', 'G-BKHZZPMN4Y'), { 'debug_mode':true };
+
+        // GTAG Segment Doc : Set up consent mod
+        // https://segment.com/docs/connections/destinations/catalog/google-ads-gtag/#set-up-consent-mode
+        //analytics.ready(function() {
+        //    window.gtag('consent', 'default', {
+        //        'ad_storage': 'granted',
+        //        'ad_user_data': 'granted',
+        //        'ad_personalization': 'granted',
+        //        'analytics_storage': 'granted'
+        //    });
+
+    
+        // Segment retrieve Google's session data : session stitching server-side   
+            //const sessionIdPromise =  new  Promise(resolve => {gtag('get', //'G-BKHZZPMN4Y', 'session_id', resolve)});
+            //const sessionNumPromise =  new  Promise(resolve => {gtag('get', //'G-BKHZZPMN4Y', 'session_number', resolve)});
+
+            //Promise.all([sessionIdPromise, sessionNumPromise]).then(function//(session_data) {
+            //    sessionId = session_data[0]
+            //    sessionNumber = session_data[1]
+            //    document.getElementById('sessionId-input').value = sessionId;
+            //    document.getElementById('sessionNumber-input').value = sessionNumber;
+            //    
+            //});    
+    
+        // Segment retrieve Google's client_id : session stitching server-side 
+        //    const retrieved = new Promise(resolve => {
+        //    gtag('get', 'G-BKHZZPMN4Y', 'client_id', resolve)
+        //    });
+        //    retrieved.then((client_id) => {
+        //    cid = client_id
+        //    clientId = client_id
+        //    document.getElementById('clientId-input').value = clientId;
+        //    if(clientId || cid){
+        //        console.log('clientId exists', clientId, 'cid exist', cid)
+        //        document.getElementById('clientId-input').value = clientId
+        //        document.getElementById('clientId-input').value = cid
+        //        //let clientIdInputValue = document.getElementById('clientId-input').value
+        //        const label = document.getElementById('clientIdLabel');
+        //        label.addEventListener('click', ()=> {document.getElementById//('clientId-input').value = cid})
+        //        const clickLabelSession = () => {}
+        //    }
+        //    else{
+        //        console.log('clientId does not exist')
+        //    }
+//
+        //    })
+        //});
+        // ------------------------------------
+    </script>
+    <!-- STYLESHEET FOR BOOTSTRAP ICONS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.x.x/font/bootstrap-icons.css">
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+
+    <!-- ONLY UNCOMMENT FAKER SCRIPT WHEN GENERATING NEW USERS -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@latest/dist/browser/umd.min.js"></script>
+
+    
+    <script src="./users.json" ></script> 
+
+
+    
+<!-- </head> -->

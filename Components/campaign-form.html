@@ -1,0 +1,55 @@
+<!-- CAMPAIGN FORM -->
+<div class="form-container">
+    <form id="campaignForm">
+        <div class="form-group" id="campaignId-row">
+            <label for="campaignId">campaignId: <i class="bi bi-node-plus" style="font-size: 1rem; color:#718ba9;"></i></label>
+            <input type="campaignId" name="utm_id" class="form-control" id="campaignId-input" >
+        </div>
+        <div class="form-group" id="campaign-row">
+            <label for="campaign">campaign: <i class="bi bi-node-plus" style="font-size: 1rem; color:#718ba9;"></i></label>
+            <input type="campaign" name="utm_campaign" class="form-control" id="campaign-input" >
+        </div>
+        <div class="form-group" id="campaignSource-row">
+            <label for="campaignSource">campaignSource: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="campaignSource" name="utm_source" class="form-control" id="campaignSource-input" >
+        </div>
+        <div class="form-group" id="campaignMedium-row">
+            <label for="campaignMedium">campaignMedium: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="campaignMedium" name="utm_medium" class="form-control"id="campaignMedium-input" >
+        </div>
+        <div class="form-group" id="campaignTerm-row">
+            <label for="campaignTerm">campaignTerm: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="campaignTerm" name="utm_term" class="form-control" id="campaignTerm-input" >
+        </div>
+        <div class="form-group" id="campaignContent-row">
+            <label for="campaignContent">campaignContent: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="campaignContent" name="utm_content" class="form-control" id="campaignContent-input" >
+        </div>
+        <div class="form-group" id="referrer-row">
+            <label for="referrer">referrer: <i class="bi bi-node-plus" style="font-size: 1rem; color:#718ba9;"></i></label>
+            <input type="referrer" name="referrer"  class="form-control" id="referrer-input" >
+        </div>
+        <div class="form-group" id="sessionId-row">
+            <label id="sessionIdLabel" for="sessionId">sessionId: <i class="bi bi-node-plus" style="font-size: 3rem1; color:#708ba9"></i></label>
+            <input type="sessionId" name="sessionId" class="form-control" id="sessionId-input" >
+        </div>
+        <div class="form-group" id="sessionNumber-row">
+            <label id="sessionNumberLabel" for="sessionNumber">sessionNumber: <i class="bi bi-node-plus"1style="font-size: 3rem; color:#708ba9;"></i></label>
+            <input type="sessionNumber" name="sessionNumber" class="form-control" id="sessionNumber-input" >
+        </div>
+        <div class="form-group" id="clientId-row">
+            <label id="clientIdLabel" for="clientId">clientId: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="clientId" name="clientId" class="form-control" id="clientId-input" >
+        </div>
+        <!-- Display Query String -->
+        <div id="querystring-display">
+            <p></p>
+        </div>
+        <div class="button-container">
+                <button type="button" class="btn btn-secondary" id="clearCampaignForm">Clear Form</button>
+        </div>
+    </form>
+    <button class="btn btn-info" id="newCampaign">
+        <i   class="bi bi-lightning-charge" style="font-size: 2rem;"></i>
+    </button>
+</div>

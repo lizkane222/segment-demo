@@ -5,6 +5,69 @@
 // import { campaignData, generateCampaignData, matchedCampaign, campaignId } from './campaignData.js';
 import { campaignData } from './campaignData.js';
 import { userData } from './userData.js';
+
+
+// import { getUserData } from './Components/getUserData.js';
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     const generateFakerUserDataButton = document.getElementById('generateFakerUserData');
+//     if (generateFakerUserDataButton) {
+//         generateFakerUserDataButton.addEventListener('click', getUserData);
+//     }
+// });
+
+// Fetch GA4 data from server
+const updateGA4Fields = () => {
+    console.log('GA4 context endpoint hit');
+    fetch('/ga4Context')
+    // .then(response => response.json())
+    .then(response => {
+        console.log('Fetch Response:', response); // Logs the full response object
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('GA4 Context:', data);
+        
+        // Save GA4 data as cookies
+        document.cookie = `client_id=${data.client_id}; path=/`;
+        document.cookie = `session_id=${data.session_id}; path=/`;
+        document.cookie = `session_number=${data.session_number}; path=/`;
+        
+        // Display GA4 data in the DOM (optional)
+        let ga4SessionId = document.getElementById('sessionId-input');
+        if (ga4SessionId) {
+            ga4SessionId.value = data.session_id;
+            console.log('ga4SessionId:', ga4SessionId.value); // Debugging
+        }
+
+        let ga4SessionNumber = document.getElementById('sessionNumber-input');
+        if (ga4SessionNumber) {
+            ga4SessionNumber.value = data.session_number;
+            console.log('ga4SessionNumber:', ga4SessionNumber.value); // Debugging
+        }
+
+        let ga4ClientId = document.getElementById('clientId-input');
+        if (ga4ClientId) {
+            ga4ClientId.value = data.client_id;
+            console.log('ga4ClientId:', ga4ClientId.value); // Debugging
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching GA4 context:', error);
+    });
+    // .catch(err => console.error('Error fetching GA4 context:', err));
+};
+// DOM Ready function for updateGA4Fields server call
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM fully loaded and parsed.');
+    updateGA4Fields();
+});
+
+
+
 // import {trackServer, identifyServer, pageServer, groupServer} from './server-events-node.js'
 
 // import { userData } from './userData.js';
@@ -80,13 +143,40 @@ let Track = (event, properties, context, callback) => {
 // Spec Identify : https://segment.com/docs/connections/spec/identify/
 //    The Identify method follows this format : 
 //    analytics.identify([userId], [traits], [options], [callback]);
-let Identify = (userId, anonymousId, traits, context, callback) => {
+let Identify = (userId, anonymousId, traits, context, campaign, globalVariables, callback) => {
+    // let globalUserId = globalVariables[userId] ? globalVariables[userId] : ''
+    // let globalAnonymousId = globalVariables[anonymousId] ? globalVariables[anonymousId] : ''
+    // let globalCampaign = globalVariables[campaign] ? globalVariables[campaign] : {}
+    // let {usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, currentUser} = globalVariables
+    console.log('IDENTIFY globalVariables : ',globalVariables);
+    // let globalUserId = globalVariablesuserId
+    // let globalAnonymousId = globalVariables.anonymousId
+    // let usertraits = globalVariables.usertraits
+    // let groupId = globalVariables.groupId
+    // let groupTraits = globalVariables.groupTraits
+    // let sessionId = globalVariables.sessionId
+    // let sessionNumber = globalVariables.sessionNumber
+    // let clientId = globalVariables.clientId
+    // let cid = globalVariables.cid
+    // let globalCampaign = globalVariables.campaign
+    // let currentUser = globalVariables. currentUser
+        // usertraits = {...usertraits, ...traits}
 
+    currentUser = {
+        userId : userId || analytics.user().id() || null, 
+        anonymousId : anonymousId || analytics.user().anonymousId() || null, 
+        traits : traits || usertraits || {}, 
+        context: context || {}, 
+        campaign : campaign || null
+    }
+    console.log('IDENTIFY currentUser : ',currentUser)
     console.log('IDENTIFY userId : ',userId)
     console.log('IDENTIFY anonymousId : ',anonymousId)
     console.log('IDENTIFY traits : ',traits)
     console.log('IDENTIFY context : ',context)
     console.log('IDENTIFY campaign : ',campaign)
+    // console.log('IDENTIFY currentUser : ',currentUser)
+    
 
     userList.innerHTML = '';
 
@@ -103,27 +193,18 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
         userItem.innerHTML = info;
         userList.appendChild(userItem);
     });
-    // const tempUserInfo = [
-    //     firstName || lastName ? `<span class="bold">Name: </span> ${firstName} ${lastName}` : '',
-    //     username?`<span class="bold">Username: </span>${username}` :'',
-    //     phone? `<span class="bold">Phone: </span>${phone}` : '',
-    //     email?`<span class="bold">Email: </span>${email}` : '',
-    //     street || city || state || zipcode?`<span class="bold">Address: </span> ${street}, ${city}, ${state}, ${zipcode}` : ''
-    // ];
-
-    // tempUserInfo.forEach(info => {
-    //     const userItem = document.createElement('li');
-    //     userItem.innerHTML = info;
-    //     userList.appendChild(userItem);
-    // });
 
     const payload = {
-        userId: userId,
-        anonymousId: anonymousId,
+        userId: userId ? userId  : null,
+        anonymousId: anonymousId ? anonymousId  : null,
         traits: traits,
-        context: { ...context, campaign },
+        context: { context, campaign : campaign? campaign : null },
+        globalVariables : globalVariables
     };
     console.log('payload : ', payload)
+
+    updateGA4Fields();
+
     if (currentSourceSelected==='CLIENT') {
         // Send data client-side via Segment's analytics.js library
         analytics.identify(
@@ -136,8 +217,8 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
             //   ...(traits.username ? { username : traits.username } : {}),
             //   ...(traits.phone ? { phone : traits.phone } : {})
              : {}),
-            payload.context ? {...payload['context'], anonymousId : payload.anonymousId} : {}
-        )
+             payload.context ? {...payload['context'], anonymousId : payload.anonymousId} : {}
+            )
     }
     else {
         // Send data to the server via Segment's Node.js library
@@ -164,30 +245,35 @@ let Identify = (userId, anonymousId, traits, context, callback) => {
     // if(callback){{
     //     callback()
     // }
-    usertraits = {...usertraits, ...traits}
-    currentUser.traits = usertraits
+    // usertraits = {...usertraits, ...traits}
+    // currentUser.traits = usertraits
     }
 }
 
 // Spec Page : https://segment.com/docs/connections/spec/page/
 //    The Page method follows this format : 
 //    analytics.page([category], [name], [properties], [options], [callback]);
-let Page = (name, category, properties, context, callback) => {
+let Page = (name, category, properties, context, campaign, userId, anonymousId, callback) => {
     const payload = {
-      name: name,
-      category: category || '',
-      properties: properties || {},
-      context: { ...context, campaign },
+        name: name? name: null,
+        category: category? category : null,
+        properties: properties? properties : {},
+        context: context ? {...context, campaign} : {},
+        ...(userId ? { userId } : analytics.user().id() ||  {}),
+        // userId : userId ? userId : analytics.user().id() ||  '',
+        anonymousId : anonymousId ? anonymousId : analytics.user().anonymousId(),
   };
+  console.log('PAGE PAYLOAD : ', payload)
+
+  updateGA4Fields();
   
   if (currentSourceSelected === 'CLIENT') {
       // analytics.page(payload.name, payload.category, payload.properties, payload.context, callback);
       analytics.page(
           name,
-          ...(category ? category : {}),
-          ...(properties ? properties : {}),
-          ...(context ? {...context,campaign} : {}),
-          ...(callback ? callback : {})
+          payload.category ? payload.category : {},
+          payload.properties ? payload.properties : {},
+          payload.context ? payload.context : {}
         )
       console.log('Client-side Page:', payload);
   } else {
@@ -296,14 +382,26 @@ let userFormFields = {firstName, lastName, username, phone, street, city, state,
 const toggleCheckbox = document.getElementById('source-selection');
 
 // Function to handle toggle state and update global variable
-const updateSourceSelected = () => {
-    // Update the global variable based on the checkbox state
-    currentSourceSelected = toggleCheckbox.checked ? 'CLIENT' : 'SERVER';
-    console.log('currentSourceSelected : ',currentSourceSelected)
-};
 
-// Event listener for the toggle input
-toggleCheckbox.addEventListener('change', updateSourceSelected);
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleCheckbox = document.getElementById('source-selection'); // Ensure the element ID matches the nav HTML
+    if (!toggleCheckbox) {
+        console.error('Toggle checkbox not found in DOM');
+        return;
+    }
+
+    const updateSourceSelected = () => {
+        // Update the global variable based on the checkbox state
+        currentSourceSelected = toggleCheckbox.checked ? 'CLIENT' : 'SERVER';
+        console.log('currentSourceSelected:', currentSourceSelected);
+    };
+
+    // Event listener for the toggle input
+    toggleCheckbox.addEventListener('change', updateSourceSelected);
+
+    // Initialize the state on load
+    updateSourceSelected();
+});
 
   // GLOBAL VARIABLES FOUND IN INDEX.HTML FILE'S <HEAD>
   // let userId
@@ -382,20 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// Function to update user profile (LEFT SIDEBAR)
-function updateProfile(event, button) {
-    event.preventDefault(); // Prevent default form submission
-    let type, forceType
-    if(button==='identifyAnonymousId'){
-        type='anonymousId'
-        console.log('ANONYMOUS IDENTIFY : no PII exist so no userId generated', )
-    }
-    if(button==='identifyUserId'){
-        type='userId'
-        console.log('ANONYMOUS IDENTIFY : PII exists so generating userId', )
-    }
-    
-
+const getUserFormValues = () => {
     firstName = document.getElementById('firstName').value;
     lastName = document.getElementById('lastName').value;
     username = document.getElementById('username').value;
@@ -405,6 +490,68 @@ function updateProfile(event, button) {
     city = document.getElementById('city').value;
     state = document.getElementById('state').value;
     zipcode = document.getElementById('zipcode').value;
+
+    return {firstName, lastName, username, phone, email, street, city, state, zipcode};
+    // Put lines below in original function : 
+    // const userFormFields = getUserFormValues() 
+    // const {firstName, lastName, username, phone, email, street, city, state, zipcode} = userFormFields;
+}
+
+const getGlobalVariables = () => {
+    console.log('GLOBAL userId : ', userId);
+    console.log('GLOBAL anonymousId : ', anonymousId);
+    console.log('GLOBAL usertraits : ', usertraits);
+    usertraits = analytics.user().traits();
+    console.log('GLOBAL groupId : ', groupId);
+    console.log('GLOBAL groupTraits : ', groupTraits);
+    console.log('GLOBAL sessionId : ', sessionId);
+    console.log('GLOBAL sessionNumber : ', sessionNumber);
+    console.log('GLOBAL clientId : ', clientId);
+    console.log('GLOBAL cid : ', cid);
+    console.log('GLOBAL campaign : ', campaign);
+    console.log('GLOBAL currentUser : ', currentUser);
+
+    return {userId, anonymousId, usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, campaign, currentUser}
+    // PUT LINES BELOW IN ORIGINAL FUNCTION
+    // const globalVariables = getGlobalVariables()
+    // {userId, anonymousId, usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, campaign, currentUser} = globalVariables
+    
+}
+
+
+// Function to update user profile (LEFT SIDEBAR)
+function updateProfile(event, button, type) {
+    event.preventDefault(); // Prevent default form submission
+    let identifierType, forceType
+    
+    if(button==='identifyAnonymousId'){
+        identifierType='anonymousId'
+        console.log('ANONYMOUS IDENTIFY : no PII exist so no userId generated', )
+    }
+    if(button==='identifyUserId'){
+        identifierType='userId'
+        console.log('ANONYMOUS IDENTIFY : PII exists so generating userId', )
+    }
+    
+    // GET CURRENT DATA FROM USER FORM
+    const userFormFields = getUserFormValues() 
+    let {firstName, lastName, username, phone, email, street, city, state, zipcode} = userFormFields;
+    // firstName = document.getElementById('firstName').value;
+    // lastName = document.getElementById('lastName').value;
+    // username = document.getElementById('username').value;
+    // phone = document.getElementById('phone').value;
+    // email = document.getElementById('email').value;
+    // street = document.getElementById('street').value;
+    // city = document.getElementById('city').value;
+    // state = document.getElementById('state').value;
+    // zipcode = document.getElementById('zipcode').value;
+
+    // GET CURRENT DATA FROM GLOBAL VARIABLES
+    const globalVariables = getGlobalVariables()
+    let {userId :userId , anonymousId :anonymousId , usertraits :usertraits , groupId :groupId , groupTraits :groupTraits , sessionId :sessionId , sessionNumber :sessionNumber , clientId :clientId , cid :cid , campaign :campaign , currentUser : currentUser} = globalVariables
+    // GET CURRENT DATA FROM CAMPAIGN FORM
+
+
 
     if(username || phone || email || street || city || state || zipcode){
       forceType='userId'  
@@ -436,7 +583,7 @@ function updateProfile(event, button) {
     // profileDiv.innerHTML = `<p><strong>First Name:</strong> ${firstName}</p><p><strong>Last Name:</strong> ${lastName}</p><p><strong>Username:</strong> ${username}</p><p><strong>Email:</strong> ${email}</p><p><strong>Phone:</strong> ${phone}</p>`;
     
     // IF IDENTIFY:USERID IS CLICKED OR IF PII IS INCLUDED IN FORM THEN FORCE USERID GENERATION
-    if(type==='userId' ||  forceType==='userId'){
+    if(identifierType==='userId' ||  forceType==='userId'){
         if(!userId){
             let tempUserId = uuidv4()
             console.log('tempUserId : ',tempUserId)
@@ -445,38 +592,59 @@ function updateProfile(event, button) {
             console.log('USERID CREATED : ', analytics.user().id())
         }
     }
-    let data = updateCampaignFormAndQueryString()
+    let data = updateCampaignFormAndQueryString(true)
 
     let tempTraits = {
         // firstName : firstName,
-        ...(firstName ? { firstName } : {}),
+        firstName : (firstName ? firstName : {}),
         // lastName : lastName,
-        ...(lastName ? { lastName } : {}),
+        lastName : (lastName ? lastName : {}),
         // username : username,
-        ...(username ? { username } : {}),
+        username : (username ? username : {}),
         // phone : phone,
-        ...(phone ? { phone } : {}),
+        phone : (phone ? phone : {}),
         // email : email,
-        ...(email ? { email } : {}),
+        email : (email ? email : {}),
         // street : street,
-        ...(street ? { street } : {}),
+        street : (street ? street : {}),
         // city : city,
-        ...(city ? { city } : {}),
+        city : (city ? city : {}),
         // state : state,
-        ...(state ? { state } : {}),
+        state : (state ? state : {}),
         // zipcode : zipcode,
-        ...(zipcode ? { zipcode } : {}),
-        ...(referrer ? { referrer } : {}),
-        ...(sessionId ? { sessionId } : {}),
-        ...(sessionNumber ? { sessionNumber } : {}),
-        ...(clientId ? { clientId } : {}),
-        ...(cid ? { cid } : {})
+        zipcode : (zipcode ? zipcode : {}),
+        referrer : (referrer ? referrer : {}),
+        sessionId : (sessionId ? sessionId : {}),
+        sessionNumber : (sessionNumber ? sessionNumber : {}),
+        clientId : (clientId ? clientId : {}),
+        cid : (cid ? cid : {})
     }
     console.log('TEMP TRAITS : ',tempTraits)
+    usertraits = tempTraits
 
     // currentSourceSelected==='CLIENT'? Identify(traits, data.context) : identifyServer(userId, traits, context=data.context)
-    Identify(userId || analytics.user().id() || null, anonymousId || analytics.user().anonymousId() || null, tempTraits, data.context)
-    // Identify(traits, data.context)
+    if(type==='identify'){
+        console.log('testing currentUser', currentUser)
+        Identify(
+            userId || analytics.user().id() || null,
+            anonymousId || analytics.user().anonymousId() || null, 
+            tempTraits, 
+            data.context, 
+            campaign, 
+            globalVariables
+        )
+    }
+    // if(type==='page'){
+    //     Page({
+    //         name : document.title, 
+    //         category : 'Campaign', 
+    //         traits: tempTraits, 
+    //         context : data.context, 
+    //         userId : userId || analytics.user().id() || null, 
+    //         anonymousId : anonymousId || analytics.user().anonymousId() || null
+    //     });
+    // }
+    // Identify(tempTraits, data.context)
     autoUpdate()
 }
 
@@ -664,7 +832,7 @@ const identifyUserIdButton = document.getElementById('identifyUserId');
 // Add submit event listener to the form
 form.addEventListener('submit', (event) => {
     // Call the function with the button.id
-    updateProfile(event, event.submitter.id);
+    updateProfile(event, event.submitter.id, 'identify');
 });
 
 
@@ -705,12 +873,14 @@ function loadFormData() {
     let campaignForm = document.getElementById('campaignForm');
     const queryParams = new URLSearchParams(window.location.search);
     
+    let contextTraits = {}
     // Populate User Form Fields from localStorage
     if (userForm) {
         const userFormInputs = userForm.querySelectorAll('input, textarea, select');
         userFormInputs.forEach(input => {
             const savedValue = localStorage.getItem(input.name);
             if (savedValue !== null) {
+                contextTraits[input.name] = input.value;
                 input.value = savedValue;
             }
         });
@@ -734,7 +904,8 @@ function loadFormData() {
     //         input.value = paramValue;
     //     }
     // });
-
+    let properties = {}
+    let context = {traits : contextTraits, campaign:{}}
     if(campaignForm){
         // Check if any of the campaignForm's fields have a value
         const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
@@ -756,6 +927,8 @@ function loadFormData() {
             campaignInputs.forEach(input => {
                 const savedValue = localStorage.getItem(input.name);
                 if (savedValue !== null) {
+                    // properties[input.name] = input.value;
+                    // context[campaign][input.name] = input.value;
                     input.value = savedValue;
                 }
             });
@@ -791,6 +964,16 @@ function loadFormData() {
     else{
         console.log('clientId does not exist')
     }
+    console.log('loadFormData document.title : ',document.title);
+    console.log('loadFormData Campaign : ','Campaign');
+    console.log('loadFormData properties : ',properties);
+    console.log('loadFormData context : ',context);
+    console.log('loadFormData campaign : ',campaign);
+    userId = userId ? userId : analytics.user().id() ||  {};
+    anonymousId = anonymousId ? anonymousId : analytics.user().anonymousId() ||  {};
+    console.log('loadFormData userId : ',userId);
+    console.log('loadFormData anonymousId : ',anonymousId);
+    Page(document.title, 'Campaign', properties, context, campaign, userId, anonymousId)
 }
 /// Call `loadFormData` on DOMContentLoaded
 // document.addEventListener('DOMContentLoaded', loadFormData);
@@ -813,15 +996,16 @@ document.addEventListener('DOMContentLoaded', ()=> {
     let sessionNumberLabel = document.getElementById('sessionNumberLabel');
     sessionNumberLabel.addEventListener('click', () => {sessionNumberInput.value = sessionNumber});
 
-    clickLabelUpdateInputGlobalVariable('firstNameLabel', 'firstName-input', firstName);
-    clickLabelUpdateInputGlobalVariable('lastNameLabel', 'lastName-input', lastName);
-    clickLabelUpdateInputGlobalVariable('usernameLabel', 'username-input', username);
-    clickLabelUpdateInputGlobalVariable('phoneLabel', 'phone-input', phone);
-    clickLabelUpdateInputGlobalVariable('emailLabel', 'email-input', email);
-    clickLabelUpdateInputGlobalVariable('streetLabel', 'street-input', street);
-    clickLabelUpdateInputGlobalVariable('cityLabel', 'city-input', city);
-    clickLabelUpdateInputGlobalVariable('stateLabel', 'state-input', state);
-    clickLabelUpdateInputGlobalVariable('zipcodeLabel', 'zipcode-input', zipcode);
+    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('firstNameLabel', 'firstName-input', firstName));
+    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('lastNameLabel', 'lastName-input', lastName));
+    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('usernameLabel', 'username-input', username));
+    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('phoneLabel', 'phone-input', phone));
+    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('emailLabel', 'email-input', email));
+    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('streetLabel', 'street-input', street));
+    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('cityLabel', 'city-input', city));
+    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('stateLabel', 'state-input', state));
+    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('zipcodeLabel', 'zipcode-input', zipcode));
+    
 });
 
 document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariable);
@@ -1131,13 +1315,16 @@ function generateCampaignData() {
 
 // ------------------------------------
 
-function updateCampaignFormAndQueryString() {
+function updateCampaignFormAndQueryString(ignore) {
     console.log('Button clicked'); // Debug log
 
     const data = generateCampaignData();
+    // let data = loadFormData()
+    let formData = loadFormData()
     console.log('Generated Campaign Data:', data);
 
     const utmParams = data.utm;
+    console.log(data.utm)
     // const campaignReferrer = utmParams.referrer
     // console.log('594', campaignReferrer , utmParams.referrer)
     // referrer = campaignReferrer
@@ -1196,8 +1383,11 @@ function updateCampaignFormAndQueryString() {
         // clientId: cid
     }
     console.log('Segment page call'); // Log Segment call
-    Page = ({name : pageName, category : "Campaign", properties : properties, context : context} ) 
-    let resData = {pageName : pageName, context : context, properties : properties, campaignData : data}
+    let resData = {pageName : pageName, category:'', properties : properties, context : context, campaign : data, userId : userId, anonymousId : anonymousId}
+    if(ignore === false){
+        Page(resData)
+    }
+    // Page(pageName, "Campaign", properties,context)
     return resData
 }
 // document.getElementById('newCampaign').addEventListener('click', updateCampaignFormAndQueryString);
@@ -1212,27 +1402,97 @@ document.getElementById('newCampaign').addEventListener('click', (event) => {
 // });
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    // Ensure the DOM is fully loaded before accessing elements
 
-// Function to populate the form with random user data
-function populateFormWithUserData() {
-    console.log("inside populateFormWithUserData")
-    // Select a random user from the userData array
-    const randomIndex = Math.floor(Math.random() * userData.length);
-    const randomUser = userData[randomIndex];
+    // Function to populate the form with random user data
+    function populateFormWithUserData() {
+        console.log("inside populateFormWithUserData")
+        // Select a random user from the userData array
+        const randomIndex = Math.floor(Math.random() * userData.length);
+        const randomUser = userData[randomIndex];
 
-    // Populate form fields with the selected user data
-    document.getElementById('firstName').value = randomUser.traits.firstName || '';
-    document.getElementById('lastName').value = randomUser.traits.lastName || '';
-    document.getElementById('username').value = randomUser.traits.username || '';
-    document.getElementById('email').value = randomUser.traits.email || '';
-    document.getElementById('state').value = randomUser.traits.state || '';
-    document.getElementById('zipcode').value = randomUser.traits.zipcode || '';
-    // Add more fields as needed
+        // Populate form fields with the selected user data
+        document.getElementById('firstName').value = randomUser.traits.firstName || '';
+        document.getElementById('lastName').value = randomUser.traits.lastName || '';
+        document.getElementById('username').value = randomUser.traits.username || '';
+        document.getElementById('email').value = randomUser.traits.email || '';
+        document.getElementById('state').value = randomUser.traits.state || '';
+        document.getElementById('zipcode').value = randomUser.traits.zipcode || '';
+        // Add more fields as needed
 
+    }
+
+    // Add an event listener to the "Generate User Data" button
+    // document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
+    // document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
+
+    document.getElementById('generateFakerUserData').addEventListener('click', getUserData);
+
+});
+
+const triggerEvent = (type) => {
+    if(type ==='page'){
+        // let pageName = window.document.title
+        // let context = {
+        //     campaign: {
+        //         id: utmParams.campaignId,
+        //         name: utmParams.campaign,
+        //         source: utmParams.campaignSource,
+        //         medium: utmParams.campaignMedium,
+        //         term: utmParams.campaignTerm,
+        //         content: utmParams.campaignContent,
+        //     },
+        //     page : {
+        //         referrer : referrer
+        //     },
+        //     google : {
+        //         // referrer: utmParams.referrer,
+        //         ...(referrer ? referrer : {}),
+        //         ...(sessionId ? { sessionId } : {}),
+        //         ...(sessionNumber ? { sessionNumber } : {}),
+        //         ...(clientId ? { cid } : {})
+        //     }
+        // }
+        // let properties = {
+        //     campaignId: utmParams.campaignId,
+        //     campaign: utmParams.campaign,
+        //     campaignSource: utmParams.campaignSource,
+        //     campaignMedium: utmParams.campaignMedium,
+        //     campaignTerm: utmParams.campaignTerm,
+        //     campaignContent: utmParams.campaignContent,
+        //     referrer: utmParams.referrer,
+        //     ...(sessionId ? { sessionId } : {}),
+        //     ...(sessionNumber ? { sessionNumber } : {}),
+        //     ...(clientId ? { cid } : {})
+        // }
+        console.log('Page event triggered');
+        // Page('General Page', 'Campaign', properties, context)
+        loadFormData()
+        
+        // Page(data)
+    }
+    if(type ==='identify'){
+        console.log('Identify event triggered');
+        console.log("identify button : campaignData obj",campaignData)
+        console.log("identify button : google obj", google)
+        Identify(userId, anonymousId, usertraits, context)
+    }
+    if(type ==='track'){
+        Track(userId, anonymousId, 'General Event', properties, context)
+    }
+    if(type ==='group'){
+        Group(userId, groupId, groupTraits, context)
+    }
+    if(type ==='alias'){
+        Alias(userId, anonymousId, context)
+    }
 }
 
-// Add an event listener to the "Generate User Data" button
-// document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
-// document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
-
-document.getElementById('generateFakerUserData').addEventListener('click', getUserData);
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('pageTrigger').addEventListener('click', () => triggerEvent('page'));
+    document.getElementById('identifyTrigger').addEventListener('click', () => triggerEvent('identify'));
+    document.getElementById('trackTrigger').addEventListener('click', () => triggerEvent('track'));
+    document.getElementById('groupTrigger').addEventListener('click', () => triggerEvent('group'));
+    document.getElementById('aliasTrigger').addEventListener('click', () => triggerEvent('alias'));
+});

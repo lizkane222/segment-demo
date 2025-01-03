@@ -21,7 +21,7 @@
 
         let userId
         let anonymousId
-        let usertraits
+        let usertraits = {}
         let groupId
         let groupTraits
         let utm_id
@@ -35,7 +35,7 @@
         let sessionNumber
         let clientId
         let cid
-        let campaign = {utm_id,utm_campaign, utm_source, utm_medium, utm_term, utm_content }
+        let campaign = {utm_id, utm_campaign, utm_source, utm_medium, utm_term, utm_content }
 
         let currentUser = {}
 
@@ -50,7 +50,7 @@
         let email
 
         let currentSourceSelected = 'CLIENT';
-
+        let generateGA4ContextReady = false
  
 
 
@@ -84,13 +84,15 @@
 
 
         // Use ternary operator to assign values to form fields
-        document.getElementById('firstName').value = usertraits.firstName ? usertraits.firstName : '';
-        document.getElementById('lastName').value = usertraits.lastName ? usertraits.lastName : '';
-        document.getElementById('username').value = usertraits.username ? usertraits.username : '';
-        document.getElementById('phone').value = usertraits.phone ? usertraits.phone : '';
-        document.getElementById('email').value = usertraits.email ? usertraits.email : '';
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('firstName').value = usertraits.firstName ? usertraits.firstName : '';
+            document.getElementById('lastName').value = usertraits.lastName ? usertraits.lastName : '';
+            document.getElementById('username').value = usertraits.username ? usertraits.username : '';
+            document.getElementById('phone').value = usertraits.phone ? usertraits.phone : '';
+            document.getElementById('email').value = usertraits.email ? usertraits.email : '';
+        });
         
-        
+        //generateGA4ContextReady = true;
         analytics.page();
         console.log('currentSourceSelected : ',currentSourceSelected)
     });
@@ -105,60 +107,58 @@
         //      GA4 DOCS : https://support.google.com/analytics/answer/11242841?hl=en#zippy=%2Cin-this-article
         //      GSHEET : https://docs.google.com/spreadsheets/d/1mjVdj5VtywFVOPWFvvoJywKpMBznLIiRbAgn4oHLUss/edit?usp=sharing
         //  Google tag (gtag.js) -->
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-BKHZZPMN4Y'), { 'debug_mode':true };
+        //window.dataLayer = window.dataLayer || [];
+        //function gtag(){dataLayer.push(arguments);}
+        //gtag('js', new Date());
+        
+        //gtag('config', 'G-BKHZZPMN4Y'), { 'debug_mode':true };
 
         // GTAG Segment Doc : Set up consent mod
         // https://segment.com/docs/connections/destinations/catalog/google-ads-gtag/#set-up-consent-mode
-        analytics.ready(function() {
-            window.gtag('consent', 'default', {
-                'ad_storage': 'granted',
-                'ad_user_data': 'granted',
-                'ad_personalization': 'granted',
-                'analytics_storage': 'granted'
-            });
+        //analytics.ready(function() {
+        //    window.gtag('consent', 'default', {
+        //        'ad_storage': 'granted',
+        //        'ad_user_data': 'granted',
+        //        'ad_personalization': 'granted',
+        //        'analytics_storage': 'granted'
+        //    });
 
     
         // Segment retrieve Google's session data : session stitching server-side   
-            const sessionIdPromise =  new  Promise(resolve => {gtag('get', 'G-BKHZZPMN4Y', 'session_id', resolve)});
-            const sessionNumPromise =  new  Promise(resolve => {gtag('get', 'G-BKHZZPMN4Y', 'session_number', resolve)});
+            //const sessionIdPromise =  new  Promise(resolve => {gtag('get', //'G-BKHZZPMN4Y', 'session_id', resolve)});
+            //const sessionNumPromise =  new  Promise(resolve => {gtag('get', //'G-BKHZZPMN4Y', 'session_number', resolve)});
 
-            Promise.all([sessionIdPromise, sessionNumPromise]).then(function(session_data) {
-                sessionId = session_data[0]
-                sessionNumber = session_data[1]
-                document.getElementById('sessionId-input').value = sessionId;
-                document.getElementById('sessionNumber-input').value = sessionNumber;
-                //console.log('sessionId : ',sessionId)
-                //console.log('sessionNumber : ',sessionNumber)
-                
-            });    
+            //Promise.all([sessionIdPromise, sessionNumPromise]).then(function//(session_data) {
+            //    sessionId = session_data[0]
+            //    sessionNumber = session_data[1]
+            //    document.getElementById('sessionId-input').value = sessionId;
+            //    document.getElementById('sessionNumber-input').value = sessionNumber;
+            //    
+            //});    
     
         // Segment retrieve Google's client_id : session stitching server-side 
-            const retrieved = new Promise(resolve => {
-            gtag('get', 'G-BKHZZPMN4Y', 'client_id', resolve)
-            });
-            retrieved.then((client_id) => {
-            cid = client_id
-            clientId = client_id
-            document.getElementById('clientId-input').value = clientId;
-            if(clientId || cid){
-                console.log('clientId exists', clientId, 'cid exist', cid)
-                document.getElementById('clientId-input').value = clientId
-                document.getElementById('clientId-input').value = cid
-                //let clientIdInputValue = document.getElementById('clientId-input').value
-                const label = document.getElementById('clientIdLabel');
-                label.addEventListener('click', ()=> {document.getElementById('clientId-input').value = cid})
-                const clickLabelSession = () => {}
-            }
-            else{
-                console.log('clientId does not exist')
-            }
-
-            })
-        });
+        //    const retrieved = new Promise(resolve => {
+        //    gtag('get', 'G-BKHZZPMN4Y', 'client_id', resolve)
+        //    });
+        //    retrieved.then((client_id) => {
+        //    cid = client_id
+        //    clientId = client_id
+        //    document.getElementById('clientId-input').value = clientId;
+        //    if(clientId || cid){
+        //        console.log('clientId exists', clientId, 'cid exist', cid)
+        //        document.getElementById('clientId-input').value = clientId
+        //        document.getElementById('clientId-input').value = cid
+        //        //let clientIdInputValue = document.getElementById('clientId-input').value
+        //        const label = document.getElementById('clientIdLabel');
+        //        label.addEventListener('click', ()=> {document.getElementById//('clientId-input').value = cid})
+        //        const clickLabelSession = () => {}
+        //    }
+        //    else{
+        //        console.log('clientId does not exist')
+        //    }
+//
+        //    })
+        //});
         // ------------------------------------
     </script>
     <!-- STYLESHEET FOR BOOTSTRAP ICONS -->
@@ -177,23 +177,39 @@
 </head>
 <body>
     <!-- NAV BAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <h3 class="segment-green-text"><a class="navbar-brand" href="#">Segment Demo</a></h3>
-        <span class="segment-green-text">_ __ ___ </span>
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <h3 class="segment-green-text"><a class="navbar-brand" href="/user">Segment Demo</a></h3>
+        <span class="segment-green-text zoom">_ __ ___ </span>
         <i class="bi bi-scooter" style="font-size: 2rem; color:#4fb58b;"></i>
-        
+
+        <h5 class="segment-green-text nav-page"><a href="/user"> User Page </a></h5>
+        <h5 class="segment-green-text nav-page"><a href="/ecommerce"> Ecommerce </a></h5> -->
+        <!-- <h5></h5> -->
+        <!-- <h5></h5> -->
+
         <!-- CLIENT vs SERVER toggle -->
-        <div class="toggle-container">
+        <!-- <div class="toggle-container"> -->
             <!-- CODEPEN TOGGLE : https://codepen.io/mallendeo/pen/QWKrEL -->
-            <ul class="tg-list">
+            <!-- <ul class="tg-list">
                 <li class="tg-list-item">
-                    <!-- <h4>Flip</h4> -->
                     <input id="source-selection" class="tgl tgl-flip" type="checkbox" checked/>
                     <label class="tgl-btn" data-tg-off="SERVER" data-tg-on="CLIENT" for="source-selection"></label>
                 </li>
             </ul>
         </div>
-    </nav>
+    </nav> -->
+    
+    <!-- LOAD NAV BAR -->
+    <div id="navbar-placeholder"></div>
+
+    <script>
+        fetch('./Components/nav.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+            })
+            .catch(err => console.error('Error loading navbar:', err));
+    </script>
         
     <div class="container-fluid">
         <div class="row" id="main-content">
@@ -377,6 +393,15 @@
                 </div> <!-- Close sidebar-container -->
             </div> <!-- Close rightSidebarWrapper -->
         </div> <!-- Close row -->
+
+            
+        <div id="eventTriggerContainer">
+            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="pageTrigger">Page</button>
+            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="identifyTrigger">Identify</button>
+            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="trackTrigger">Track</button>
+            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="groupTrigger">Group</button>
+            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="aliasTrigger">Alias</button>
+        </div>
     </div> <!-- Close container-fluid -->
 
     <!-- FOOTER -->

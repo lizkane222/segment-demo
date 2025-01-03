@@ -1,0 +1,54 @@
+<!-- USER DETAILS FORM -->
+<div class="form-container">
+    <button type="button" id="generateFakerUserData" class="btn btn-warning">
+        <i   class="bi bi-lightning-charge" style="font-size: 2rem;"></i>
+    </button>
+    <form id="userForm">
+        <div class="form-group">
+            <label id="firstNameLabel" for="firstName">First Name: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="text" name="firstName" class="form-control" id="firstName" >
+        </div>
+        <div class="form-group">
+            <label id="lastNameLabel" for="lastName">Last Name: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="text" name="lastName" class="form-control" id="lastName" >
+        </div>
+        <div class="form-group">
+            <label id="usernameLabel" for="username">Username: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="text" name="username" class="form-control" id="username" >
+        </div>
+        <div class="form-group">
+            <label id="phoneLabel" for="phone">Phone: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="text" name="phone" class="form-control" id="phone" >
+        </div>
+        <div class="form-group" id="email-row">
+            <label id="emailLabel" for="email">Email: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="email" name="email" class="form-control" id="email" >
+        </div>
+        <div class="form-group">
+            <label id="streetLabel" for="street">Street Address: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="text" name="street" class="form-control" id="street" >
+        </div>
+        <div class="form-group">
+            <label id="cityLabel" for="city">City: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="text" name="city" class="form-control" id="city" >
+        </div>
+        <div class="form-group">
+            <label id="stateLabel" for="state">State: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="text" name="state" class="form-control" id="state" >
+        </div>
+        <div class="form-group">
+            <label id="zipcodeLabel" for="zipcode">Zipcode: <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i></label>
+            <input type="text" name="zipcode" class="form-control" id="zipcode" >
+        </div>
+        
+        <div class="button-row">
+            <button type="submit" id="identifyAnonymousId" class="btn bkgrdSegmentGreen" style="color:white;">Identify : AnonymousId</button>
+            <button type="submit" id="identifyUserId" class="btn bkgrdSegmentGreen" style="color:white;">Identify : UserId</button>
+        </div>
+
+        <div class="extra-buttons">
+            <button type="button" class="btn btn-secondary" id="clearUserForm">Clear Form</button>
+            <button type="button" class="btn btn-outline-danger" id="reset-ajs-user">Reset AJS User</button>
+        </div>
+    </form>
+</div>

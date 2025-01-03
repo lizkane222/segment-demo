@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ecommerce</title>
+    <script>
+        fetch('./Components/head.html')
+        .then(response => response.text())
+        .then(data => {
+            document.head.innerHTML += data; // Append to the existing head
+        })
+        .catch(error => console.error('Error loading head.html:', error));
+    </script>
+    <link rel="stylesheet" href="./ecommerce.css">
+</head>
+<body>
+
+    <!-- LOAD NAV BAR -->
+    <div id="navbar-placeholder"></div>
+
+    <script>
+        fetch('./Components/nav.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+            })
+            .catch(err => console.error('Error loading navbar:', err));
+    </script>
+
+    <header class="ecommerce-header">
+        <h1>Ecommerce</h1>
+        <!-- <h1>Ecommerce Store</h1> -->
+        <input type="text" id="searchBar" placeholder="Search for products...">
+        <div id="tags">
+            <!-- Tags will be dynamically added here -->
+        </div>
+    </header>
+    <main>
+        <section id="products">
+            <!-- Product categories and products will be dynamically added here -->
+            <div class="product-list">
+                <!-- Example Product -->
+                <div class="product" data-product-id="1">
+                    <h3>Product Name</h3>
+                    <p>Product Description</p>
+                    <!-- <div> -->
+                        <i class="bi bi-cart product-cart" style="font-size: 3rem; color:#44a27b;"></i>
+                        <!-- <i class="bi bi-cart product-cart"></i> -->
+                        <i class="bi bi-bookmark product-bookmark"></i>
+                    <!-- </div> -->
+                </div>
+                <!-- Repeat for other products -->
+            </div>
+        </section>
+    </main>
+    <aside id="cartSidebar" >
+        <h3>Cart</h3>
+        <ul id="cartList"></ul>
+        <p>Subtotal: <span id="subtotal">$0.00</span></p>
+        <p>Tax: <span id="tax">$0.00</span></p>
+        <p>Shipping: <span id="shipping">$0.00</span></p>
+        <p>Total: <span id="total">$0.00</span></p>
+        <button id="checkoutButton" class="btn bkgrdSegmentGreen white-text">Checkout</button>
+    </aside>
+
+    <!-- Footer for bookmarked products -->
+    <!-- <footer class="bookmark-footer">
+        <div id="bookmarked-products">
+            <i class="bi bi-bookmarks toggle-bookmark-footer"></i>
+            <div class="bookmarked-list"></div>
+        </div>
+    </footer> -->
+    <footer class="bookmark-footer">
+        <div id="bookmarked-products">
+            <i class="bi bi-bookmarks toggle-bookmark-footer" style="font-size: 3rem; color:#4fb58b;"></i>
+            <!-- <i class="bi bi-bookmarks toggle-bookmark-footer"></i> -->
+            <div class="bookmarked-list">
+                <!-- Bookmarked products will appear here -->
+            </div>
+        </div>
+    </footer>
+</body>
+<script src="./segment-demo.js" type="module"></script> 
+<script src="./ecommerce.js" type="module"></script> 
+</html>
+
+
+
+<!-- cart icon that should be visible at all times to toggle cart sidebar and this icon should be visible on all products-->
+<!-- <i class="bi bi-cart" style="font-size: 3rem; color:#44a27b;"></i> -->
+
+<!-- icon that appears when hovering over a product's bi-cart icon -->
+<!-- <i class="bi bi-cart-plus" style="font-size: 3rem; color:#6fc3a0;"></i> -->
+
+<!-- icon on the product that should appear when product is added to cart -->
+<!-- <i class="bi bi-cart-check" style="font-size: 3rem; color:#339cff;"></i> -->
+
+<!-- icon on the product when hovering over the bi-cart-plus icon, this should only appear on hover when bi-cart-plus icon exists and remove the product from the cart -->
+<!-- <i class="bi bi-cart-dash" style="font-size: 3rem; color:#435A6F;"></i> -->
+
+
+<!-- bookmark icon that should be visible on all products -->
+<!-- <i class="bi bi-bookmark" style="font-size: 3rem; color:#44a27b;"></i> -->
+
+<!-- icon that appears when hovering on the bi-bookmark icon -->
+<!-- <i class="bi bi-bookmark-plus" style="font-size: 3rem; color:#6fc3a0;"></i> -->
+
+<!-- icon that should appear on a product which has been clicked and added to the list of bookmarked products -->
+<!-- <i class="bi bi-bookmark-check" style="font-size: 3rem; color:#339cff;"></i> -->
+
+<!-- icon on the product when hovering over the bi-bookmark-check icon, this should only appear on hover when bi-bookmark-check icon exists and when clicked it removes the product from the list of products -->
+<!-- <i class="bi bi-bookmark-dash" style="font-size: 3rem; color:#56728f;"></i> -->
+
+<!-- create a new section that sits as a footer at the bottom of the page which contains in a row the list of products that have been bookmarked (all products with bi-bookmark-check). when clicked it can toggle open and close this section. it should remain visible at all times -->
+<!--  -->
+<!-- <i class="bi bi-bookmarks" style="font-size: 3rem; color:#357e5f;"></i> -->
+
+
+<!-- summary cart : 
+all products have a cart icon that is always visible : bi-cart
+when hovering over the bi-cart cart icon on a product, a bi-cart-plus icon appears
+when clicking on the bi-cart-plus icon, the icon is updated to the bi-cart-check icon on the product
+when hovering over the bi-cart-check icon, a bi-cart-dash icon appears
+when clicking on the bi-cart-dash icon, the product is removed from the cart and the bi-cart should appear on the product
+
+summary bookmark : 
+all products have a bookmark icon that is always visible : bi-bookmark
+when hovering over the bi-bookmark bookmark icon on a product, a bi-bookmark-plus icon appears
+when clicking on the bi-bookmark-plus icon, the icon is updated to the bi-bookmark-check icon on the product
+when hovering over the bi-bookmark-check icon, a bi-bookmark-dash icon appears
+when clicking on the bi-bookmark-dash icon, the product is removed from the bookmarked list and the bi-bookmark should appear on the product -->
