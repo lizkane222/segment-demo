@@ -75,7 +75,7 @@ body {
 }
 
 main {
-    margin: 10em 280px 0 0;
+    margin: 7em 280px 0 0;
     display: flex;
     flex-direction: row;
     gap: 20px;
@@ -114,35 +114,35 @@ main {
     scroll-behavior: smooth;
     overflow-y: hidden; /* Hide vertical scrolling */
     /* height: 10em; */
-    padding: 10px 0; /* Adjust padding as needed */
+    padding: 10px 0; /* This padding ensures full product is visible */
 
 }
 
 .carousel {
     position: relative;
-    position: relative;
     height: 300px; /* Set a fixed height for the carousel */
-    margin: 20px 0;
-    padding: 1em 3em 0 0;
+    margin: 20px 0 0 0;
+    /* padding: 0 3em 0 0; */
 }
 
 .carousel h3 {
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     text-align: left;
+    margin-left: 4em;
 }
 
 .carousel-wrapper {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    gap: 15px;
+    /* gap: 15px; */
     /* padding: 3em 0; */
 }
 
 .product-row {
     display: flex;
-    gap: 1em;
-    padding: 3em 0;
+    /* gap: 1em; */
+    /* padding: 1em 0; */
 
 }
 
@@ -163,11 +163,11 @@ main {
     /* margin : 0 4em 0 0; */
 }
 
-.carousel-button.prev {
+.carousel-button.left {
     left: 5px;
 }
 
-.carousel-button.next {
+.carousel-button.right {
     right: 5px;
 }
 
@@ -323,7 +323,7 @@ main {
 #cartSidebar {
     position: fixed;
     right: 0;
-    top: 0;
+    top: 10em;
     width: 300px;
     height: 100%;
     background-color: #ffffff;

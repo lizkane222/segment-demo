@@ -61,13 +61,20 @@
         </section>
     </main>
     <aside id="cartSidebar" >
-        <h3>Cart</h3>
+        <h3 class="right"><i class="bi bi-cart product-cart" style="font-size: 3rem; color:#44a27b;"></i></h3>
         <ul id="cartList"></ul>
         <p>Subtotal: <span id="subtotal">$0.00</span></p>
         <p>Tax: <span id="tax">$0.00</span></p>
         <p>Shipping: <span id="shipping">$0.00</span></p>
         <p>Total: <span id="total">$0.00</span></p>
         <button id="checkoutButton" class="btn bkgrdSegmentGreen white-text">Checkout</button>
+
+        <div id="recentOrdersWrapper" class="wrapper hidden">
+            <h5>Recent Orders</h5>
+            <ul id="recentOrdersList">
+                <!-- Recent Orders will appear here -->
+            </ul>
+        </div>
     </aside>
 
     <!-- Footer for bookmarked products -->

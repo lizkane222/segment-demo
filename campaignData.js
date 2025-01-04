@@ -422,7 +422,7 @@ const campaignData = [
 ];
 
 // Export or use the campaignData as needed
-console.log(campaignData.length);
+// console.log(campaignData.length);
 
 
 // Extract the `utm_campaign` or `utm_id` from the URL query string

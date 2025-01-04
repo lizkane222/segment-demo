@@ -148,8 +148,9 @@ function toggleBookmark(productId) {
     updateBookmarkedList();
 }
 
+let recentOrders = []
 // Render cart
-function renderCart() {
+function renderCart(recentOrder) {
     const cartSidebar = document.getElementById("cartSidebar");
     cartSidebar.classList.remove("hidden");
 
@@ -170,6 +171,10 @@ function renderCart() {
     taxElement.textContent = `$${tax}`;
     shippingElement.textContent = `$${shipping}`;
     totalElement.textContent = `$${total.toFixed(2)}`;
+
+    if(recentOrders.length > 0){
+        document.getElementById("recentOrdersWrapper").classList.remove("hidden");
+    }
 }
 
 // Update bookmarked list
@@ -215,10 +220,14 @@ function filterByTag(category) {
 function setupCheckoutButton() {
     const checkoutButton = document.getElementById("checkoutButton");
     checkoutButton.addEventListener("click", () => {
-        alert("Order Completed!");
+        // alert("Order Completed!");
+        let orderDate = new Date();
+        let order = {orderDate:orderDate, cart:cart}
+        let recentOrder = []
+        recentOrder.push(order);
+
+        renderCart(recentOrder);
         cart = [];
-        renderCart();
-        document.getElementById("cartSidebar").classList.add("hidden");
     });
 }
 

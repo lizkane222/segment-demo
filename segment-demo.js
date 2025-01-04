@@ -40,19 +40,27 @@ const updateGA4Fields = () => {
         let ga4SessionId = document.getElementById('sessionId-input');
         if (ga4SessionId) {
             ga4SessionId.value = data.session_id;
-            console.log('ga4SessionId:', ga4SessionId.value); // Debugging
+            sessionId = data.session_id;
+            // console.log('ga4SessionId:', ga4SessionId.value); // Debugging
+            // console.log('sessionId:', sessionId); // Debugging
         }
 
         let ga4SessionNumber = document.getElementById('sessionNumber-input');
         if (ga4SessionNumber) {
             ga4SessionNumber.value = data.session_number;
-            console.log('ga4SessionNumber:', ga4SessionNumber.value); // Debugging
+            sessionNumber = data.session_number;
+            // console.log('ga4SessionNumber:', ga4SessionNumber.value); // Debugging
+            // console.log('sessionNumber:', sessionNumber); // Debugging
         }
 
         let ga4ClientId = document.getElementById('clientId-input');
         if (ga4ClientId) {
             ga4ClientId.value = data.client_id;
-            console.log('ga4ClientId:', ga4ClientId.value); // Debugging
+            clientId = data.client_id;
+            cid = data.client_id;
+            // console.log('ga4ClientId:', ga4ClientId.value); // Debugging
+            // console.log('clientId:', clientId); // Debugging
+            // console.log('cid:', cid); // Debugging
         }
     })
     .catch(error => {
@@ -62,7 +70,7 @@ const updateGA4Fields = () => {
 };
 // DOM Ready function for updateGA4Fields server call
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded and parsed.');
+    // console.log('DOM fully loaded and parsed.');
     updateGA4Fields();
 });
 
@@ -169,13 +177,12 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         context: context || {}, 
         campaign : campaign || null
     }
-    console.log('IDENTIFY currentUser : ',currentUser)
-    console.log('IDENTIFY userId : ',userId)
-    console.log('IDENTIFY anonymousId : ',anonymousId)
-    console.log('IDENTIFY traits : ',traits)
-    console.log('IDENTIFY context : ',context)
-    console.log('IDENTIFY campaign : ',campaign)
     // console.log('IDENTIFY currentUser : ',currentUser)
+    // console.log('IDENTIFY userId : ',userId)
+    // console.log('IDENTIFY anonymousId : ',anonymousId)
+    // console.log('IDENTIFY traits : ',traits)
+    // console.log('IDENTIFY context : ',context)
+    // console.log('IDENTIFY campaign : ',campaign)
     
 
     userList.innerHTML = '';
@@ -221,7 +228,6 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
             )
     }
     else {
-        // Send data to the server via Segment's Node.js library
         // Send data to the server via Segment's Node.js library
         fetch('/identify', {
             method: 'POST',
@@ -458,14 +464,99 @@ function showToast() {
     }, 2000);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // document.getElementById('userId-p').addEventListener('click', () => copyToClipboard('userId-p'));
-    // document.getElementById('anonymousId-p').addEventListener('click', () => copyToClipboard('anonymousId-p'));
-    // document.getElementById('traits-p').addEventListener('click', () => copyToClipboard('traits-p'));
-    // document.getElementById('groupId-p').addEventListener('click', () => copyToClipboard('groupId-p'));
-    // document.getElementById('groupTraits-p').addEventListener('click', () => copyToClipboard('groupTraits-p'));
-    // Add more event listeners as needed
-    // Bind buttons to update respective <p> tags
+// document.addEventListener('DOMContentLoaded', () => {
+//     document.addEventListener("DOMContentLoaded", () => {
+//         const externalIdMappings = ["userId", "anonymousId", "groupId", "email"];
+    
+//         const updateProfileAPIField = (fieldValue, targetFieldId) => {
+//             const targetField = document.getElementById(targetFieldId);
+//             if (targetField) {
+//                 targetField.value = fieldValue;
+//                 console.log(`Updated ${targetFieldId} with value: ${fieldValue}`);
+//             } else {
+//                 console.error(`Target field with ID ${targetFieldId} not found.`);
+//             }
+//         };
+    
+//         document.querySelectorAll(".unify-svg-icon").forEach(icon => {
+//             icon.addEventListener("click", event => {
+//                 const parent = event.target.closest("label, .get-cookie-btns, .form-group");
+//                 const inputField = parent?.querySelector("input");
+//                 const pTag = parent?.querySelector("p");
+    
+//                 let fieldValue = "";
+//                 let inputId = "";
+    
+//                 if (inputField) {
+//                     fieldValue = inputField.value.trim();
+//                     inputId = inputField.id;
+//                 } else if (pTag) {
+//                     fieldValue = pTag.textContent.trim();
+//                     inputId = pTag.id.replace("-p", ""); // Map `-p` IDs to input IDs
+//                 }
+    
+//                 if (fieldValue) {
+//                     if (externalIdMappings.includes(inputId)) {
+//                         updateProfileAPIField(fieldValue, "externalId");
+//                     } else {
+//                         const queryParametersInput = document.getElementById("queryParameters");
+//                         const currentParams = queryParametersInput.value.trim();
+//                         const newParam = `${inputId}=${fieldValue}`;
+//                         queryParametersInput.value = currentParams ? `${currentParams},${newParam}` : newParam;
+//                         console.log(`Added query parameter: ${newParam}`);
+//                     }
+//                 } else {
+//                     console.error("No valid input or p tag value found, or value is empty.");
+//                 }
+//             });
+//         });
+//     });
+document.addEventListener("DOMContentLoaded", () => {
+    const externalIdMappings = ["userId", "anonymousId", "groupId", "email"];
+
+    const updateProfileAPIField = (fieldValue, targetFieldId) => {
+        const targetField = document.getElementById(targetFieldId);
+        if (targetField) {
+            targetField.value = fieldValue;
+            console.log(`Updated ${targetFieldId} with value: ${fieldValue}`);
+        } else {
+            console.error(`Target field with ID ${targetFieldId} not found.`);
+        }
+    };
+
+    document.querySelectorAll(".unify-svg-icon").forEach(icon => {
+        icon.addEventListener("click", event => {
+            const parent = event.target.closest("label, .get-cookie-btns, .form-group");
+            const inputField = parent?.querySelector("input");
+            const pTag = parent?.querySelector("p");
+
+            let fieldValue = "";
+            let inputId = "";
+
+            if (inputField) {
+                fieldValue = inputField.value.trim();
+                inputId = inputField.id;
+            } else if (pTag) {
+                fieldValue = pTag.textContent.trim();
+                inputId = pTag.id.replace("-p", ""); // Map `-p` IDs to input IDs
+            }
+
+            if (fieldValue) {
+                if (externalIdMappings.includes(inputId)) {
+                    updateProfileAPIField(fieldValue, "externalId");
+                } else {
+                    const queryParametersInput = document.getElementById("queryParameters");
+                    const currentParams = queryParametersInput.value.trim();
+                    const newParam = `${inputId}=${fieldValue}`;
+                    queryParametersInput.value = currentParams ? `${currentParams},${newParam}` : newParam;
+                    console.log(`Added query parameter: ${newParam}`);
+                }
+            } else {
+                console.error("No valid input or p tag value found, or value is empty.");
+            }
+        });
+    });
+
     document.getElementById("userId-cookie-get").addEventListener("click", () => updateCookie(userId, "userId-p"));
     document.getElementById("userId-p").addEventListener("click", () => copyToClipboard("userId-p"));
     document.getElementById("anonymousId-cookie-get").addEventListener("click", () => updateCookie(anonymousId, "anonymousId-p"));
@@ -518,7 +609,132 @@ const getGlobalVariables = () => {
     
 }
 
+// ------------------------------------
+// START // PROFILE API REQUEST @ LEFT SIDEBAR
 
+// THIRD ITERATION
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Fetch sensitive data from the server
+    fetch('/api/config')
+        .then(response => response.json())
+        .then(data => {
+            const spaceIdInput = document.getElementById('spaceId');
+            const profileAPIKeyInput = document.getElementById('profileAPIKey');
+    
+            if (spaceIdInput) spaceIdInput.value = data.spaceId || '';
+            if (profileAPIKeyInput) profileAPIKeyInput.value = data.profileAPIKey || '';
+        })
+        .catch(err => {
+            console.error('Error fetching config:', err);
+        });
+
+    // DOM Elements
+    const spaceIdInput = document.getElementById("spaceId");
+    const externalIdInput = document.getElementById("externalId");
+    const queryParametersInput = document.getElementById("queryParameters");
+    const addAudienceClassButton = document.getElementById("addAudienceClass");
+    const addComputedTraitClassButton = document.getElementById("addComputedTraitClass");
+    const sendApiRequestButton = document.getElementById("sendApiRequest");
+    const queryStringDisplay = document.getElementById("queryStringDisplay");
+
+    // Default Endpoint Template
+    const defaultEndpointTemplate = "https://profiles.segment.com/v1/spaces/<space_id>/collections/";
+
+    // Function to Update Query String Display
+    const updateQueryStringDisplay = () => {
+        const spaceId = spaceIdInput.value.trim() || "<space_id>";
+        const externalId = externalIdInput.value.trim() || "<external_id>";
+        const queryParams = new URLSearchParams();
+
+        // Build Query Parameters
+        if (queryParametersInput.value.trim()) {
+            queryParametersInput.value
+                .split(",")
+                .forEach(param => {
+                    const [key, value] = param.split("=");
+                    if (key && value) queryParams.append(key.trim(), value.trim());
+                });
+        }
+
+        // Construct the Full Endpoint
+        const endpoint = `${defaultEndpointTemplate.replace("<space_id>", spaceId)}users/profiles/${externalId}/traits${queryParams.toString() ? "?" + queryParams.toString() : ""}`;
+
+        // Update Query String Display
+        queryStringDisplay.value = endpoint || "No query string present.";
+    };
+
+    // Add Query Parameters for Audience Class
+    addAudienceClassButton.addEventListener("click", () => {
+        const currentParams = queryParametersInput.value.trim();
+        queryParametersInput.value = currentParams
+            ? `${currentParams},class=audience`
+            : "class=audience";
+        updateQueryStringDisplay();
+    });
+
+    // Add Query Parameters for Computed Trait Class
+    addComputedTraitClassButton.addEventListener("click", () => {
+        const currentParams = queryParametersInput.value.trim();
+        queryParametersInput.value = currentParams
+            ? `${currentParams},class=computed_trait`
+            : "class=computed_trait";
+        updateQueryStringDisplay();
+    });
+
+    // Send API Request
+    sendApiRequestButton.addEventListener("click", async () => {
+        const spaceId = spaceIdInput.value.trim();
+        const externalId = externalIdInput.value.trim();
+        const queryParams = queryParametersInput.value.trim();
+
+        if (!spaceId || !externalId) {
+            alert("Space ID and External ID are required.");
+            return;
+        }
+
+        try {
+            const queryString = queryParams
+                ? `?${queryParametersInput.value}`
+                : "";
+            const endpoint = `https://profiles.segment.com/v1/spaces/${spaceId}/collections/users/profiles/${externalId}/traits${queryString}`;
+
+            console.log("Sending API request to:", endpoint);
+
+            const response = await fetch(endpoint, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer YOUR_SEGMENT_ACCESS_TOKEN`, // Replace with a valid token
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("API Response:", data);
+                alert("API Request Successful!");
+            } else {
+                console.error("API Error:", data);
+                alert("API Request Failed!");
+            }
+        } catch (error) {
+            console.error("Request Error:", error);
+            alert("An error occurred while sending the request.");
+        }
+    });
+
+    // Update query string display whenever inputs change
+    [spaceIdInput, externalIdInput, queryParametersInput].forEach(input =>
+        input.addEventListener("input", updateQueryStringDisplay)
+    );
+
+    // Initialize query string display
+    updateQueryStringDisplay();
+});
+
+// END // PROFILE API REQUEST @ LEFT SIDEBAR
+// ------------------------------------
+                                    
 // Function to update user profile (LEFT SIDEBAR)
 function updateProfile(event, button, type) {
     event.preventDefault(); // Prevent default form submission
@@ -536,22 +752,11 @@ function updateProfile(event, button, type) {
     // GET CURRENT DATA FROM USER FORM
     const userFormFields = getUserFormValues() 
     let {firstName, lastName, username, phone, email, street, city, state, zipcode} = userFormFields;
-    // firstName = document.getElementById('firstName').value;
-    // lastName = document.getElementById('lastName').value;
-    // username = document.getElementById('username').value;
-    // phone = document.getElementById('phone').value;
-    // email = document.getElementById('email').value;
-    // street = document.getElementById('street').value;
-    // city = document.getElementById('city').value;
-    // state = document.getElementById('state').value;
-    // zipcode = document.getElementById('zipcode').value;
 
     // GET CURRENT DATA FROM GLOBAL VARIABLES
     const globalVariables = getGlobalVariables()
     let {userId :userId , anonymousId :anonymousId , usertraits :usertraits , groupId :groupId , groupTraits :groupTraits , sessionId :sessionId , sessionNumber :sessionNumber , clientId :clientId , cid :cid , campaign :campaign , currentUser : currentUser} = globalVariables
     // GET CURRENT DATA FROM CAMPAIGN FORM
-
-
 
     if(username || phone || email || street || city || state || zipcode){
       forceType='userId'  
@@ -577,10 +782,6 @@ function updateProfile(event, button, type) {
         userItem.innerHTML = info;
         userList.appendChild(userItem);
     });
-
-
-    // const profileDiv = document.getElementById('user-profile');
-    // profileDiv.innerHTML = `<p><strong>First Name:</strong> ${firstName}</p><p><strong>Last Name:</strong> ${lastName}</p><p><strong>Username:</strong> ${username}</p><p><strong>Email:</strong> ${email}</p><p><strong>Phone:</strong> ${phone}</p>`;
     
     // IF IDENTIFY:USERID IS CLICKED OR IF PII IS INCLUDED IN FORM THEN FORCE USERID GENERATION
     if(identifierType==='userId' ||  forceType==='userId'){
@@ -595,23 +796,14 @@ function updateProfile(event, button, type) {
     let data = updateCampaignFormAndQueryString(true)
 
     let tempTraits = {
-        // firstName : firstName,
         firstName : (firstName ? firstName : {}),
-        // lastName : lastName,
         lastName : (lastName ? lastName : {}),
-        // username : username,
         username : (username ? username : {}),
-        // phone : phone,
         phone : (phone ? phone : {}),
-        // email : email,
         email : (email ? email : {}),
-        // street : street,
         street : (street ? street : {}),
-        // city : city,
         city : (city ? city : {}),
-        // state : state,
         state : (state ? state : {}),
-        // zipcode : zipcode,
         zipcode : (zipcode ? zipcode : {}),
         referrer : (referrer ? referrer : {}),
         sessionId : (sessionId ? sessionId : {}),
@@ -622,7 +814,6 @@ function updateProfile(event, button, type) {
     console.log('TEMP TRAITS : ',tempTraits)
     usertraits = tempTraits
 
-    // currentSourceSelected==='CLIENT'? Identify(traits, data.context) : identifyServer(userId, traits, context=data.context)
     if(type==='identify'){
         console.log('testing currentUser', currentUser)
         Identify(
@@ -634,17 +825,7 @@ function updateProfile(event, button, type) {
             globalVariables
         )
     }
-    // if(type==='page'){
-    //     Page({
-    //         name : document.title, 
-    //         category : 'Campaign', 
-    //         traits: tempTraits, 
-    //         context : data.context, 
-    //         userId : userId || analytics.user().id() || null, 
-    //         anonymousId : anonymousId || analytics.user().anonymousId() || null
-    //     });
-    // }
-    // Identify(tempTraits, data.context)
+
     autoUpdate()
 }
 
@@ -669,7 +850,7 @@ window.clearForm = (formId) => {
     inputs.forEach(input => {
         // Skip clearing specific inputs
         if (['sessionId', 'sessionNumber', 'clientId'].includes(input.name)) {
-            console.log(`Skipping reset for input: ${input.name}`);
+            // console.log(`Skipping reset for input: ${input.name}`);
             return;
         }
         input.value = ''; // Clear other inputs
@@ -680,20 +861,20 @@ window.clearForm = (formId) => {
         // Clear the traits object using analytics.js method
         analytics.user().traits({}); // This clears all user traits
         console.log('User form and traits reset.');
-    } else if (formId === 'campaign-fields') {
+    } else if (formId === 'campaignForm') {
         // Clear localStorage and query string display for the campaign form
         inputs.forEach(input => {
             if (!['sessionId', 'sessionNumber', 'clientId'].includes(input.name)) {
                 localStorage.removeItem(input.name);
             }
         });
-
+        
         // Clear the query string display
         const queryStringDisplay = document.getElementById('querystring-display');
         if (queryStringDisplay) {
             queryStringDisplay.textContent = '';
+            window.location.search = ''
         }
-
         console.log('Campaign form cleared, localStorage and query string display reset.');
     }
 };
@@ -725,6 +906,45 @@ const resetAjsUser = () => {
     // reset()
     window.location.reload(true);
     // autoUpdate()
+
+    // Reset GA4 context on the server each time reset is clicked on client
+    console.log('PREVIOUS clientId : ', clientId)
+    console.log('PREVIOUS cid : ', cid)
+    console.log('PREVIOUS sessionId : ', sessionId)
+    console.log('PREVIOUS sessionNumber : ', sessionNumber)
+
+    fetch('/reset-ga4-context', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('GA4 Context Reset:', data);
+
+            // Save new GA4 data as cookies
+            document.cookie = `client_id=${data.client_id}; path=/`;
+            document.cookie = `session_id=${data.session_id}; path=/`;
+            document.cookie = `session_number=${data.session_number}; path=/`;
+
+            // Optionally update the UI
+            const sessionIdInput = document.getElementById('sessionId-input');
+            const sessionNumberInput = document.getElementById('sessionNumber-input');
+            const clientIdInput = document.getElementById('clientId-input');
+            if (sessionIdInput) sessionIdInput.value = data.session_id;
+            if (sessionNumberInput) sessionNumberInput.value = data.session_number;
+            if (clientIdInput) clientIdInput.value = data.client_id;
+
+            // Reload the page to simulate a new session
+            window.location.reload();
+        })
+        .catch(err => console.error('Error resetting GA4 context:', err))
+    updateGA4Fields();
+    console.log('CURRENT clientId : ', clientId)
+    console.log('CURRENT cid : ', cid)
+    console.log('CURRENT sessionId : ', sessionId)
+    console.log('CURRENT sessionNumber : ', sessionNumber)
 }
 // document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser);
 
@@ -737,58 +957,7 @@ document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser
 // document.getElementById('clearCampaignForm').addEventListener('click', clearForm,'clearCampaignForm');
 
 document.getElementById('clearUserForm').addEventListener('click', () => clearForm('userForm'));
-document.getElementById('clearCampaignForm').addEventListener('click', () => clearForm('campaign-fields'));
-
-
-
-
-// ANALYTICS RESET
-    // const reset = () => {
-        // Step 1: Reset the analytics state
-        // analytics.reset();
-    
-        // Step 2: Remove the existing Segment analytics script tag
-        // var scriptTag = document.querySelector('script[data-global-segment-analytics-key]');
-        // if (scriptTag) {
-        // scriptTag.parentNode.removeChild(scriptTag);
-        // }
-    
-        // // Step 3: Reinsert the Segment script tag to reload the snippet
-        // var newScript = document.createElement('script');
-        // newScript.type = 'text/javascript';
-        // newScript.async = true;
-        // newScript.src = 'https://cdn.segment.com/analytics.js/v1/mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3/analytics.min.js';
-        // newScript.setAttribute('data-global-segment-analytics-key', 'mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3');
-        // document.head.appendChild(newScript);
-    
-        // Optionally, you can call `analytics.page()` or any other method to initialize the new session
-        // newScript.onload = function() {
-        //     analytics.page();
-        // };
-        // autoUpdate()
-        // window.location.reload(true);
-    // }
-
-
-
-// Function to create dynamic buttons
-// function createButtons(buttonNames) {
-//     const buttonContainer = document.getElementById('dynamic-buttons');
-//     buttonNames.forEach(name => {
-//         const button = document.createElement('button');
-//         button.textContent = name;
-//         button.classList.add('btn', 'btn-secondary', 'mr-2');
-//         button.addEventListener('click', () => {
-//             // Handle button click (replace with your desired function)
-//             alert(`Button "${name}" clicked!`);
-//         });
-//         buttonContainer.appendChild(button);
-//     });
-// }
-// Example button names
-// const buttonNames = ['Button 1', 'Button 2', 'Button 3'];
-// createButtons(buttonNames);
-
+document.getElementById('clearCampaignForm').addEventListener('click', () => clearForm('campaignForm'));
 
 
 // Function to display cookies
@@ -867,7 +1036,6 @@ function saveFormData() {
 
 
 // Function to load form data from localStorage & querystring
-// Function to load form data from localStorage & querystring
 function loadFormData() {
     let userForm = document.getElementById('userForm');
     let campaignForm = document.getElementById('campaignForm');
@@ -884,61 +1052,40 @@ function loadFormData() {
                 input.value = savedValue;
             }
         });
-    } else {
-        console.error('User form element not found');
     }
 
-    // Populate Campaign Form Fields from localStorage
-    // const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
-    // campaignInputs.forEach(input => {
-    //     const savedValue = localStorage.getItem(input.name);
-    //     if (savedValue !== null) {
-    //         input.value = savedValue;
-    //     }
-    // });
-
-    // // Populate Campaign Form Fields from Query String
-    // campaignInputs.forEach(input => {
-    //     const paramValue = queryParams.get(input.name);
-    //     if (paramValue !== null) {
-    //         input.value = paramValue;
-    //     }
-    // });
     let properties = {}
     let context = {traits : contextTraits, campaign:{}}
-    if(campaignForm){
-        // Check if any of the campaignForm's fields have a value
+
+    if (campaignForm) {
+        // Populate Campaign Form Fields from localStorage or query string
         const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
-        let hasValue = false;
-        campaignInputs.forEach(input => {
-            if (input.value.trim() !== '') {
-                hasValue = true;
-            }
-        });
-        // Populate Campaign Form Fields from Query String
         campaignInputs.forEach(input => {
             const paramValue = queryParams.get(input.name);
             if (paramValue !== null) {
                 input.value = paramValue;
             }
-        });
-        if(hasValue){
-            // Populate Campaign Form Fields from localStorage
-            campaignInputs.forEach(input => {
-                const savedValue = localStorage.getItem(input.name);
-                if (savedValue !== null) {
-                    // properties[input.name] = input.value;
-                    // context[campaign][input.name] = input.value;
-                    input.value = savedValue;
-                }
-            });
-        }
-    }
 
-    // Display Query String
-    const queryStringDisplay = document.getElementById('querystring-display');
-    if (queryStringDisplay) {
-        queryStringDisplay.textContent = window.location.search;
+            const savedValue = localStorage.getItem(input.name);
+            if (savedValue !== null) {
+                input.value = savedValue;
+            }
+        });
+         // Update the query string and display it
+         const queryStringDisplay = document.getElementById('querystring-display');
+         if (queryStringDisplay) {
+             const newQueryParams = new URLSearchParams();
+             campaignInputs.forEach(input => {
+                 if (input.value.trim() !== '') {
+                     newQueryParams.set(input.name, input.value.trim());
+                 }
+             });
+ 
+             // Update the URL and query string display
+             const newQueryString = `?${newQueryParams.toString()}`;
+             window.history.replaceState({}, '', newQueryString);
+             queryStringDisplay.textContent = newQueryString || 'No query string present.';
+         }
     }
 
     // Extract the `utm_campaign` or `utm_id` from the URL query string
@@ -954,25 +1101,25 @@ function loadFormData() {
         const referrerInput = campaignForm.querySelector('input[name="referrer"]');
         if (referrerInput) {
             referrerInput.value = matchedCampaign.utm.referrer || '';
-            console.log("Referrer field set to:", referrerInput.value);
+            // console.log("Referrer field set to:", referrerInput.value);
         }
     }
     if(clientId || cid){
-        console.log('clientId exists', clientId, 'cid exist', cid)
+        // console.log('clientId exists', clientId, 'cid exist', cid)
         document.getElementById('clientId-input').value = clientId
     }
     else{
         console.log('clientId does not exist')
     }
-    console.log('loadFormData document.title : ',document.title);
-    console.log('loadFormData Campaign : ','Campaign');
-    console.log('loadFormData properties : ',properties);
-    console.log('loadFormData context : ',context);
-    console.log('loadFormData campaign : ',campaign);
+    // console.log('loadFormData document.title : ',document.title);
+    // console.log('loadFormData Campaign : ','Campaign');
+    // console.log('loadFormData properties : ',properties);
+    // console.log('loadFormData context : ',context);
+    // console.log('loadFormData campaign : ',campaign);
     userId = userId ? userId : analytics.user().id() ||  {};
     anonymousId = anonymousId ? anonymousId : analytics.user().anonymousId() ||  {};
-    console.log('loadFormData userId : ',userId);
-    console.log('loadFormData anonymousId : ',anonymousId);
+    // console.log('loadFormData userId : ',userId);
+    // console.log('loadFormData anonymousId : ',anonymousId);
     Page(document.title, 'Campaign', properties, context, campaign, userId, anonymousId)
 }
 /// Call `loadFormData` on DOMContentLoaded
@@ -980,7 +1127,6 @@ function loadFormData() {
 
 // CLICK LABEL UPDATES INPUT BY GLOBAL VARIABLE VALUE
 const clickLabelUpdateInputGlobalVariable = (labelId, inputId, variable) => {
-    console.log('INSIDE clickLabelUpdateInputGlobalVariable')
     console.log(labelId, inputId, variable)
     const label = document.getElementById(labelId);
     // label.addEventListener('click', ()=> {console.log(labelId, inputId, variable)})
@@ -1041,87 +1187,7 @@ document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariabl
 // });
 
 
-// Find the matching campaign from the campaignData array
-// const matchedCampaign = campaignData.find(campaign => 
-//   campaign.utm.campaignId === campaign.campaignId || campaign.utm.campaign === campaign.campaignId
-// );
-
-// // Function to load form data from localStorage & querystring
-// function loadFormData() {
-//   // Select the form and its input fields
-//   const form = document.getElementById('userForm');
-//   const inputs = form.querySelectorAll('input, textarea, select');
-  
-//   // Populate from localStorage
-//   inputs.forEach(input => {
-//     const savedValue = localStorage.getItem(input.name);
-//     if (savedValue !== null) {
-//       input.value = savedValue;
-//     }
-//   });
-  
-//   // Select the campaign fields form
-//   const campaignForm = document.getElementById('campaignForm');
-//   const campaignInputs = campaignForm.querySelectorAll('input, textarea, select');
-
-//   // Populate from localStorage (for campaign form fields)
-//   campaignInputs.forEach(input => {
-//       const savedValue = localStorage.getItem(input.name);
-//       if (savedValue !== null) {
-//           input.value = savedValue;
-//       }
-//   });
-
-//   // Populate from query string (for campaign form fields)
-//   const queryParams = new URLSearchParams(window.location.search);
-//   campaignInputs.forEach(input => {
-//       const paramValue = queryParams.get(input.name);
-//       if (paramValue !== null) {
-//           input.value = paramValue;
-//       }
-//   });
-
-//   // Function to display the entire query string in the #querystring-display div
-//   const queryStringDisplay = document.getElementById('querystring-display');
-//   queryStringDisplay.textContent = window.location.search; // Display the entire query string
-
-//   // // Extract the `utm_campaign` or `utm_id` from the URL query string
-//   const campaignId = queryParams.get('utm_id') || queryParams.get('utm_campaign');
-
-
-//   // If a matching campaign is found, update the referrer field
-//   if (matchedCampaign) {
-//       const referrerInput = campaignForm.querySelector('input[name="referrer"]');
-//       if (referrerInput) {
-//         referrer = matchedCampaign.utm.referrer;  
-//         referrerInput.value = matchedCampaign.utm.referrer; // Populate the referrer with the matching campaign data
-//       }
-//   }
-
-//   // Function to display the query string in the display area
-//   function displayQueryString() {
-//       const queryStringDisplay = document.getElementById('querystring-display');
-//       queryStringDisplay.textContent = window.location.search; // Display the entire query string
-//   }
-
-//   // Call the functions after the page loads
-//   document.addEventListener('DOMContentLoaded', () => {
-//       loadFormData();
-//       displayQueryString();
-//   });
-// }
-
-// Event listener for the "Use Campaign Data" button
-// document.getElementById('useCampaign').addEventListener('click', () => {
-//     event.preventDefault()
-//     loadFormData();  // Trigger the loadFormData function to populate the form when the button is clicked
-// });
-
-
-
 // ------------------------------------
-// RESOLVING } BRACE ERROR
-
 
 // Call the loadFormData function on DOM load
 // document.addEventListener('DOMContentLoaded', () => {loadFormData()});
@@ -1146,19 +1212,11 @@ function makeResizable(resizer, direction) {
     const MAX_WIDTH = window.innerWidth * 0.2; // Maximum width constraint (20% of viewport)
     const MIN_WIDTH = 0; // Minimum width constraint
     let startX
-    // let startX, startWidth;
 
 
     resizer.addEventListener('mousedown', (e) => {
         e.preventDefault(); // Prevent text selection
         startX = e.clientX;
-
-        // Save the initial width of the target sidebar
-        // if (direction === 'left') {
-        //     startWidth = parseInt(window.getComputedStyle(leftSidebar).width, 10);
-        // } else if (direction === 'right') {
-        //     startWidth = parseInt(window.getComputedStyle(rightSidebar).width, 10);
-        // }
 
         // Add active class for visual feedback
         resizer.classList.add('active');
@@ -1170,11 +1228,9 @@ function makeResizable(resizer, direction) {
     function resize(e) {
         if (direction === 'left') {
             // Calculate the new width for the left sidebar
-            // const newWidth = startWidth + (e.clientX - startX);
             const newWidth = e.clientX;
 
             if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
-            // if (newWidth >= 50 && newWidth <= window.innerWidth * 0.5) {
                 leftSidebar.style.width = `${newWidth}px`;
                 sidebarLeftContent.style.width = `${newWidth}px`;
                 resizer.style.left = `${newWidth}px`; // Move resizer with sidebar
@@ -1192,11 +1248,9 @@ function makeResizable(resizer, direction) {
             }
         } else if (direction === 'right') {
             // Calculate the new width for the right sidebar
-            // const newWidth = startWidth - (e.clientX - startX);
             const newWidth = window.innerWidth - e.clientX;
 
             if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
-            // if (newWidth >= 50 && newWidth <= window.innerWidth * 0.5) {
                 rightSidebar.style.width = `${newWidth}px`;
                 sidebarRightContent.style.width = `${newWidth}px`;
                 resizer.style.right = `${newWidth}px`; // Move resizer with sidebar
@@ -1306,6 +1360,16 @@ function toggleSidebar(sidebar, icon, resizer) {
 
 // END // RESIZING SIDEBARS
 
+// ------------------------------------
+
+// START // PROFILE API 
+
+
+
+
+// END // PROFILE API 
+
+
 function generateCampaignData() {
     // Generate random index to select data
     const randomIndex = Math.floor(Math.random() * campaignData.length);
@@ -1316,7 +1380,7 @@ function generateCampaignData() {
 // ------------------------------------
 
 function updateCampaignFormAndQueryString(ignore) {
-    console.log('Button clicked'); // Debug log
+    // console.log('Button clicked'); // Debug log
 
     const data = generateCampaignData();
     // let data = loadFormData()
@@ -1325,10 +1389,6 @@ function updateCampaignFormAndQueryString(ignore) {
 
     const utmParams = data.utm;
     console.log(data.utm)
-    // const campaignReferrer = utmParams.referrer
-    // console.log('594', campaignReferrer , utmParams.referrer)
-    // referrer = campaignReferrer
-    // document.getElementById('referrer-in').value = campaignReferrer
 
     // Update form fields
     for (const key in utmParams) {
@@ -1343,6 +1403,11 @@ function updateCampaignFormAndQueryString(ignore) {
     const newUrl = window.location.pathname + queryString;
     window.history.pushState({}, '', newUrl); // Update URL without reload
 
+    // Display Query String
+    const queryStringDisplay = document.getElementById('querystring-display');
+    // if (queryStringDisplay) {
+        queryStringDisplay.textContent = data.queryString;
+    // }
 
     // Generate Segment page call
 
@@ -1360,7 +1425,6 @@ function updateCampaignFormAndQueryString(ignore) {
             referrer : referrer
         },
         google : {
-            // referrer: utmParams.referrer,
             ...(referrer ? referrer : {}),
             ...(sessionId ? { sessionId } : {}),
             ...(sessionNumber ? { sessionNumber } : {}),
@@ -1378,9 +1442,6 @@ function updateCampaignFormAndQueryString(ignore) {
         ...(sessionId ? { sessionId } : {}),
         ...(sessionNumber ? { sessionNumber } : {}),
         ...(clientId ? { cid } : {})
-        // sessionId: sessionId,
-        // sessionNumber: sessionNumber,
-        // clientId: cid
     }
     console.log('Segment page call'); // Log Segment call
     let resData = {pageName : pageName, category:'', properties : properties, context : context, campaign : data, userId : userId, anonymousId : anonymousId}
@@ -1420,62 +1481,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('state').value = randomUser.traits.state || '';
         document.getElementById('zipcode').value = randomUser.traits.zipcode || '';
         // Add more fields as needed
-
     }
-
-    // Add an event listener to the "Generate User Data" button
-    // document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
-    // document.getElementById('generateUserData').addEventListener('click', populateFormWithUserData);
-
     document.getElementById('generateFakerUserData').addEventListener('click', getUserData);
-
 });
 
 const triggerEvent = (type) => {
     if(type ==='page'){
-        // let pageName = window.document.title
-        // let context = {
-        //     campaign: {
-        //         id: utmParams.campaignId,
-        //         name: utmParams.campaign,
-        //         source: utmParams.campaignSource,
-        //         medium: utmParams.campaignMedium,
-        //         term: utmParams.campaignTerm,
-        //         content: utmParams.campaignContent,
-        //     },
-        //     page : {
-        //         referrer : referrer
-        //     },
-        //     google : {
-        //         // referrer: utmParams.referrer,
-        //         ...(referrer ? referrer : {}),
-        //         ...(sessionId ? { sessionId } : {}),
-        //         ...(sessionNumber ? { sessionNumber } : {}),
-        //         ...(clientId ? { cid } : {})
-        //     }
-        // }
-        // let properties = {
-        //     campaignId: utmParams.campaignId,
-        //     campaign: utmParams.campaign,
-        //     campaignSource: utmParams.campaignSource,
-        //     campaignMedium: utmParams.campaignMedium,
-        //     campaignTerm: utmParams.campaignTerm,
-        //     campaignContent: utmParams.campaignContent,
-        //     referrer: utmParams.referrer,
-        //     ...(sessionId ? { sessionId } : {}),
-        //     ...(sessionNumber ? { sessionNumber } : {}),
-        //     ...(clientId ? { cid } : {})
-        // }
         console.log('Page event triggered');
-        // Page('General Page', 'Campaign', properties, context)
         loadFormData()
-        
-        // Page(data)
     }
     if(type ==='identify'){
         console.log('Identify event triggered');
         console.log("identify button : campaignData obj",campaignData)
-        console.log("identify button : google obj", google)
+        // console.log("identify button : google obj", google)
         Identify(userId, anonymousId, usertraits, context)
     }
     if(type ==='track'){
@@ -1496,3 +1514,46 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('groupTrigger').addEventListener('click', () => triggerEvent('group'));
     document.getElementById('aliasTrigger').addEventListener('click', () => triggerEvent('alias'));
 });
+
+// ------------------------------------
+// START : TOOLTIP
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    document.body.appendChild(tooltip);
+
+    let hoverTimeout;
+
+    const showTooltip = (e) => {
+        const target = e.target;
+        const tooltipText = target.getAttribute('data-tooltip');
+        if (tooltipText) {
+            hoverTimeout = setTimeout(() => {
+                tooltip.textContent = tooltipText;
+                tooltip.style.left = `${e.pageX + 10}px`;
+                tooltip.style.top = `${e.pageY + 10}px`;
+                tooltip.classList.add('show');
+            }, 2000); // Delay of 2 seconds
+        }
+    };
+
+    const moveTooltip = (e) => {
+        if (tooltip.classList.contains('show')) {
+            tooltip.style.left = `${e.pageX + 10}px`;
+            tooltip.style.top = `${e.pageY + 10}px`;
+        }
+    };
+
+    const hideTooltip = () => {
+        clearTimeout(hoverTimeout); // Clear timeout to prevent tooltip from showing
+        tooltip.classList.remove('show');
+    };
+
+    document.body.addEventListener('mouseover', showTooltip);
+    document.body.addEventListener('mousemove', moveTooltip);
+    document.body.addEventListener('mouseout', hideTooltip);
+});
+
+// END : TOOLTIP
+// ------------------------------------
