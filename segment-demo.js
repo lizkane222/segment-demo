@@ -1,11 +1,9 @@
 // JAVASCRIPT
-// import { Analytics } from '@segment/analytics-node'
-// const node = new Analytics({ writeKey: 'WOIYdGFBtpCDtCHTMenBAnuTYPA9HLMM' })
 
 // import { campaignData, generateCampaignData, matchedCampaign, campaignId } from './campaignData.js';
+// import { btoa } from "abab";
 import { campaignData } from './campaignData.js';
 import { userData } from './userData.js';
-
 
 // import { getUserData } from './Components/getUserData.js';
 
@@ -34,7 +32,7 @@ const updateGA4Fields = () => {
         // Save GA4 data as cookies
         document.cookie = `client_id=${data.client_id}; path=/`;
         document.cookie = `session_id=${data.session_id}; path=/`;
-        document.cookie = `session_number=${data.session_number}; path=/`;
+        document.cookie = `session_numaber=${data.session_number}; path=/`;
         
         // Display GA4 data in the DOM (optional)
         let ga4SessionId = document.getElementById('sessionId-input');
@@ -157,7 +155,7 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
     // let globalCampaign = globalVariables[campaign] ? globalVariables[campaign] : {}
     // let {usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, currentUser} = globalVariables
     console.log('IDENTIFY globalVariables : ',globalVariables);
-    // let globalUserId = globalVariablesuserId
+    // let globalUserId = globalVariables.userId
     // let globalAnonymousId = globalVariables.anonymousId
     // let usertraits = globalVariables.usertraits
     // let groupId = globalVariables.groupId
@@ -170,6 +168,9 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
     // let currentUser = globalVariables. currentUser
         // usertraits = {...usertraits, ...traits}
 
+    console.log('!!! IDENTIFY !!! userId : ', userId)
+    // console.log('!!! IDENTIFY !!! anonymousId : ', anonymousId)
+
     currentUser = {
         userId : userId || analytics.user().id() || null, 
         anonymousId : anonymousId || analytics.user().anonymousId() || null, 
@@ -177,7 +178,7 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         context: context || {}, 
         campaign : campaign || null
     }
-    // console.log('IDENTIFY currentUser : ',currentUser)
+    console.log('IDENTIFY currentUser : ',currentUser)
     // console.log('IDENTIFY userId : ',userId)
     // console.log('IDENTIFY anonymousId : ',anonymousId)
     // console.log('IDENTIFY traits : ',traits)
@@ -208,7 +209,7 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         context: { context, campaign : campaign? campaign : null },
         globalVariables : globalVariables
     };
-    console.log('payload : ', payload)
+    console.log('IDENTIFY PAYLOAD (SERVER) : ', payload)
 
     updateGA4Fields();
 
@@ -400,7 +401,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update the global variable based on the checkbox state
         currentSourceSelected = toggleCheckbox.checked ? 'CLIENT' : 'SERVER';
         console.log('currentSourceSelected:', currentSourceSelected);
+        
+        // Persist the current state in localStorage
+        localStorage.setItem('currentSourceSelected', currentSourceSelected);
     };
+
+    // Load the persisted state from localStorage
+    const savedSourceSelected = localStorage.getItem('currentSourceSelected');
+    if (savedSourceSelected) {
+        toggleCheckbox.checked = savedSourceSelected === 'CLIENT';
+    }
 
     // Event listener for the toggle input
     toggleCheckbox.addEventListener('change', updateSourceSelected);
@@ -426,18 +436,43 @@ document.addEventListener('DOMContentLoaded', () => {
 // ------------------------------------
 
 // Generic function to update the <span> with the result of the passed function
-let updateCookie = (getValueFunc, spanId) => {
-    // Check if getValueFunc is an object or a function
-    let value = typeof getValueFunc === "function" ? getValueFunc() : getValueFunc;
+const updateCookie = async (getValueFunc, spanId) => {
+    return new Promise((resolve, reject) => {
+        try {
+            // Check if getValueFunc is an object or a function
+            let value = typeof getValueFunc === "function" ? getValueFunc() : getValueFunc;
 
-    // If the value is an object, convert it to a readable JSON string
-    if (typeof value === "object") {
-        value = JSON.stringify(value, null, 2); // Pretty-print the JSON
-    }
+            // If the value is an object, convert it to a readable JSON string
+            if (typeof value === "object") {
+                value = JSON.stringify(value, null, 2); // Pretty-print the JSON
+            }
 
-    // Update the span with the formatted value or a default message if not set
-    document.getElementById(spanId).innerText = value || "not set";
+            // Update the span with the formatted value or a default message if not set
+            const spanElement = document.getElementById(spanId);
+            if (spanElement) {
+                spanElement.innerText = value || "not set";
+                resolve(value); // Resolve with the value
+            } else {
+                reject(`Element with ID ${spanId} not found.`);
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
 };
+// let updateCookie = (getValueFunc, spanId) => {
+//     // Check if getValueFunc is an object or a function
+//     let value = typeof getValueFunc === "function" ? getValueFunc() : getValueFunc;
+
+//     // If the value is an object, convert it to a readable JSON string
+//     if (typeof value === "object") {
+//         value = JSON.stringify(value, null, 2); // Pretty-print the JSON
+//     }
+
+//     // Update the span with the formatted value or a default message if not set
+//     document.getElementById(spanId).innerText = value || "not set";
+//     return value;
+// };
 
 // Function to copy text to the clipboard
 function copyToClipboard(pId) {
@@ -454,9 +489,13 @@ function copyToClipboard(pId) {
 }
 
 // Function to display the toast message
-function showToast() {
+function showToast(responseType, responseData, color) {
     var toast = document.getElementById("toast");
+    // ADD LINE BREAK TO TOAST MESSAGE
+    toast.innerText = responseType + responseData || "Copied to clipboard!";
     toast.classList.add("show");
+    // toast.classList.add("show");
+    toast.style.backgroundColor = color || "green";
     
     // Hide the toast after 2 seconds
     setTimeout(function() {
@@ -464,112 +503,494 @@ function showToast() {
     }, 2000);
 }
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     document.addEventListener("DOMContentLoaded", () => {
-//         const externalIdMappings = ["userId", "anonymousId", "groupId", "email"];
-    
-//         const updateProfileAPIField = (fieldValue, targetFieldId) => {
-//             const targetField = document.getElementById(targetFieldId);
-//             if (targetField) {
-//                 targetField.value = fieldValue;
-//                 console.log(`Updated ${targetFieldId} with value: ${fieldValue}`);
-//             } else {
-//                 console.error(`Target field with ID ${targetFieldId} not found.`);
-//             }
-//         };
-    
-//         document.querySelectorAll(".unify-svg-icon").forEach(icon => {
-//             icon.addEventListener("click", event => {
-//                 const parent = event.target.closest("label, .get-cookie-btns, .form-group");
-//                 const inputField = parent?.querySelector("input");
-//                 const pTag = parent?.querySelector("p");
-    
-//                 let fieldValue = "";
-//                 let inputId = "";
-    
-//                 if (inputField) {
-//                     fieldValue = inputField.value.trim();
-//                     inputId = inputField.id;
-//                 } else if (pTag) {
-//                     fieldValue = pTag.textContent.trim();
-//                     inputId = pTag.id.replace("-p", ""); // Map `-p` IDs to input IDs
-//                 }
-    
-//                 if (fieldValue) {
-//                     if (externalIdMappings.includes(inputId)) {
-//                         updateProfileAPIField(fieldValue, "externalId");
-//                     } else {
-//                         const queryParametersInput = document.getElementById("queryParameters");
-//                         const currentParams = queryParametersInput.value.trim();
-//                         const newParam = `${inputId}=${fieldValue}`;
-//                         queryParametersInput.value = currentParams ? `${currentParams},${newParam}` : newParam;
-//                         console.log(`Added query parameter: ${newParam}`);
-//                     }
-//                 } else {
-//                     console.error("No valid input or p tag value found, or value is empty.");
-//                 }
-//             });
-//         });
-//     });
-document.addEventListener("DOMContentLoaded", () => {
-    const externalIdMappings = ["userId", "anonymousId", "groupId", "email"];
 
-    const updateProfileAPIField = (fieldValue, targetFieldId) => {
+
+// START // PROFILE API 
+
+// FINAL ITERATION : DRY CODE
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Field Mappings
+    const fieldMappings = {
+        "unify-i-userId": { field: "externalId", name: "user_id", spanId: "userId-p", getValue: () => userId },
+        "unify-i-anonymousId": { field: "externalId", name: "anonymous_id", spanId: "anonymousId-p", getValue: () => anonymousId },
+        // resolve unify-i-traits obj to queryParameters field with proper QUERYSTRING syntax
+        "unify-i-traits": { field: "queryParameters", name: "traits", spanId: "traits-p", getValue: () => usertraits },
+        "unify-i-groupTraits": { field: "externalId", name: "group_traits", spanId: "groupTraits-p", getValue: () => groupTraits },
+        "unify-i-groupId": { field: "externalId", name: "groupId", spanId: "groupId-p", getValue: () => groupId },
+        "unify-i-firstName": { field: "queryParameters", name: "firstName" },
+        "unify-i-lastName": { field: "queryParameters", name: "lastName" },
+        "unify-i-username": { field: "queryParameters", name: "username" },
+        "unify-i-phone": { field: "queryParameters", name: "phone" },
+        "unify-i-email": { field: "externalId", name: "email" },
+        "unify-i-street": { field: "queryParameters", name: "street" },
+        "unify-i-city": { field: "queryParameters", name: "city" },
+        "unify-i-state": { field: "queryParameters", name: "state" },
+        "unify-i-zipcode": { field: "queryParameters", name: "zipcode" },
+    };
+
+    // Helper Functions
+    const updateProfileAPIField = (fieldName, fieldValue, targetFieldId) => {
         const targetField = document.getElementById(targetFieldId);
+
         if (targetField) {
-            targetField.value = fieldValue;
-            console.log(`Updated ${targetFieldId} with value: ${fieldValue}`);
+            if (targetFieldId === "externalId") {
+                targetField.value = `${fieldName}:${fieldValue}`;
+                console.log(`Updated ${targetFieldId} with value: ${targetField.value}`);
+            } else if (targetFieldId === "queryParameters") {
+                targetField.value = targetField.value
+                    ? `${targetField.value}&includes=${fieldName}`
+                    : `includes=${fieldName}`;
+                console.log(`Updated ${targetFieldId} with value: ${targetField.value}`);
+            }
         } else {
             console.error(`Target field with ID ${targetFieldId} not found.`);
         }
     };
 
-    document.querySelectorAll(".unify-svg-icon").forEach(icon => {
-        icon.addEventListener("click", event => {
-            const parent = event.target.closest("label, .get-cookie-btns, .form-group");
-            const inputField = parent?.querySelector("input");
-            const pTag = parent?.querySelector("p");
+    const handleIconClick = async (iconId) => {
+        const mapping = fieldMappings[iconId];
+        if (!mapping) {
+            console.error(`No mapping found for iconId: ${iconId}`);
+            return;
+        }
 
-            let fieldValue = "";
-            let inputId = "";
+        const { field, name, spanId, getValue } = mapping;
 
-            if (inputField) {
-                fieldValue = inputField.value.trim();
-                inputId = inputField.id;
-            } else if (pTag) {
-                fieldValue = pTag.textContent.trim();
-                inputId = pTag.id.replace("-p", ""); // Map `-p` IDs to input IDs
-            }
-
-            if (fieldValue) {
-                if (externalIdMappings.includes(inputId)) {
-                    updateProfileAPIField(fieldValue, "externalId");
-                } else {
-                    const queryParametersInput = document.getElementById("queryParameters");
-                    const currentParams = queryParametersInput.value.trim();
-                    const newParam = `${inputId}=${fieldValue}`;
-                    queryParametersInput.value = currentParams ? `${currentParams},${newParam}` : newParam;
-                    console.log(`Added query parameter: ${newParam}`);
-                }
+        try {
+            const value = spanId ? await updateCookie(getValue, spanId) : document.getElementById(name)?.value.trim();
+            if (value) {
+                updateProfileAPIField(name, value, field);
+                updateQueryStringDisplay()
             } else {
-                console.error("No valid input or p tag value found, or value is empty.");
+                console.error(`No value returned for iconId: ${iconId}`);
             }
+        } catch (error) {
+            console.error(`Error handling icon click for ${iconId}:`, error);
+        }
+    };
+
+    // Add Event Listeners
+    document.querySelectorAll(".unify-svg-icon").forEach((icon) => {
+        icon.addEventListener("click", (event) => {
+            const iconId = event.target.id;
+            handleIconClick(iconId).catch((error) =>
+                console.error("Error handling icon click:", error)
+            );
         });
     });
 
-    document.getElementById("userId-cookie-get").addEventListener("click", () => updateCookie(userId, "userId-p"));
-    document.getElementById("userId-p").addEventListener("click", () => copyToClipboard("userId-p"));
-    document.getElementById("anonymousId-cookie-get").addEventListener("click", () => updateCookie(anonymousId, "anonymousId-p"));
-    document.getElementById("anonymousId-p").addEventListener("click", () => copyToClipboard("anonymousId-p"));
-    document.getElementById("traits-cookie-get").addEventListener("click", () => updateCookie(usertraits, "traits-p"));
-    document.getElementById("traits-p").addEventListener("click", () => copyToClipboard("traits-p"));
-    document.getElementById("groupId-cookie-get").addEventListener("click", () => updateCookie(groupId, "groupId-p"));
-    document.getElementById("groupId-p").addEventListener("click", () => copyToClipboard("groupId-p"));
-    document.getElementById("groupTraits-cookie-get").addEventListener("click", () => updateCookie(groupTraits, "groupTraits-p"));
-    document.getElementById("groupTraits-p").addEventListener("click", () => copyToClipboard("groupTraits-p"));
-});
+    // Cookie Management
+    document.querySelectorAll(".get-cookie-btns button").forEach((button) => {
+        button.addEventListener("click", () => {
+            const spanId = button.dataset.target;
+            const value = updateCookie(button.id.replace("-cookie-get", ""), spanId);
+            console.log(`Updated cookie for ${button.id}:`, value);
+        });
+    });
+
+    // Session Field Clicks
+    const sessionFields = [
+        { label: "sessionIdLabel", input: "sessionId-input", value: "sessionId" },
+        { label: "sessionNumberLabel", input: "sessionNumber-input", value: "sessionNumber" },
+    ];
+    sessionFields.forEach(({ label, input, value }) => {
+        document.getElementById(label)?.addEventListener("click", () => {
+            document.getElementById(input).value = window[value] || "";
+        });
+    });
+
+    // Fetch Sensitive Data
+    fetch("/api/config")
+        .then((response) => response.json())
+        .then((data) => {
+            document.getElementById("spaceId").value = data.spaceId || "";
+            document.getElementById("profileAPIKey").value = data.profileAPIKey || "";
+        })
+        .catch((err) => console.error("Error fetching config:", err));
+
+    // Query String Display
+    const updateQueryStringDisplay = () => {
+        const spaceId = document.getElementById("spaceId").value.trim() || "<space_id>";
+        const externalId = document.getElementById("externalId").value.trim() || "<external_id>";
+        const queryParams = new URLSearchParams();
+        const queryParametersInput = document.getElementById("queryParameters");
+
+        if (queryParametersInput.value.trim()) {
+            queryParametersInput.value.split("&").forEach((param) => {
+                const [key, value] = param.split("=");
+                if (key && value) queryParams.append(key.trim(), value.trim());
+            });
+        }
+
+        const endpoint = `https://profiles.segment.com/v1/spaces/${spaceId}/collections/users/profiles/${externalId}/traits${
+            queryParams.toString() ? `?${queryParams.toString()}` : ""
+        }`;
+        document.getElementById("queryStringDisplay").value = endpoint || "No query string present.";
+        console.log(`Query String Updated: ${endpoint}`); // Debug log
+    };
+
+    // Add event listeners to fields and update on change
+    ["spaceId", "externalId", "queryParameters"].forEach((id) => {
+        document.getElementById(id)?.addEventListener("input", (event) => {
+            console.log(`Input changed for ${id}: ${event.target.value}`); // Debug log
+            updateQueryStringDisplay();
+        });
+    });
+
+    // Initialize Query String Display
+    updateQueryStringDisplay();
+    });
 
 
+
+    // Send API Request
+    const sendApiRequestButton = document.getElementById("sendApiRequest");
+    sendApiRequestButton.addEventListener("click", async () => {
+        const spaceIdInput = document.getElementById("spaceId");
+        const profileAPIKeyInput = document.getElementById("profileAPIKey");
+        const externalIdInput = document.getElementById("externalId");
+        const queryParametersInput = document.getElementById("queryParameters");
+    
+        const spaceId = spaceIdInput?.value.trim();
+        const profileAPIKey = profileAPIKeyInput?.value.trim();
+        const externalId = externalIdInput?.value.trim();
+        const queryParams = queryParametersInput?.value.trim();
+    
+        if (!spaceId || !externalId) {
+            alert("Space ID and External ID are required.");
+            return;
+        }
+    
+        try {
+            const queryString = queryParams ? `?${queryParams}` : "";
+    
+            const endpointUrl = `https://profiles.segment.com/v1/spaces/${spaceId}/collections/users/profiles/${externalId}/traits${queryString}`;
+
+            console.log("Sending API request to:", endpointUrl);
+            console.log("API request profileAPIKey :", profileAPIKey);
+    
+            const response = await fetch("/profile-api", {
+                method: "POST",
+                headers: {
+                    // Authorization: `Basic ${profileAPIKey.value}`, // Replace with a valid token
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ endpointUrl, profileAPIKey }),
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                console.log("API Response:", data);
+                // alert("API Request Successful!");
+                showToast("API Request Successful!", response, "green");
+            } else {
+                console.error("API Error:", data);
+                showToast("API Request Failed!", data, "red");
+                // alert("API Request Failed!");
+            }
+        } catch (error) {
+            console.error("Request Error:", error);
+            showToast("API Request Error!", error, "orange");
+            // alert("An error occurred while sending the request.");
+        }
+    });
+    
+    
+
+
+// PREV ITERATION : WORKS but not DRY
+
+// document.addEventListener("DOMContentLoaded", () => {
+//     const externalIdMappings = ["userId", "anonymousId", "groupId", "email"];
+//     queryStringDisplay
+
+//     const updateProfileAPIField = (fieldName, fieldValue, targetFieldId) => {
+//         const targetField = document.getElementById(targetFieldId);
+//         console.log('fieldName : ', fieldName)
+//         console.log('fieldValue : ', fieldValue)
+//         console.log('targetField id : ', targetField.id)
+//         console.log('targetField value : ', targetField.value)
+
+//         if (targetField) {
+//             if (targetField.id === "externalId") {
+//                 targetField.value = `${fieldName}:${fieldValue}`;
+//                 console.log(`Updated ${targetFieldId} with value: ${fieldValue}`);
+//             }
+//             else if (targetField.id === "queryParameters") {
+//                 if (targetField.value !== "") {
+//                     // Add a comma and space if the field is not empty
+//                     targetField.value = targetField.value ? targetField.value + "&includes=" + fieldName : "includes=" + fieldName;
+//                     console.log('if targetField.value : ', targetField.value)
+//                 }
+//                 else{
+//                     targetField.value = "includes=" + fieldName;
+//                     console.log('ELSE targetField.value : ', targetField.value)
+//                 }
+                
+//                 console.log(`Updated ${targetFieldId} with value: ${fieldName}`);
+//             }
+//         } else {
+//             console.error(`Target field with ID ${targetFieldId} not found.`);
+//         }
+//     };
+
+//     // unify-svg-icon updates Profile API form fields
+//     document.querySelectorAll(".unify-svg-icon").forEach(icon => {
+//         icon.addEventListener("click", event => {
+//             const iconId = event.target.id;
+
+//             try{
+//                 // RIGHT SIDEBAR BUTTONS
+                // if(iconId === 'unify-i-userId'){
+                //     updateCookie(userId, "userId-p")
+                //     .then(value => {
+                //         let fieldValue = value
+                //         let fieldName = 'user_id'
+                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
+                //         console.log('fieldName / fieldValue : ',fieldName, fieldValue)
+                //     })
+                // }
+                // if(iconId === 'unify-i-anonymousId'){
+                //     updateCookie(anonymousId, "anonymousId-p")
+                //     .then(value => {
+                //         let fieldValue = value
+                //         let fieldName = 'anonymous_id'
+                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
+                //     })
+                // }
+                // if(iconId === 'unify-i-traits'){
+                //     updateCookie(usertraits, "traits-p")
+                //     .then(value => {
+                //         let fieldValue = value
+                //         let fieldName = 'traits'
+                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
+                //     })
+                // }
+                // if(iconId === 'unify-i-groupTraits'){
+                //     updateCookie(groupId, "groupId-p")
+                //     .then(value => {
+                //         let fieldValue = value
+                //         let fieldName = 'groupId'
+                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
+                //     })
+                // }
+                // if(iconId === 'unify-i-groupTraits'){
+                //     updateCookie(groupTraits, "groupTraits-p")
+                //     .then(value => {
+                //         let fieldValue = value
+                //         let fieldName = 'group_traits'
+                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
+                //     })
+                // }
+//                 // USER FORM FIELDS
+//                 if(iconId === 'unify-firstName'){
+//                     updateCookie(groupTraits, "groupTraits-p")
+//                     .then(value => {
+//                         let fieldValue = value
+//                         let fieldName = 'group_traits'
+//                         updateProfileAPIField(fieldName, fieldValue, "externalId")
+//                     })
+//                 }
+//                 if(iconId ==="unify-i-firstName"){
+//                     let fieldValue = document.getElementById("firstName").value
+//                     let fieldName = "firstName"
+//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
+//                 }
+//                 if(iconId ==="unify-i-lastName"){
+//                     let fieldValue = document.getElementById("lastName").value
+//                     let fieldName = "lastName"
+//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
+//                 }
+//                 if(iconId ==="unify-i-username"){
+//                     let fieldValue = document.getElementById("username").value
+//                     let fieldName = "username"
+//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
+//                 }
+//                 if(iconId ==="unify-i-phone"){
+//                     let fieldValue = document.getElementById("phone").value
+//                     let fieldName = "phone"
+//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
+//                 }
+//                 if(iconId ==="unify-i-email"){
+//                     let fieldValue = document.getElementById("email").value
+//                     let fieldName = "email"
+//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
+//                 }
+//                 if(iconId ==="unify-i-street"){
+//                     let fieldValue = document.getElementById("street").value
+//                     let fieldName = "street"
+//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
+//                 }
+//                 if(iconId ==="unify-i-city"){
+//                     let fieldValue = document.getElementById("city").value
+//                     let fieldName = "city"
+//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
+//                 }
+//                 if(iconId ==="unify-i-state"){
+//                     let fieldValue = document.getElementById("state").value
+//                     let fieldName = "state"
+//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
+//                 }
+//                 if(iconId ==="unify-i-zipcode"){
+//                     let fieldValue = document.getElementById("zipcode").value
+//                     let fieldName = "zipcode"
+//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
+//                 }
+//             } catch (error) {
+//                 console.error("Error updating cookie or profile API field:", error);
+//             }
+
+//         });
+//     });
+
+
+//     let sessionIdInput = document.getElementById('sessionId-input');
+//     let sessionIdLabel = document.getElementById('sessionIdLabel');
+//     sessionIdLabel.addEventListener('click', () => {sessionIdInput.value = sessionId});
+    
+//     let sessionNumberInput = document.getElementById('sessionNumber-input');
+//     let sessionNumberLabel = document.getElementById('sessionNumberLabel');
+//     sessionNumberLabel.addEventListener('click', () => {sessionNumberInput.value = sessionNumber});
+
+
+//     document.getElementById("userId-cookie-get").addEventListener("click", () => updateCookie(userId, "userId-p"));
+//     document.getElementById("userId-p").addEventListener("click", () => copyToClipboard("userId-p"));
+//     document.getElementById("anonymousId-cookie-get").addEventListener("click", () => updateCookie(anonymousId, "anonymousId-p"));
+//     document.getElementById("anonymousId-p").addEventListener("click", () => copyToClipboard("anonymousId-p"));
+//     document.getElementById("traits-cookie-get").addEventListener("click", () => updateCookie(usertraits, "traits-p"));
+//     document.getElementById("traits-p").addEventListener("click", () => copyToClipboard("traits-p"));
+//     document.getElementById("groupId-cookie-get").addEventListener("click", () => updateCookie(groupId, "groupId-p"));
+//     document.getElementById("groupId-p").addEventListener("click", () => copyToClipboard("groupId-p"));
+//     document.getElementById("groupTraits-cookie-get").addEventListener("click", () => updateCookie(groupTraits, "groupTraits-p"));
+//     document.getElementById("groupTraits-p").addEventListener("click", () => copyToClipboard("groupTraits-p"));
+// });
+
+
+
+
+// document.addEventListener("DOMContentLoaded", () => {
+//     // Fetch sensitive data from the server
+//     fetch('/api/config')
+//         .then(response => response.json())
+//         .then(data => {
+//             const spaceIdInput = document.getElementById('spaceId');
+//             const profileAPIKeyInput = document.getElementById('profileAPIKey');
+    
+//             if (spaceIdInput) spaceIdInput.value = data.spaceId || '';
+//             if (profileAPIKeyInput) profileAPIKeyInput.value = data.profileAPIKey || '';
+//         })
+//         .catch(err => {
+//             console.error('Error fetching config:', err);
+//         });
+
+//     // DOM Elements
+//     const spaceIdInput = document.getElementById("spaceId");
+//     const externalIdInput = document.getElementById("externalId");
+//     const queryParametersInput = document.getElementById("queryParameters");
+//     const addAudienceClassButton = document.getElementById("addAudienceClass");
+//     const addComputedTraitClassButton = document.getElementById("addComputedTraitClass");
+//     const sendApiRequestButton = document.getElementById("sendApiRequest");
+//     const queryStringDisplay = document.getElementById("queryStringDisplay");
+
+//     // Default Endpoint Template
+//     const defaultEndpointTemplate = "https://profiles.segment.com/v1/spaces/<space_id>/collections/";
+
+//     // Function to Update Query String Display
+//     const updateQueryStringDisplay = () => {
+//         const spaceId = spaceIdInput.value.trim() || "<space_id>";
+//         const externalId = externalIdInput.value.trim() || "<external_id>";
+//         const queryParams = new URLSearchParams();
+
+//         // Build Query Parameters
+//         if (queryParametersInput.value.trim()) {
+//             queryParametersInput.value
+//                 .split(",")
+//                 .forEach(param => {
+//                     const [key, value] = param.split("=");
+//                     if (key && value) queryParams.append(key.trim(), value.trim());
+//                 });
+//         }
+
+//         // Construct the Full Endpoint
+//         const endpoint = `${defaultEndpointTemplate.replace("<space_id>", spaceId)}users/profiles/${externalId}/traits${queryParams.toString() ? "?" + queryParams.toString() : ""}`;
+
+//         // Update Query String Display
+//         queryStringDisplay.value = endpoint || "No query string present.";
+//     };
+
+//     // Add Query Parameters for Audience Class
+//     addAudienceClassButton.addEventListener("click", () => {
+//         const currentParams = queryParametersInput.value.trim();
+//         queryParametersInput.value = currentParams
+//             ? `${currentParams}&class=audience`
+//             : "class=audience";
+//         updateQueryStringDisplay();
+//     });
+
+//     // Add Query Parameters for Computed Trait Class
+//     addComputedTraitClassButton.addEventListener("click", () => {
+//         const currentParams = queryParametersInput.value.trim();
+//         queryParametersInput.value = currentParams
+//             ? `${currentParams}&class=computed_trait`
+//             : "class=computed_trait";
+//         updateQueryStringDisplay();
+//     });
+
+//     // Send API Request
+//     sendApiRequestButton.addEventListener("click", async () => {
+//         const spaceId = spaceIdInput.value.trim();
+//         const externalId = externalIdInput.value.trim();
+//         const queryParams = queryParametersInput.value.trim();
+
+//         if (!spaceId || !externalId) {
+//             alert("Space ID and External ID are required.");
+//             return;
+//         }
+
+//         try {
+//             const queryString = queryParams
+//                 ? `?${queryParametersInput.value}`
+//                 : "";
+//             const endpoint = `https://profiles.segment.com/v1/spaces/${spaceId}/collections/users/profiles/${externalId}/traits${queryString}`;
+
+//             console.log("Sending API request to:", endpoint);
+
+//             const response = await fetch(endpoint, {
+//                 method: "GET",
+//                 headers: {
+//                     Authorization: `Bearer YOUR_SEGMENT_ACCESS_TOKEN`, // Replace with a valid token
+//                 },
+//             });
+
+//             const data = await response.json();
+
+//             if (response.ok) {
+//                 console.log("API Response:", data);
+//                 alert("API Request Successful!");
+//             } else {
+//                 console.error("API Error:", data);
+//                 alert("API Request Failed!");
+//             }
+//         } catch (error) {
+//             console.error("Request Error:", error);
+//             alert("An error occurred while sending the request.");
+//         }
+//     });
+
+//     // Update query string display whenever inputs change
+//     [spaceIdInput, externalIdInput, queryParametersInput].forEach(input =>
+//         input.addEventListener("input", updateQueryStringDisplay)
+//     );
+
+//     // Initialize query string display
+//     updateQueryStringDisplay();
+// });
+
+
+// END // PROFILE API REQUEST @ LEFT SIDEBAR
+// ------------------------------------
 
 const getUserFormValues = () => {
     firstName = document.getElementById('firstName').value;
@@ -609,143 +1030,19 @@ const getGlobalVariables = () => {
     
 }
 
-// ------------------------------------
-// START // PROFILE API REQUEST @ LEFT SIDEBAR
 
-// THIRD ITERATION
-
-document.addEventListener("DOMContentLoaded", () => {
-    // Fetch sensitive data from the server
-    fetch('/api/config')
-        .then(response => response.json())
-        .then(data => {
-            const spaceIdInput = document.getElementById('spaceId');
-            const profileAPIKeyInput = document.getElementById('profileAPIKey');
-    
-            if (spaceIdInput) spaceIdInput.value = data.spaceId || '';
-            if (profileAPIKeyInput) profileAPIKeyInput.value = data.profileAPIKey || '';
-        })
-        .catch(err => {
-            console.error('Error fetching config:', err);
-        });
-
-    // DOM Elements
-    const spaceIdInput = document.getElementById("spaceId");
-    const externalIdInput = document.getElementById("externalId");
-    const queryParametersInput = document.getElementById("queryParameters");
-    const addAudienceClassButton = document.getElementById("addAudienceClass");
-    const addComputedTraitClassButton = document.getElementById("addComputedTraitClass");
-    const sendApiRequestButton = document.getElementById("sendApiRequest");
-    const queryStringDisplay = document.getElementById("queryStringDisplay");
-
-    // Default Endpoint Template
-    const defaultEndpointTemplate = "https://profiles.segment.com/v1/spaces/<space_id>/collections/";
-
-    // Function to Update Query String Display
-    const updateQueryStringDisplay = () => {
-        const spaceId = spaceIdInput.value.trim() || "<space_id>";
-        const externalId = externalIdInput.value.trim() || "<external_id>";
-        const queryParams = new URLSearchParams();
-
-        // Build Query Parameters
-        if (queryParametersInput.value.trim()) {
-            queryParametersInput.value
-                .split(",")
-                .forEach(param => {
-                    const [key, value] = param.split("=");
-                    if (key && value) queryParams.append(key.trim(), value.trim());
-                });
-        }
-
-        // Construct the Full Endpoint
-        const endpoint = `${defaultEndpointTemplate.replace("<space_id>", spaceId)}users/profiles/${externalId}/traits${queryParams.toString() ? "?" + queryParams.toString() : ""}`;
-
-        // Update Query String Display
-        queryStringDisplay.value = endpoint || "No query string present.";
-    };
-
-    // Add Query Parameters for Audience Class
-    addAudienceClassButton.addEventListener("click", () => {
-        const currentParams = queryParametersInput.value.trim();
-        queryParametersInput.value = currentParams
-            ? `${currentParams},class=audience`
-            : "class=audience";
-        updateQueryStringDisplay();
-    });
-
-    // Add Query Parameters for Computed Trait Class
-    addComputedTraitClassButton.addEventListener("click", () => {
-        const currentParams = queryParametersInput.value.trim();
-        queryParametersInput.value = currentParams
-            ? `${currentParams},class=computed_trait`
-            : "class=computed_trait";
-        updateQueryStringDisplay();
-    });
-
-    // Send API Request
-    sendApiRequestButton.addEventListener("click", async () => {
-        const spaceId = spaceIdInput.value.trim();
-        const externalId = externalIdInput.value.trim();
-        const queryParams = queryParametersInput.value.trim();
-
-        if (!spaceId || !externalId) {
-            alert("Space ID and External ID are required.");
-            return;
-        }
-
-        try {
-            const queryString = queryParams
-                ? `?${queryParametersInput.value}`
-                : "";
-            const endpoint = `https://profiles.segment.com/v1/spaces/${spaceId}/collections/users/profiles/${externalId}/traits${queryString}`;
-
-            console.log("Sending API request to:", endpoint);
-
-            const response = await fetch(endpoint, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer YOUR_SEGMENT_ACCESS_TOKEN`, // Replace with a valid token
-                },
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                console.log("API Response:", data);
-                alert("API Request Successful!");
-            } else {
-                console.error("API Error:", data);
-                alert("API Request Failed!");
-            }
-        } catch (error) {
-            console.error("Request Error:", error);
-            alert("An error occurred while sending the request.");
-        }
-    });
-
-    // Update query string display whenever inputs change
-    [spaceIdInput, externalIdInput, queryParametersInput].forEach(input =>
-        input.addEventListener("input", updateQueryStringDisplay)
-    );
-
-    // Initialize query string display
-    updateQueryStringDisplay();
-});
-
-// END // PROFILE API REQUEST @ LEFT SIDEBAR
-// ------------------------------------
                                     
 // Function to update user profile (LEFT SIDEBAR)
 function updateProfile(event, button, type) {
     event.preventDefault(); // Prevent default form submission
-    let identifierType, forceType
+    let btnIDType, forceType
     
     if(button==='identifyAnonymousId'){
-        identifierType='anonymousId'
+        btnIDType='anonymousId'
         console.log('ANONYMOUS IDENTIFY : no PII exist so no userId generated', )
     }
     if(button==='identifyUserId'){
-        identifierType='userId'
+        btnIDType='userId'
         console.log('ANONYMOUS IDENTIFY : PII exists so generating userId', )
     }
     
@@ -755,8 +1052,11 @@ function updateProfile(event, button, type) {
 
     // GET CURRENT DATA FROM GLOBAL VARIABLES
     const globalVariables = getGlobalVariables()
-    let {userId :userId , anonymousId :anonymousId , usertraits :usertraits , groupId :groupId , groupTraits :groupTraits , sessionId :sessionId , sessionNumber :sessionNumber , clientId :clientId , cid :cid , campaign :campaign , currentUser : currentUser} = globalVariables
+    let {userId, anonymousId , usertraits , groupId , groupTraits , sessionId , sessionNumber , clientId , cid , campaign , currentUser} = globalVariables
     // GET CURRENT DATA FROM CAMPAIGN FORM
+
+    console.log('GLOBAL VARIABLES @901 : ', userId, anonymousId, usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, campaign, currentUser)
+    console.log('GLOBAL VARIABLES @902 : ', globalVariables)
 
     if(username || phone || email || street || city || state || zipcode){
       forceType='userId'  
@@ -784,13 +1084,18 @@ function updateProfile(event, button, type) {
     });
     
     // IF IDENTIFY:USERID IS CLICKED OR IF PII IS INCLUDED IN FORM THEN FORCE USERID GENERATION
-    if(identifierType==='userId' ||  forceType==='userId'){
-        if(!userId){
+    if(btnIDType==='userId' ||  forceType==='userId'){
+        console.log('INSIDE btnIDType | forceType: ',btnIDType, ' | ', forceType)
+        if(!analytics.user().id()){
+            console.log('INSIDE !userId (1) : ', userId)
+            
             let tempUserId = uuidv4()
-            console.log('tempUserId : ',tempUserId)
+            console.log('INSIDE !userId (2) : ', tempUserId)
             analytics.user().id(tempUserId);
+            console.log('INSIDE !userId (3) : ', analytics.user().id())
             userId=tempUserId;
             console.log('USERID CREATED : ', analytics.user().id())
+            console.log('INSIDE !userId (4) : ', userId)
         }
     }
     let data = updateCampaignFormAndQueryString(true)
@@ -894,6 +1199,10 @@ const checkData = () => {
 // document.getElementById('check-data').addEventListener('click', checkData);
 
 const resetAjsUser = () => {
+    // Save the current source-selection value before clearing localStorage
+    const currentSourceSelected = localStorage.getItem('currentSourceSelected');
+
+    
     localStorage.clear()
     console.log("LocalStorage cleared");
     const cookies = document.cookie.split(";"); // Get all cookies
@@ -904,8 +1213,16 @@ const resetAjsUser = () => {
     }
     console.log("Cookies cleared");
     // reset()
-    window.location.reload(true);
+    
+    // window.location.reload(true);
     // autoUpdate()
+
+    // Restore the source-selection state in localStorage
+    if (currentSourceSelected) {
+        localStorage.setItem('currentSourceSelected', currentSourceSelected);
+        console.log('Persisted source-selection:', currentSourceSelected);
+    }
+
 
     // Reset GA4 context on the server each time reset is clicked on client
     console.log('PREVIOUS clientId : ', clientId)
@@ -1126,35 +1443,35 @@ function loadFormData() {
 // document.addEventListener('DOMContentLoaded', loadFormData);
 
 // CLICK LABEL UPDATES INPUT BY GLOBAL VARIABLE VALUE
-const clickLabelUpdateInputGlobalVariable = (labelId, inputId, variable) => {
-    console.log(labelId, inputId, variable)
-    const label = document.getElementById(labelId);
-    // label.addEventListener('click', ()=> {console.log(labelId, inputId, variable)})
-        // {document.getElementById(inputId).value = variable})
-}
+// const clickLabelUpdateInputGlobalVariable = (labelId, inputId, variable) => {
+//     console.log(labelId, inputId, variable)
+//     const label = document.getElementById(labelId);
+//     // label.addEventListener('click', ()=> {console.log(labelId, inputId, variable)})
+//         // {document.getElementById(inputId).value = variable})
+// }
 
-document.addEventListener('DOMContentLoaded', ()=> {
-    let sessionIdInput = document.getElementById('sessionId-input');
-    let sessionIdLabel = document.getElementById('sessionIdLabel');
-    sessionIdLabel.addEventListener('click', () => {sessionIdInput.value = sessionId});
+// document.addEventListener('DOMContentLoaded', ()=> {
+//     let sessionIdInput = document.getElementById('sessionId-input');
+//     let sessionIdLabel = document.getElementById('sessionIdLabel');
+//     sessionIdLabel.addEventListener('click', () => {sessionIdInput.value = sessionId});
     
-    let sessionNumberInput = document.getElementById('sessionNumber-input');
-    let sessionNumberLabel = document.getElementById('sessionNumberLabel');
-    sessionNumberLabel.addEventListener('click', () => {sessionNumberInput.value = sessionNumber});
+//     let sessionNumberInput = document.getElementById('sessionNumber-input');
+//     let sessionNumberLabel = document.getElementById('sessionNumberLabel');
+//     sessionNumberLabel.addEventListener('click', () => {sessionNumberInput.value = sessionNumber});
 
-    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('firstNameLabel', 'firstName-input', firstName));
-    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('lastNameLabel', 'lastName-input', lastName));
-    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('usernameLabel', 'username-input', username));
-    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('phoneLabel', 'phone-input', phone));
-    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('emailLabel', 'email-input', email));
-    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('streetLabel', 'street-input', street));
-    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('cityLabel', 'city-input', city));
-    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('stateLabel', 'state-input', state));
-    document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('zipcodeLabel', 'zipcode-input', zipcode));
+//     document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('firstNameLabel', 'firstName-input', firstName));
+//     document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('lastNameLabel', 'lastName-input', lastName));
+//     document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('usernameLabel', 'username-input', username));
+//     document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('phoneLabel', 'phone-input', phone));
+//     document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('emailLabel', 'email-input', email));
+//     document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('streetLabel', 'street-input', street));
+//     document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('cityLabel', 'city-input', city));
+//     document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('stateLabel', 'state-input', state));
+//     document.getElementById('firstNameLabel').addEventListener('click', () => clickLabelUpdateInputGlobalVariable('zipcodeLabel', 'zipcode-input', zipcode));
     
-});
+// });
 
-document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariable);
+// document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariable);
 
 
 // document.addEventListener('DOMContentLoaded', clickLabelUpdateInputGlobalVariable);
@@ -1362,12 +1679,7 @@ function toggleSidebar(sidebar, icon, resizer) {
 
 // ------------------------------------
 
-// START // PROFILE API 
 
-
-
-
-// END // PROFILE API 
 
 
 function generateCampaignData() {

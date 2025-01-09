@@ -217,6 +217,7 @@ label .unify-svg-icon{
     /* width: 20vw; */
     overflow-y: auto;
     border-right: 1px solid #eee;
+    background-color: #ffffff;
     box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1);
     border-right: 1px solid #eee;
     font-size: 0.7rem; /* Adjust this value to make the text smaller */
@@ -245,6 +246,9 @@ label .unify-svg-icon{
     /* margin-left: 2vw; */
 }
 
+.sidebar-right div {
+    margin-top: 5em;
+}
 
 .sidebar-left {
     right: auto;
@@ -789,12 +793,14 @@ main .forms-wrapper .form-container form , #campaignForm{
   /* Style for the toast notification */
   .toast {
     visibility: hidden;
+    display: block;
     min-width: 150px;
-    max-height : 40px;
+    max-height : 80px;
     margin-left: -125px;
     background-color: #f0f0f0; /* Light grey background */
     color: #333; /* Dark text color for contrast */
     text-align: center;
+    line-height: normal;
     border-radius: 10px; /* Curved edges */
     padding: 10px;
     position: fixed;
@@ -818,6 +824,8 @@ main .forms-wrapper .form-container form , #campaignForm{
     opacity: 0;
     transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
 }
+
+
 
 button:hover{
     cursor: pointer;

@@ -57,13 +57,14 @@
 
 
         !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
-        analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3");
+        analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3",{
+            //useQueryString: false
+          })
         
-        
-        //analytics.page();
-    
+        analytics.page();
         }}();
-
+          
+        
             // Wait for analytics to be ready before assigning values
     analytics.ready(function() {
         userId = analytics.user().id();
@@ -290,63 +291,63 @@
                             <div class="form-group">
                                 <label id="firstNameLabel" for="firstName">First Name: 
                                     <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-firstName" data-tooltip="Add field to Profile API request">
                                 </label>
                                 <input type="text" name="firstName" class="form-control" id="firstName" >
                             </div>
                             <div class="form-group">
                                 <label id="lastNameLabel" for="lastName">Last Name: 
                                     <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-lastName" data-tooltip="Add field to Profile API request">
                                 </label>
                                 <input type="text" name="lastName" class="form-control" id="lastName" >
                             </div>
                             <div class="form-group">
                                 <label id="usernameLabel" for="username">Username: 
                                     <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-username" data-tooltip="Add field to Profile API request">
                                 </label>
                                 <input type="text" name="username" class="form-control" id="username" >
                             </div>
                             <div class="form-group">
                                 <label id="phoneLabel" for="phone">Phone: 
                                     <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-phone" data-tooltip="Add field to Profile API request">
                                 </label>
                                 <input type="text" name="phone" class="form-control" id="phone" >
                             </div>
                             <div class="form-group" id="email-row">
                                 <label id="emailLabel" for="email">Email: 
                                     <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-email" data-tooltip="Add field to Profile API request">
                                 </label>
                                 <input type="email" name="email" class="form-control" id="email" >
                             </div>
                             <div class="form-group">
                                 <label id="streetLabel" for="street">Street Address: 
                                     <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-street" data-tooltip="Add field to Profile API request">
                                 </label>
                                 <input type="text" name="street" class="form-control" id="street" >
                             </div>
                             <div class="form-group">
                                 <label id="cityLabel" for="city">City: 
                                     <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-city" data-tooltip="Add field to Profile API request">
                                 </label>
                                 <input type="text" name="city" class="form-control" id="city" >
                             </div>
                             <div class="form-group">
                                 <label id="stateLabel" for="state">State: 
                                     <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-state" data-tooltip="Add field to Profile API request">
                                 </label>
                                 <input type="text" name="state" class="form-control" id="state" >
                             </div>
                             <div class="form-group">
                                 <label id="zipcodeLabel" for="zipcode">Zipcode: 
                                     <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-zipcode" data-tooltip="Add field to Profile API request">
                                 </label>
                                 <input type="text" name="zipcode" class="form-control" id="zipcode" >
                             </div>
@@ -450,35 +451,35 @@
                             <div class="get-cookie-btns">                                    
                                 <p>
                                     <button class="btn btn-secondary" id="userId-cookie-get" data-target="userId-p">userId</button> 
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-userId" data-tooltip="Add field to Profile API request">
                                 </p>
                                 <p class="click-mouse" id="userId-p"></p>
                             </div>
                             <div class="get-cookie-btns">                                
                                 <p>
                                     <button class="btn btn-secondary" id="anonymousId-cookie-get" data-target="anonymousId-p">anonymousId</button> 
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-anonymousId" data-tooltip="Add field to Profile API request">
                                 </p>
                                 <p class="click-mouse" id="anonymousId-p"></p>
                             </div>
                             <div class="get-cookie-btns">                                
                                 <p>
                                     <button class="btn btn-secondary" id="traits-cookie-get" data-target="traits-p">traits</button> 
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-traits" data-tooltip="Add field to Profile API request">
                                 </p>
                             </div>
                             <p class="click-mouse" id="traits-p"></p>
                             <div class="get-cookie-btns">                                    
                                 <p>
                                     <button class="btn btn-secondary" id="groupId-cookie-get" data-target="groupId-p">groupId</button>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-groupId" data-tooltip="Add field to Profile API request">
                                 </p>
                                 <p class="click-mouse" id="groupId-p"></p>
                             </div>
                             <div class="get-cookie-btns">                                    
                                 <p>
                                     <button class="btn btn-secondary" id="groupTraits-cookie-get" data-target="groupTraits-p">groupTraits</button>
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-groupTraits" data-tooltip="Add field to Profile API request">
                                 </p>
                                 <p class="click-mouse" id="groupTraits-p"></p>
                             </div>
