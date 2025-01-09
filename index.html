@@ -235,8 +235,15 @@
                         </div>
                     
                         <div class="profile-api-container">
+                            <div id="profile-api-res" class="hidden">
+                                <p class="bold">User Profile Data</p>
+                                <ul id="profile-api-res-list">
+                                    <li >test</li>
+                                    <!-- user form data added as li -->
+                                </ul>
+                            </div>
                             <div class="left-sidebar-content">
-                                <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add field to Profile API request">
+                                <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add fields to Profile API request by clicking on the icons">
                                 <h3>Segment Profile API</h3>
                             </div>
                             <form id="profileApiForm">
@@ -353,12 +360,12 @@
                             </div>
                             
                             <div class="button-row">
-                                <button type="submit" id="identifyAnonymousId" class="btn bkgrdSegmentGreen" style="color:white;">Identify : AnonymousId</button>
-                                <button type="submit" id="identifyUserId" class="btn bkgrdSegmentGreen" style="color:white;">Identify : UserId</button>
+                                <button type="submit" id="identifyAnonymousId" class="btn btn-outline-segment-green bkgrdSegmentGreen" style="color:white;">Identify : AnonymousId</button>
+                                <button type="submit" id="identifyUserId" class="btn btn-outline-segment-green bkgrdSegmentGreen" style="color:white;">Identify : UserId</button>
                             </div>
 
                             <div class="extra-buttons">
-                                <button type="button" class="btn btn-secondary" id="clearUserForm">Clear Form</button>
+                                <button type="button" class="btn btn-outline-secondary" id="clearUserForm">Clear Form</button>
                                 <button type="button" class="btn btn-outline-danger" id="reset-ajs-user" data-tooltip="Resets user data on client and server including Google's ClientId & Session Data">Reset AJS User</button>
                             </div>
                         </form>
@@ -412,7 +419,7 @@
                                 <p></p>
                             </div>
                             <div class="button-container">
-                                    <button type="button" class="btn btn-secondary" id="clearCampaignForm">Clear Form</button>
+                                    <button type="button" class="btn btn-outline-secondary" id="clearCampaignForm">Clear Form</button>
                             </div>
                         </form>
                         <button class="btn btn-info" id="newCampaign">
@@ -450,35 +457,35 @@
                         <div id="getCookieBtns">
                             <div class="get-cookie-btns">                                    
                                 <p>
-                                    <button class="btn btn-secondary" id="userId-cookie-get" data-target="userId-p">userId</button> 
+                                    <button class="btn btn-outline-secondary" id="userId-cookie-get" data-target="userId-p">userId</button> 
                                     <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-userId" data-tooltip="Add field to Profile API request">
                                 </p>
                                 <p class="click-mouse" id="userId-p"></p>
                             </div>
                             <div class="get-cookie-btns">                                
                                 <p>
-                                    <button class="btn btn-secondary" id="anonymousId-cookie-get" data-target="anonymousId-p">anonymousId</button> 
+                                    <button class="btn btn-outline-secondary" id="anonymousId-cookie-get" data-target="anonymousId-p">anonymousId</button> 
                                     <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-anonymousId" data-tooltip="Add field to Profile API request">
                                 </p>
                                 <p class="click-mouse" id="anonymousId-p"></p>
                             </div>
                             <div class="get-cookie-btns">                                
                                 <p>
-                                    <button class="btn btn-secondary" id="traits-cookie-get" data-target="traits-p">traits</button> 
+                                    <button class="btn btn-outline-secondary" id="traits-cookie-get" data-target="traits-p">traits</button> 
                                     <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-traits" data-tooltip="Add field to Profile API request">
                                 </p>
                             </div>
                             <p class="click-mouse" id="traits-p"></p>
                             <div class="get-cookie-btns">                                    
                                 <p>
-                                    <button class="btn btn-secondary" id="groupId-cookie-get" data-target="groupId-p">groupId</button>
+                                    <button class="btn btn-outline-secondary" id="groupId-cookie-get" data-target="groupId-p">groupId</button>
                                     <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-groupId" data-tooltip="Add field to Profile API request">
                                 </p>
                                 <p class="click-mouse" id="groupId-p"></p>
                             </div>
                             <div class="get-cookie-btns">                                    
                                 <p>
-                                    <button class="btn btn-secondary" id="groupTraits-cookie-get" data-target="groupTraits-p">groupTraits</button>
+                                    <button class="btn btn-outline-secondary" id="groupTraits-cookie-get" data-target="groupTraits-p">groupTraits</button>
                                     <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-groupTraits" data-tooltip="Add field to Profile API request">
                                 </p>
                                 <p class="click-mouse" id="groupTraits-p"></p>
@@ -491,11 +498,11 @@
 
             
         <div id="eventTriggerContainer">
-            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="pageTrigger">Page</button>
-            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="identifyTrigger">Identify</button>
-            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="trackTrigger">Track</button>
-            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="groupTrigger">Group</button>
-            <button class="btn btn-success eventTriggerBtn bkgrdSegmentGreen" id="aliasTrigger">Alias</button>
+            <button class="btn eventTriggerBtn btn-outline-segment-green" id="pageTrigger">Page</button>
+            <button class="btn eventTriggerBtn btn-outline-segment-green" id="identifyTrigger">Identify</button>
+            <button class="btn eventTriggerBtn btn-outline-segment-green" id="trackTrigger">Track</button>
+            <button class="btn eventTriggerBtn btn-outline-segment-green" id="groupTrigger">Group</button>
+            <button class="btn eventTriggerBtn btn-outline-segment-green" id="aliasTrigger">Alias</button>
         </div>
     </div> <!-- Close container-fluid -->
 
@@ -504,7 +511,7 @@
             <!-- <span class="text-muted">&copy; Liz Kane</span> -->
         <!-- Toast notification element -->
         <div id="toast" class="toast">Copied to clipboard!</div>
-        <button id="analytics-reset" class="btn btn-danger click-mouse" onclick="resetAjsUser()">analytics.reset()</button>
+        <button id="analytics-reset" class="btn btn-outline-danger click-mouse" onclick="resetAjsUser()">analytics.reset()</button>
     </footer>
 
 </body>

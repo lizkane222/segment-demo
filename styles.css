@@ -67,6 +67,17 @@ html, body {
     background-color: var(--segment-green);
 }
 
+.btn-outline-segment-green {
+    background-color: transparent; /* Transparent background */
+    border-color: var(--segment-green); /* Custom border color */
+    color: var(--segment-green) !important;
+}
+.btn-outline-segment-green:hover {
+    background-color: var(--segment-green); /* Custom hover background */
+    border-color: none;    /* Custom hover border */
+    color: white !important;             /* Custom hover text color */
+}
+
 
 /* DARK MODE */
 /* LIGHT MODE */
@@ -98,6 +109,14 @@ label .unify-svg-icon{
     width: 1.2em;
     height: 1.2em;
     /* margin-right: .5em; */
+    transition: filter 0.3s ease-in-out;
+}
+
+label .unify-svg-icon:hover{
+    filter: contrast(.1); /* Increase contrast */
+    filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.5));
+    filter: hue-rotate(90deg);
+
 }
 
 .get-cookie-btns {
@@ -107,8 +126,15 @@ label .unify-svg-icon{
 .get-cookie-btns .unify-svg-icon{
     width: 2em;
     height: 2em;
+    transition: filter 0.3s ease-in-out;
 }
 
+.get-cookie-btns .unify-svg-icon:hover{
+    filter: contrast(.1); /* Increase contrast */
+    filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.5));
+    filter: hue-rotate(90deg);
+
+}
 
 .user-nav a, .ecommerce-nav a {
     text-decoration: none !important;
@@ -330,6 +356,11 @@ label .unify-svg-icon{
     top: 0; /* Adjust for consistent vertical alignment */
     cursor: pointer;
     z-index: 100; /* Ensure visibility above other elements */
+    transition: filter 0.3s ease-out;
+}
+
+.toggle-icon:active, .toggle-icon:hover {
+    filter: hue-rotate(90deg);
 }
 
 .toggle-icon.left {
@@ -603,9 +634,6 @@ main .forms-wrapper .form-container form , #campaignForm{
     margin-top: 1vh;
 }
 
-#identifyAnonymousId:hover, #identifyUserId:hover {
-    background-color: #357e5f; /* Change background color on hover */
-}
 
 .main .form-container form .extra-buttons button {
     width: 48%; /* Buttons take up almost half the row each */
@@ -779,13 +807,16 @@ main .forms-wrapper .form-container form , #campaignForm{
 
 .click-mouse {
     cursor:pointer;
-    transition: background-color 0.3s ease, padding 0.5s ease-in-out;
+    transition: background-color 0.3s ease, padding 0.5s ease-in-out, filter 0.3s ease-out;
+    /* ADDED :  transition: filter 0.3s ease-out;
+    filter: hue-rotate(90deg); */
 }
 
 .click-mouse:hover {
     opacity: 0.7; /* Decreased opacity on hover */
     transition: background-color 0.1s ease-in-out;
     padding: 1px; /* Add padding on hover for a subtle effect */
+    filter: hue-rotate(90deg);
     /* font-size: 0.6rem; */
      /* Adjust this value to make the text smaller */
 }
@@ -826,12 +857,15 @@ main .forms-wrapper .form-container form , #campaignForm{
 }
 
 
+button{
+    /* transition: filter 0.3s ease-out; */
+}
 
 button:hover{
     cursor: pointer;
     background-color: #ddd; /* Light grey on hover */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
-
+    /* filter: hue-rotate(90deg); */
 }
 
 footer {
@@ -1072,6 +1106,16 @@ li .tg-list-item{
     font-weight: 600;
 /* } */
 
+#profile-api-res {
+    display: none; /* Initially hidden */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#profile-api-res.show {
+    display: block;
+    opacity: 1;
+}
 
 /* .profile-api-container .left-sidebar-content { */
     display:flex;
@@ -1114,9 +1158,9 @@ li .tg-list-item{
 }
 
 /* Buttons */
-.profile-api-container .api-button {
+.profile-api-container .api-button, .profile-api-container div .api-button {
     width: 100%;
-    height: 3em;
+    height: 2em;
     font-size: 1em;
     background: var(--segment-green);
     color: #fff;
@@ -1165,5 +1209,13 @@ li .tg-list-item{
     height: 10em;
     /* color: #ced4da; */
 }
+
+
+/* .unify-svg-icon{
+    transition: color 0.3s ease;
+}
+.unify-svg-icon:hover {
+    color : #357e5f;
+} */
 
 /* END // Profile API @ Left Sidebar */

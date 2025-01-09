@@ -685,6 +685,43 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("API Response:", data);
                 // alert("API Request Successful!");
                 showToast("API Request Successful!", response, "green");
+                
+
+                // Get the response list container
+                // const profileApiResList = document.getElementById('profile-api-res-list');
+                // profileApiResList.innerHTML = ''; // Clear the list before adding new items
+
+                // // Helper function to add key-value pairs as <li>
+                // const addKeyValuePairs = (obj) => {
+                //     Object.entries(obj).forEach(([field, value]) => {
+                //         // Format the value nicely if it's an object or array
+                //         const formattedValue = typeof value === 'object' && value !== null
+                //             ? JSON.stringify(value, null, 2) // Prettify JSON strings
+                //             : value;
+
+                //         // Create a new <li> element
+                //         const listItem = document.createElement('li');
+                //         listItem.innerHTML = `<span class="bold">${field}:</span> ${formattedValue}`;
+                        
+                //         // Append the <li> to the list
+                //         profileApiResList.appendChild(listItem);
+                //     });
+                // };
+
+                // // Add traits
+                // if (data.traits) {
+                //     const traitsHeader = document.createElement('li');
+                //     traitsHeader.innerHTML = `<span class="section-header">Traits:</span>`;
+                //     profileApiResList.appendChild(traitsHeader);
+                //     addKeyValuePairs(data.traits);
+                // }
+                // const profileApiResElement = document.getElementById('profile-api-res');
+                // // profileApiResElement.style.display = 'block';
+                // profileApiResElement.classList.add('show');
+
+
+                
+
             } else {
                 console.error("API Error:", data);
                 showToast("API Request Failed!", data, "red");
@@ -696,297 +733,6 @@ document.addEventListener("DOMContentLoaded", () => {
             // alert("An error occurred while sending the request.");
         }
     });
-    
-    
-
-
-// PREV ITERATION : WORKS but not DRY
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     const externalIdMappings = ["userId", "anonymousId", "groupId", "email"];
-//     queryStringDisplay
-
-//     const updateProfileAPIField = (fieldName, fieldValue, targetFieldId) => {
-//         const targetField = document.getElementById(targetFieldId);
-//         console.log('fieldName : ', fieldName)
-//         console.log('fieldValue : ', fieldValue)
-//         console.log('targetField id : ', targetField.id)
-//         console.log('targetField value : ', targetField.value)
-
-//         if (targetField) {
-//             if (targetField.id === "externalId") {
-//                 targetField.value = `${fieldName}:${fieldValue}`;
-//                 console.log(`Updated ${targetFieldId} with value: ${fieldValue}`);
-//             }
-//             else if (targetField.id === "queryParameters") {
-//                 if (targetField.value !== "") {
-//                     // Add a comma and space if the field is not empty
-//                     targetField.value = targetField.value ? targetField.value + "&includes=" + fieldName : "includes=" + fieldName;
-//                     console.log('if targetField.value : ', targetField.value)
-//                 }
-//                 else{
-//                     targetField.value = "includes=" + fieldName;
-//                     console.log('ELSE targetField.value : ', targetField.value)
-//                 }
-                
-//                 console.log(`Updated ${targetFieldId} with value: ${fieldName}`);
-//             }
-//         } else {
-//             console.error(`Target field with ID ${targetFieldId} not found.`);
-//         }
-//     };
-
-//     // unify-svg-icon updates Profile API form fields
-//     document.querySelectorAll(".unify-svg-icon").forEach(icon => {
-//         icon.addEventListener("click", event => {
-//             const iconId = event.target.id;
-
-//             try{
-//                 // RIGHT SIDEBAR BUTTONS
-                // if(iconId === 'unify-i-userId'){
-                //     updateCookie(userId, "userId-p")
-                //     .then(value => {
-                //         let fieldValue = value
-                //         let fieldName = 'user_id'
-                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
-                //         console.log('fieldName / fieldValue : ',fieldName, fieldValue)
-                //     })
-                // }
-                // if(iconId === 'unify-i-anonymousId'){
-                //     updateCookie(anonymousId, "anonymousId-p")
-                //     .then(value => {
-                //         let fieldValue = value
-                //         let fieldName = 'anonymous_id'
-                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
-                //     })
-                // }
-                // if(iconId === 'unify-i-traits'){
-                //     updateCookie(usertraits, "traits-p")
-                //     .then(value => {
-                //         let fieldValue = value
-                //         let fieldName = 'traits'
-                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
-                //     })
-                // }
-                // if(iconId === 'unify-i-groupTraits'){
-                //     updateCookie(groupId, "groupId-p")
-                //     .then(value => {
-                //         let fieldValue = value
-                //         let fieldName = 'groupId'
-                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
-                //     })
-                // }
-                // if(iconId === 'unify-i-groupTraits'){
-                //     updateCookie(groupTraits, "groupTraits-p")
-                //     .then(value => {
-                //         let fieldValue = value
-                //         let fieldName = 'group_traits'
-                //         updateProfileAPIField(fieldName, fieldValue, "externalId")
-                //     })
-                // }
-//                 // USER FORM FIELDS
-//                 if(iconId === 'unify-firstName'){
-//                     updateCookie(groupTraits, "groupTraits-p")
-//                     .then(value => {
-//                         let fieldValue = value
-//                         let fieldName = 'group_traits'
-//                         updateProfileAPIField(fieldName, fieldValue, "externalId")
-//                     })
-//                 }
-//                 if(iconId ==="unify-i-firstName"){
-//                     let fieldValue = document.getElementById("firstName").value
-//                     let fieldName = "firstName"
-//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
-//                 }
-//                 if(iconId ==="unify-i-lastName"){
-//                     let fieldValue = document.getElementById("lastName").value
-//                     let fieldName = "lastName"
-//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
-//                 }
-//                 if(iconId ==="unify-i-username"){
-//                     let fieldValue = document.getElementById("username").value
-//                     let fieldName = "username"
-//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
-//                 }
-//                 if(iconId ==="unify-i-phone"){
-//                     let fieldValue = document.getElementById("phone").value
-//                     let fieldName = "phone"
-//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
-//                 }
-//                 if(iconId ==="unify-i-email"){
-//                     let fieldValue = document.getElementById("email").value
-//                     let fieldName = "email"
-//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
-//                 }
-//                 if(iconId ==="unify-i-street"){
-//                     let fieldValue = document.getElementById("street").value
-//                     let fieldName = "street"
-//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
-//                 }
-//                 if(iconId ==="unify-i-city"){
-//                     let fieldValue = document.getElementById("city").value
-//                     let fieldName = "city"
-//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
-//                 }
-//                 if(iconId ==="unify-i-state"){
-//                     let fieldValue = document.getElementById("state").value
-//                     let fieldName = "state"
-//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
-//                 }
-//                 if(iconId ==="unify-i-zipcode"){
-//                     let fieldValue = document.getElementById("zipcode").value
-//                     let fieldName = "zipcode"
-//                     updateProfileAPIField(fieldName, fieldValue, "queryParameters")
-//                 }
-//             } catch (error) {
-//                 console.error("Error updating cookie or profile API field:", error);
-//             }
-
-//         });
-//     });
-
-
-//     let sessionIdInput = document.getElementById('sessionId-input');
-//     let sessionIdLabel = document.getElementById('sessionIdLabel');
-//     sessionIdLabel.addEventListener('click', () => {sessionIdInput.value = sessionId});
-    
-//     let sessionNumberInput = document.getElementById('sessionNumber-input');
-//     let sessionNumberLabel = document.getElementById('sessionNumberLabel');
-//     sessionNumberLabel.addEventListener('click', () => {sessionNumberInput.value = sessionNumber});
-
-
-//     document.getElementById("userId-cookie-get").addEventListener("click", () => updateCookie(userId, "userId-p"));
-//     document.getElementById("userId-p").addEventListener("click", () => copyToClipboard("userId-p"));
-//     document.getElementById("anonymousId-cookie-get").addEventListener("click", () => updateCookie(anonymousId, "anonymousId-p"));
-//     document.getElementById("anonymousId-p").addEventListener("click", () => copyToClipboard("anonymousId-p"));
-//     document.getElementById("traits-cookie-get").addEventListener("click", () => updateCookie(usertraits, "traits-p"));
-//     document.getElementById("traits-p").addEventListener("click", () => copyToClipboard("traits-p"));
-//     document.getElementById("groupId-cookie-get").addEventListener("click", () => updateCookie(groupId, "groupId-p"));
-//     document.getElementById("groupId-p").addEventListener("click", () => copyToClipboard("groupId-p"));
-//     document.getElementById("groupTraits-cookie-get").addEventListener("click", () => updateCookie(groupTraits, "groupTraits-p"));
-//     document.getElementById("groupTraits-p").addEventListener("click", () => copyToClipboard("groupTraits-p"));
-// });
-
-
-
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     // Fetch sensitive data from the server
-//     fetch('/api/config')
-//         .then(response => response.json())
-//         .then(data => {
-//             const spaceIdInput = document.getElementById('spaceId');
-//             const profileAPIKeyInput = document.getElementById('profileAPIKey');
-    
-//             if (spaceIdInput) spaceIdInput.value = data.spaceId || '';
-//             if (profileAPIKeyInput) profileAPIKeyInput.value = data.profileAPIKey || '';
-//         })
-//         .catch(err => {
-//             console.error('Error fetching config:', err);
-//         });
-
-//     // DOM Elements
-//     const spaceIdInput = document.getElementById("spaceId");
-//     const externalIdInput = document.getElementById("externalId");
-//     const queryParametersInput = document.getElementById("queryParameters");
-//     const addAudienceClassButton = document.getElementById("addAudienceClass");
-//     const addComputedTraitClassButton = document.getElementById("addComputedTraitClass");
-//     const sendApiRequestButton = document.getElementById("sendApiRequest");
-//     const queryStringDisplay = document.getElementById("queryStringDisplay");
-
-//     // Default Endpoint Template
-//     const defaultEndpointTemplate = "https://profiles.segment.com/v1/spaces/<space_id>/collections/";
-
-//     // Function to Update Query String Display
-//     const updateQueryStringDisplay = () => {
-//         const spaceId = spaceIdInput.value.trim() || "<space_id>";
-//         const externalId = externalIdInput.value.trim() || "<external_id>";
-//         const queryParams = new URLSearchParams();
-
-//         // Build Query Parameters
-//         if (queryParametersInput.value.trim()) {
-//             queryParametersInput.value
-//                 .split(",")
-//                 .forEach(param => {
-//                     const [key, value] = param.split("=");
-//                     if (key && value) queryParams.append(key.trim(), value.trim());
-//                 });
-//         }
-
-//         // Construct the Full Endpoint
-//         const endpoint = `${defaultEndpointTemplate.replace("<space_id>", spaceId)}users/profiles/${externalId}/traits${queryParams.toString() ? "?" + queryParams.toString() : ""}`;
-
-//         // Update Query String Display
-//         queryStringDisplay.value = endpoint || "No query string present.";
-//     };
-
-//     // Add Query Parameters for Audience Class
-//     addAudienceClassButton.addEventListener("click", () => {
-//         const currentParams = queryParametersInput.value.trim();
-//         queryParametersInput.value = currentParams
-//             ? `${currentParams}&class=audience`
-//             : "class=audience";
-//         updateQueryStringDisplay();
-//     });
-
-//     // Add Query Parameters for Computed Trait Class
-//     addComputedTraitClassButton.addEventListener("click", () => {
-//         const currentParams = queryParametersInput.value.trim();
-//         queryParametersInput.value = currentParams
-//             ? `${currentParams}&class=computed_trait`
-//             : "class=computed_trait";
-//         updateQueryStringDisplay();
-//     });
-
-//     // Send API Request
-//     sendApiRequestButton.addEventListener("click", async () => {
-//         const spaceId = spaceIdInput.value.trim();
-//         const externalId = externalIdInput.value.trim();
-//         const queryParams = queryParametersInput.value.trim();
-
-//         if (!spaceId || !externalId) {
-//             alert("Space ID and External ID are required.");
-//             return;
-//         }
-
-//         try {
-//             const queryString = queryParams
-//                 ? `?${queryParametersInput.value}`
-//                 : "";
-//             const endpoint = `https://profiles.segment.com/v1/spaces/${spaceId}/collections/users/profiles/${externalId}/traits${queryString}`;
-
-//             console.log("Sending API request to:", endpoint);
-
-//             const response = await fetch(endpoint, {
-//                 method: "GET",
-//                 headers: {
-//                     Authorization: `Bearer YOUR_SEGMENT_ACCESS_TOKEN`, // Replace with a valid token
-//                 },
-//             });
-
-//             const data = await response.json();
-
-//             if (response.ok) {
-//                 console.log("API Response:", data);
-//                 alert("API Request Successful!");
-//             } else {
-//                 console.error("API Error:", data);
-//                 alert("API Request Failed!");
-//             }
-//         } catch (error) {
-//             console.error("Request Error:", error);
-//             alert("An error occurred while sending the request.");
-//         }
-//     });
-
-//     // Update query string display whenever inputs change
-//     [spaceIdInput, externalIdInput, queryParametersInput].forEach(input =>
-//         input.addEventListener("input", updateQueryStringDisplay)
-//     );
-
-//     // Initialize query string display
-//     updateQueryStringDisplay();
-// });
 
 
 // END // PROFILE API REQUEST @ LEFT SIDEBAR
@@ -1030,7 +776,70 @@ const getGlobalVariables = () => {
     
 }
 
+const displayUserFormData = () => {
+    // GET CURRENT DATA FROM USER FORM
+    const userFormFields = getUserFormValues() 
+    let {firstName, lastName, username, phone, email, street, city, state, zipcode} = userFormFields;
+    console.log('userFormFields : ', userFormFields)
 
+    // GET CURRENT DATA FROM GLOBAL VARIABLES
+    const globalVariables = getGlobalVariables()
+    let {userId, anonymousId , usertraits , groupId , groupTraits , sessionId , sessionNumber , clientId , cid , campaign , currentUser} = globalVariables
+
+    console.log('GLOBAL VARIABLES @901 : ', userId, anonymousId, usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, campaign, currentUser)
+    console.log('GLOBAL VARIABLES @902 : ', globalVariables)
+
+    // GET CURRENT DATA FROM CAMPAIGN FORM
+    let data = updateCampaignFormAndQueryString(true)
+
+    userList.innerHTML = '';
+
+    const tempUserInfo = [
+        `<span class="bold">Name: </span> ${firstName} ${lastName}`,
+        `<span class="bold">Username: </span>${username}` ,
+        `<span class="bold">Phone: </span>${phone}` ,
+        `<span class="bold">Email: </span>${email}` ,
+        `<span class="bold">Address: </span> ${street}, ${city}, ${state}, ${zipcode}`,
+        clientId?`<span class="bold">clientId: </span>${clientId}` : '',
+        sessionId?`<span class="bold">sessionId: </span>${sessionId}` : '',
+        sessionNumber?`<span class="bold">sessionNumber: </span>${sessionNumber}` : '',
+        userId?`<span class="bold">userId: </span>${userId}` : '',
+        anonymousId?`<span class="bold">anonymousId: </span>${anonymousId}`: '',
+        usertraits?`<span class="bold">usertraits: </span>${usertraits}` :'',
+        groupId?`<span class="bold">groupId: </span>${groupId}` :'',
+        groupTraits?`<span class="bold">groupTraits: </span>${groupTraits}`:'' 
+    ];
+
+    tempUserInfo.forEach(info => {
+        const userItem = document.createElement('li');
+        userItem.innerHTML = info;
+        userList.appendChild(userItem);
+    });
+    
+
+    
+
+    let tempTraits = {
+        firstName : (firstName ? firstName : {}),
+        lastName : (lastName ? lastName : {}),
+        username : (username ? username : {}),
+        phone : (phone ? phone : {}),
+        email : (email ? email : {}),
+        street : (street ? street : {}),
+        city : (city ? city : {}),
+        state : (state ? state : {}),
+        zipcode : (zipcode ? zipcode : {}),
+        referrer : (referrer ? referrer : {}),
+        sessionId : (sessionId ? sessionId : {}),
+        sessionNumber : (sessionNumber ? sessionNumber : {}),
+        clientId : (clientId ? clientId : {}),
+        cid : (cid ? cid : {})
+    }
+    console.log('TEMP TRAITS : ',tempTraits)
+    usertraits = tempTraits
+
+    return {firstName, lastName, username, phone, email, street, city, state, zipcode, userId, anonymousId , usertraits , groupId , groupTraits , sessionId , sessionNumber , clientId , cid , campaign , currentUser, tempTraits, data}
+}
                                     
 // Function to update user profile (LEFT SIDEBAR)
 function updateProfile(event, button, type) {
@@ -1045,7 +854,8 @@ function updateProfile(event, button, type) {
         btnIDType='userId'
         console.log('ANONYMOUS IDENTIFY : PII exists so generating userId', )
     }
-    
+    // displayUserFormData()
+
     // GET CURRENT DATA FROM USER FORM
     const userFormFields = getUserFormValues() 
     let {firstName, lastName, username, phone, email, street, city, state, zipcode} = userFormFields;
@@ -1067,22 +877,6 @@ function updateProfile(event, button, type) {
         console.log()
     }
 
-    userList.innerHTML = '';
-
-    const tempUserInfo = [
-        `<span class="bold">Name: </span> ${firstName} ${lastName}`,
-        `<span class="bold">Username: </span>${username}` ,
-        `<span class="bold">Phone: </span>${phone}` ,
-        `<span class="bold">Email: </span>${email}` ,
-        `<span class="bold">Address: </span> ${street}, ${city}, ${state}, ${zipcode}`
-    ];
-
-    tempUserInfo.forEach(info => {
-        const userItem = document.createElement('li');
-        userItem.innerHTML = info;
-        userList.appendChild(userItem);
-    });
-    
     // IF IDENTIFY:USERID IS CLICKED OR IF PII IS INCLUDED IN FORM THEN FORCE USERID GENERATION
     if(btnIDType==='userId' ||  forceType==='userId'){
         console.log('INSIDE btnIDType | forceType: ',btnIDType, ' | ', forceType)
@@ -1099,6 +893,31 @@ function updateProfile(event, button, type) {
         }
     }
     let data = updateCampaignFormAndQueryString(true)
+    
+    userList.innerHTML = '';
+
+    const tempUserInfo = [
+        `<span class="bold">Name: </span> ${firstName} ${lastName}`,
+        `<span class="bold">Username: </span>${username}` ,
+        `<span class="bold">Phone: </span>${phone}` ,
+        `<span class="bold">Email: </span>${email}` ,
+        `<span class="bold">Address: </span> ${street}, ${city}, ${state}, ${zipcode}`,
+        clientId?`<span class="bold">clientId: </span>${clientId}` : '',
+        sessionId?`<span class="bold">sessionId: </span>${sessionId}` : '',
+        sessionNumber?`<span class="bold">sessionNumber: </span>${sessionNumber}` : '',
+        userId?`<span class="bold">userId: </span>${userId}` : '',
+        anonymousId?`<span class="bold">anonymousId: </span>${anonymousId}`: '',
+        usertraits?`<span class="bold">usertraits: </span>${usertraits}` :'',
+        groupId?`<span class="bold">groupId: </span>${groupId}` :'',
+        groupTraits?`<span class="bold">groupTraits: </span>${groupTraits}`:'' 
+    ];
+
+    tempUserInfo.forEach(info => {
+        const userItem = document.createElement('li');
+        userItem.innerHTML = info;
+        userList.appendChild(userItem);
+    });
+    
 
     let tempTraits = {
         firstName : (firstName ? firstName : {}),
