@@ -32,7 +32,7 @@ const updateGA4Fields = () => {
         // Save GA4 data as cookies
         document.cookie = `client_id=${data.client_id}; path=/`;
         document.cookie = `session_id=${data.session_id}; path=/`;
-        document.cookie = `session_numaber=${data.session_number}; path=/`;
+        document.cookie = `session_number=${data.session_number}; path=/`;
         
         // Display GA4 data in the DOM (optional)
         let ga4SessionId = document.getElementById('sessionId-input');
@@ -60,6 +60,13 @@ const updateGA4Fields = () => {
             // console.log('clientId:', clientId); // Debugging
             // console.log('cid:', cid); // Debugging
         }
+
+        // Add data to the query string
+        const url = new URL(window.location);
+        url.searchParams.set('client_id', data.client_id);
+        url.searchParams.set('session_id', data.session_id);
+        url.searchParams.set('session_number', data.session_number);
+        window.history.replaceState({}, '', url.toString()); // Update the URL without reloading
     })
     .catch(error => {
         console.error('Error fetching GA4 context:', error);
@@ -121,20 +128,25 @@ console.log("JS FILE")
 // Spec Track : https://segment.com/docs/connections/spec/track/
 //    The Track method follows this format :
 //    analytics.track(event, [properties], [options], [callback]);
-let Track = (event, properties, context, callback) => {
+let Track = (event, properties, context, anonymousId, userId,callback) => {
+    const pageData = {
+        path : window.location.pathname,
+        referrer : context.referrer,
+        search : window.location.search,
+        title : document.title,
+        url : window.location.href
+    }
+    
     const payload = {
       event: event,
-      properties: properties || {},
-      context: { ...context, campaign },
+      ...(properties ? properties : {}),
+      page : pageData,
+      ...(anonymousId ? anonymousId : analytics.user().anonymousId())
   };
+  console.log(`Initiating Track Event on ${currentSourceSelected}`)
   
   if (currentSourceSelected === 'CLIENT') {
-      analytics.track(
-          event,
-          ...(properties ? properties : {}),
-          ...(context ? {...context,campaign} : {}),
-          ...(callback ? callback : {})
-        )
+      analytics.track(payload)
       // analytics.track(event, payload.properties, payload.context, callback);
       console.log('Client-side Track:', payload);
   } else {
@@ -142,7 +154,22 @@ let Track = (event, properties, context, callback) => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
-      }).then(response => console.log('Server-side Track:', response));
+      })
+    //   .then(response => console.log('Server-side Track:', response));
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status on Server-side Track: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then((data) => {
+        console.log('Server-side Track response:', data);
+        if (callback) callback(data);
+    })
+    .catch((err) => {
+        console.error('Error triggering server-side Track:', err);
+        console.log(JSON.stringify(payload));
+    });
   }
 }
 
@@ -150,9 +177,14 @@ let Track = (event, properties, context, callback) => {
 //    The Identify method follows this format : 
 //    analytics.identify([userId], [traits], [options], [callback]);
 let Identify = (userId, anonymousId, traits, context, campaign, globalVariables, callback) => {
-    // let globalUserId = globalVariables[userId] ? globalVariables[userId] : ''
-    // let globalAnonymousId = globalVariables[anonymousId] ? globalVariables[anonymousId] : ''
-    // let globalCampaign = globalVariables[campaign] ? globalVariables[campaign] : {}
+    const pageData = {
+        path : window.location.pathname,
+        referrer : context.referrer,
+        search : window.location.search,
+        title : document.title,
+        url : window.location.href
+    }
+
     // let {usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, currentUser} = globalVariables
     console.log('IDENTIFY globalVariables : ',globalVariables);
     // let globalUserId = globalVariables.userId
@@ -206,7 +238,7 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         userId: userId ? userId  : null,
         anonymousId: anonymousId ? anonymousId  : null,
         traits: traits,
-        context: { context, campaign : campaign? campaign : null },
+        context: { context, campaign : campaign? campaign : null , page : pageData},
         globalVariables : globalVariables
     };
     console.log('IDENTIFY PAYLOAD (SERVER) : ', payload)
@@ -261,14 +293,23 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
 //    The Page method follows this format : 
 //    analytics.page([category], [name], [properties], [options], [callback]);
 let Page = (name, category, properties, context, campaign, userId, anonymousId, callback) => {
+    const pageData = {
+        path : window.location.pathname,
+        referrer : context.referrer,
+        search : window.location.search,
+        title : document.title,
+        url : window.location.href
+    }
+    // page : pageData
+
     const payload = {
         name: name? name: null,
         category: category? category : null,
         properties: properties? properties : {},
-        context: context ? {...context, campaign} : {},
+        context: context ? {traits : context.traits, campaign : context.campaign, page : pageData} : {},
         ...(userId ?  userId  : analytics.user().id() ||  ''),
         // userId : userId ? userId : analytics.user().id() ||  '',
-        anonymousId : anonymousId ? anonymousId : analytics.user().anonymousId(),
+        anonymousId : anonymousId ? anonymousId : analytics.user().anonymousId() || '',
   };
   console.log('PAGE PAYLOAD : ', payload)
 
@@ -377,20 +418,46 @@ let Alias = (userId, previousId, context, callback) => {
 // let zipcode
 // let email
 
-
-document.getElementById('sessionId-input').value = sessionId;
-document.getElementById('sessionNumber-input').value = sessionNumber;
-document.getElementById('clientId-input').value = clientId;
-
+// document.addEventListener('DOMContentLoaded', () => {
+//     document.getElementById('sessionId-input').value = sessionId;
+//     document.getElementById('sessionNumber-input').value = sessionNumber;
+//     document.getElementById('clientId-input').value = clientId;
+// })
 let userFormFields = {firstName, lastName, username, phone, street, city, state, zipcode, email}
 
 
 // Get the toggle checkbox element
 const toggleCheckbox = document.getElementById('source-selection');
 
-// Function to handle toggle state and update global variable
+// analytics.ready(() => {
+    
+    // campaign = {
+    //     utm_id:document.getElementById('campaignId'),
+    //     utm_campaign: document.getElementById('campaign'),
+    //     utm_source: document.getElementById('campaignSource'),
+    //     utm_medium: document.getElementById('campaignMedium'),
+    //     utm_term: document.getElementById('campaignTerm'),
+    //     utm_content : document.getElementById('campaignContent'),
+    // }
+    // referrer = document.getElementById('referrer')
+// document.addEventListener('DOMContentLoaded', () => {
+//     document.getElementById('campaignId')
+//     document.getElementById('campaign')
+//     document.getElementById('campaignSource')
+//     document.getElementById('campaignMedium')
+//     document.getElementById('campaignTerm')
+//     document.getElementById('campaignContent')
+//     document.getElementById('referrer')
+//     let data = getCampaignFormValues()
+    
+//     Track('campaign_details',{clientId, sessionId, sessionNumber, campaign : data.campaign, referrer : data.referrer, anonymousId}, {campaign : data.campaign, referrer : data.referrer, google : {clientId, sessionId, sessionNumber}}, anonymousId)
+// })
 
-document.addEventListener('DOMContentLoaded', () => {
+
+
+// Function to handle toggle state and update global variable
+analytics.ready(() => {
+// document.addEventListener('DOMContentLoaded', () => {
     const toggleCheckbox = document.getElementById('source-selection'); // Ensure the element ID matches the nav HTML
     if (!toggleCheckbox) {
         console.error('Toggle checkbox not found in DOM');
@@ -417,7 +484,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize the state on load
     updateSourceSelected();
-});
+// });
+})
 
   // GLOBAL VARIABLES FOUND IN INDEX.HTML FILE'S <HEAD>
   // let userId
@@ -431,6 +499,114 @@ document.addEventListener('DOMContentLoaded', () => {
   // let cid
 
 // START // GLOBAL VARIABLES
+
+
+// ------------------------------------
+
+
+// ------------------------------------
+
+// START // TRACK EVENT : CAMPAIGN_DETAILS EVENT
+
+// Refactored getCampaignFormValues function
+
+// analytics.ready(() => {
+//     // const getCampaignFormValues = async () => {
+//     //     const campaign = {
+//     //         utm_id: document.getElementById('campaignId-input')?.value || '',
+//     //         utm_campaign: document.getElementById('campaign-input')?.value || '',
+//     //         utm_source: document.getElementById('campaignSource-input')?.value || '',
+//     //         utm_medium: document.getElementById('campaignMedium-input')?.value || '',
+//     //         utm_term: document.getElementById('campaignTerm-input')?.value || '',
+//     //         utm_content: document.getElementById('campaignContent-input')?.value || '',
+//     //     };
+
+//     //     const referrer = document.getElementById('referrer-input')?.value || '';
+//     //     console.log('getCampaignFormValues campaign : ', { ...campaign, referrer, campaign });
+//     //     return { ...campaign, referrer, campaign };
+//     // };
+
+//     // document.addEventListener('DOMContentLoaded', async () => {
+//     document.addEventListener('DOMContentLoaded',  () => {
+      
+//         // const triggerDetails = async () => {
+//         const triggerDetails = () => {
+//             // let data = await getCampaignFormValues()
+//             // let data =  getCampaignFormValues()
+//             // console.log('getCampaignFormValues data : ', data)
+            
+//             // if(data){
+//                 // console.log('getCampaignFormValues IF data.campaign : ', data.campaign)
+//                 console.log('getCampaignFormValues IF data.campaign : ', campaign)
+//                 try{
+//                     Track('campaign_details',{clientId, sessionId, sessionNumber, campaign : campaign, referrer : referrer, anonymousId}, {campaign : {...campaign}, referrer : referrer, google : {clientId, sessionId, sessionNumber}}, anonymousId)
+//                     // Track('campaign_details',{clientId, sessionId, sessionNumber, campaign : data.campaign, referrer : data.referrer, anonymousId}, {campaign : {...data.campaign}, referrer : data.referrer, google : {clientId, sessionId, sessionNumber}}, anonymousId)
+//                 } catch (error) {console.log('TRACK ERROR : ',error)}
+//             // }
+//           }
+//           triggerDetails() 
+//     })
+// })
+
+
+// document.addEventListener('DOMContentLoaded', async () => {
+//     try {
+//         // Wait for all fields to become available
+//         await waitForFields([
+//             'campaignId-input',
+//             'campaign-input',
+//             'campaignSource-input',
+//             'campaignMedium-input',
+//             'campaignTerm-input',
+//             'campaignContent-input',
+//             'referrer-input'
+//         ]);
+
+//         // Run getCampaignFormValues once fields are available
+//         const data = await getCampaignFormValues();
+
+//         // Run Track once data is available
+//         Track(
+//             'campaign_details',
+//             {
+//                 clientId,
+//                 sessionId,
+//                 sessionNumber,
+//                 campaign: data.campaign,
+//                 referrer: data.referrer,
+//                 anonymousId
+//             },
+//             {
+//                 campaign: data.campaign,
+//                 referrer: data.referrer,
+//                 google: { clientId, sessionId, sessionNumber }
+//             },
+//             anonymousId
+//         );
+//     } catch (error) {
+//         console.error('Error processing campaign form values:', error);
+//     }
+// });
+
+// // Utility to wait for all required fields to be available in the DOM
+// const waitForFields = async (fieldIds, timeout = 5000) => {
+//     const pollInterval = 100; // Check every 100ms
+//     const maxChecks = timeout / pollInterval;
+
+//     for (let i = 0; i < maxChecks; i++) {
+//         const allFieldsAvailable = fieldIds.every(id => document.getElementById(id));
+//         if (allFieldsAvailable) {
+//             return true; // All fields are available
+//         }
+//         await new Promise(resolve => setTimeout(resolve, pollInterval));
+//     }
+//     throw new Error('Timeout waiting for fields to be available');
+// };
+
+
+
+
+// END // TRACK CAMPAIGN DETAILS EVENT
 
 
 // ------------------------------------
@@ -754,6 +930,27 @@ const getUserFormValues = () => {
     // const userFormFields = getUserFormValues() 
     // const {firstName, lastName, username, phone, email, street, city, state, zipcode} = userFormFields;
 }
+// const getCampaignFormValues = () => {
+//     utm_id=document.getElementById('campaignId'),
+//     utm_campaign= document.getElementById('campaign'),
+//     utm_source= document.getElementById('campaignSource'),
+//     utm_medium= document.getElementById('campaignMedium'),
+//     utm_term= document.getElementById('campaignTerm'),
+//     utm_content = document.getElementById('campaignContent'),
+//     campaign = {
+//         utm_id:document.getElementById('campaignId'),
+//         utm_campaign: document.getElementById('campaign'),
+//         utm_source: document.getElementById('campaignSource'),
+//         utm_medium: document.getElementById('campaignMedium'),
+//         utm_term: document.getElementById('campaignTerm'),
+//         utm_content : document.getElementById('campaignContent'),
+//     },
+//     referrer = document.getElementById('referrer')
+//     return {utm_id, utm_campaign, utm_source, utm_medium, utm_term, utm_content, referrer, campaign};
+//     // Put lines below in original function : 
+//     // const userFormFields = getUserFormValues() 
+//     // const {firstName, lastName, username, phone, email, street, city, state, zipcode} = userFormFields;
+// }
 
 const getGlobalVariables = () => {
     console.log('GLOBAL userId : ', userId);
@@ -1081,7 +1278,14 @@ const resetAjsUser = () => {
     console.log('CURRENT cid : ', cid)
     console.log('CURRENT sessionId : ', sessionId)
     console.log('CURRENT sessionNumber : ', sessionNumber)
+    
+    // Track('campaign_details',{campaign : campaign, referrer : referrer, anonymousId}, {campaign : {...campaign}, referrer : referrer, google : {clientId, sessionId, sessionNumber}}, anonymousId);
+
+    // analytics.ready(() => {
+    //     Track('campaign_details',{campaign : campaign, referrer : referrer, anonymousId}, {campaign : {...campaign}, referrer : referrer, google : {clientId, sessionId, sessionNumber}}, anonymousId);
+    // })
 }
+
 // document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser);
 
 
@@ -1172,11 +1376,15 @@ function saveFormData() {
 
 
 // Function to load form data from localStorage & querystring
+
 function loadFormData() {
     let userForm = document.getElementById('userForm');
     let campaignForm = document.getElementById('campaignForm');
     const queryParams = new URLSearchParams(window.location.search);
     
+    // let userFormInputVars = {}
+    // let campaignFormInputVars = {}
+
     let contextTraits = {}
     // Populate User Form Fields from localStorage
     if (userForm) {
@@ -1186,12 +1394,14 @@ function loadFormData() {
             if (savedValue !== null) {
                 contextTraits[input.name] = input.value;
                 input.value = savedValue;
+                // console.log('input.value = savedValue : ',input.value = savedValue)
+                // console.log('contextTraits[input.name] = input.value : ',contextTraits[input.name],' | ', input.value)
             }
         });
     }
 
     let properties = {}
-    let context = {traits : contextTraits, campaign:{}}
+    let context = {traits : contextTraits, campaign:{}, referrer : ''}
 
     if (campaignForm) {
         // Populate Campaign Form Fields from localStorage or query string
@@ -1199,12 +1409,18 @@ function loadFormData() {
         campaignInputs.forEach(input => {
             const paramValue = queryParams.get(input.name);
             if (paramValue !== null) {
+                properties[input.name] = paramValue;
+                context.campaign[input.name] = paramValue;
                 input.value = paramValue;
+                // console.log('input.value = paramValue : ',input.value = paramValue)
+                // console.log('context.campaign[input.name] = input.value : ',context.campaign[input.name],' | ', input.value)
+                // console.log('properties[input.name] = paramValue : ',properties[input.name],' | ', paramValue)
             }
 
             const savedValue = localStorage.getItem(input.name);
             if (savedValue !== null) {
                 input.value = savedValue;
+                // console.log('input.value = savedValue : ',input.value,' | ', savedValue)
             }
         });
          // Update the query string and display it
@@ -1221,6 +1437,7 @@ function loadFormData() {
              const newQueryString = `?${newQueryParams.toString()}`;
              window.history.replaceState({}, '', newQueryString);
              queryStringDisplay.textContent = newQueryString || 'No query string present.';
+             console.log('Query string updated:', newQueryString);
          }
     }
 
@@ -1231,33 +1448,43 @@ function loadFormData() {
     const matchedCampaign = campaignData.find(campaign => 
         campaign.utm.campaignId === campaignId || campaign.utm.campaign === campaignId
     );
-
+    
     // Populate the `referrer` field if a matching campaign is found
     if (matchedCampaign) {
         const referrerInput = campaignForm.querySelector('input[name="referrer"]');
         if (referrerInput) {
             referrerInput.value = matchedCampaign.utm.referrer || '';
-            // console.log("Referrer field set to:", referrerInput.value);
+            referrer = matchedCampaign.utm.referrer
+            context['referrer'] = referrer
+            console.log("Referrer field set to:", referrer);
+            // console.log("@loadFormData - Referrer field set to:", referrerInput.value);
         }
     }
     if(clientId || cid){
         // console.log('clientId exists', clientId, 'cid exist', cid)
         document.getElementById('clientId-input').value = clientId
-    }
-    else{
-        console.log('clientId does not exist')
-    }
-    // console.log('loadFormData document.title : ',document.title);
-    // console.log('loadFormData Campaign : ','Campaign');
-    // console.log('loadFormData properties : ',properties);
-    // console.log('loadFormData context : ',context);
-    // console.log('loadFormData campaign : ',campaign);
-    userId = userId ? userId : analytics.user().id() ||  {};
-    anonymousId = anonymousId ? anonymousId : analytics.user().anonymousId() ||  {};
+    } else{console.log('clientId does not exist')}
+    
+    console.log('loadFormData document.title : ',document.title);
+    console.log('loadFormData Campaign : ','Campaign');
+    console.log('loadFormData properties : ',properties);
+    console.log('loadFormData context : ',context);
+    console.log('loadFormData context.campaign : ',context.campaign);
+    
+    userId = userId ? analytics.user().id() :  '';
+    anonymousId = anonymousId ? analytics.user().anonymousId() :  '';
     // console.log('loadFormData userId : ',userId);
     // console.log('loadFormData anonymousId : ',anonymousId);
-    Page(document.title, 'Campaign', properties, context, campaign, userId, anonymousId)
+    
+    
+    analytics.ready(() => {
+        Page(document.title, 'Campaign', properties, context, campaign, userId, anonymousId);
+        Track('campaign_details',{campaign : context.campaign, referrer : referrer, anonymousId}, {campaign : {...context.campaign}, referrer : referrer, google : {clientId, sessionId, sessionNumber}}, anonymousId);
+        // loadFormData()
+    })
 }
+
+
 /// Call `loadFormData` on DOMContentLoaded
 // document.addEventListener('DOMContentLoaded', loadFormData);
 
@@ -1327,7 +1554,9 @@ function loadFormData() {
 
 // Call the loadFormData function on DOM load
 // document.addEventListener('DOMContentLoaded', () => {loadFormData()});
-document.addEventListener('DOMContentLoaded', loadFormData);
+analytics.ready(
+    document.addEventListener('DOMContentLoaded', loadFormData)
+)
 
 // Event listeners to save and load form data
 //   const form = document.getElementById('userForm');
@@ -1504,6 +1733,7 @@ function toggleSidebar(sidebar, icon, resizer) {
 function generateCampaignData() {
     // Generate random index to select data
     const randomIndex = Math.floor(Math.random() * campaignData.length);
+    // /campaignObject
     return campaignData[randomIndex];
 }
 
@@ -1512,14 +1742,17 @@ function generateCampaignData() {
 
 function updateCampaignFormAndQueryString(ignore) {
     // console.log('Button clicked'); // Debug log
-
-    const data = generateCampaignData();
-    // let data = loadFormData()
-    let formData = loadFormData()
-    console.log('Generated Campaign Data:', data);
-
-    const utmParams = data.utm;
-    console.log(data.utm)
+    
+    // if(ignore !== false){
+        const data = generateCampaignData();
+        console.log('updateCampaignFormAndQueryString / generateCampaignData : (data)', data)
+        // let data = loadFormData()
+        let formData = loadFormData()
+        console.log('Generated Campaign Data:', data);
+        
+        const utmParams = data.utm;
+        console.log(data.utm)
+    // }
 
     // Update form fields
     for (const key in utmParams) {
@@ -1545,12 +1778,12 @@ function updateCampaignFormAndQueryString(ignore) {
     let pageName = window.document.title
     let context = {
         campaign: {
-            id: utmParams.campaignId,
-            name: utmParams.campaign,
-            source: utmParams.campaignSource,
-            medium: utmParams.campaignMedium,
-            term: utmParams.campaignTerm,
-            content: utmParams.campaignContent,
+            utm_id: utmParams.campaignId,
+            utm_campaign: utmParams.campaign,
+            utm_source: utmParams.campaignSource,
+            utm_medium: utmParams.campaignMedium,
+            utm_term: utmParams.campaignTerm,
+            utm_content: utmParams.campaignContent,
         },
         page : {
             referrer : referrer
@@ -1578,8 +1811,13 @@ function updateCampaignFormAndQueryString(ignore) {
     let resData = {pageName : pageName, category:'', properties : properties, context : context, campaign : data, userId : userId, anonymousId : anonymousId}
     if(ignore === false){
         Page(resData)
+        console.log('Page(resData)')
+    }
+    else{
+
     }
     // Page(pageName, "Campaign", properties,context)
+    sendCampaignServerSide()
     return resData
 }
 // document.getElementById('newCampaign').addEventListener('click', updateCampaignFormAndQueryString);

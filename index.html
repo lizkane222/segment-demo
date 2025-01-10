@@ -12,7 +12,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
-    <script src="./.env"></script>
+    <!-- <script src="./.env"></script> -->
 
     <!-- <script src="path/to/uuidv4.min.js"></script> -->
 
@@ -21,35 +21,35 @@
 
     <script>
 
-        let userId
-        let anonymousId
+        let userId = ''
+        let anonymousId = ''
         let usertraits = {}
-        let groupId
-        let groupTraits
-        let utm_id
-        let utm_campaign
-        let utm_source
-        let utm_medium
-        let utm_term
-        let utm_content
-        let referrer
-        let sessionId
-        let sessionNumber
-        let clientId
-        let cid
+        let groupId = ''
+        let groupTraits = {}
+        let utm_id = ''
+        let utm_campaign = ''
+        let utm_source = ''
+        let utm_medium = ''
+        let utm_term = ''
+        let utm_content = ''
+        let referrer = ''
+        let sessionId = ''
+        let sessionNumber = ''
+        let clientId = ''
+        let cid = ''
         let campaign = {utm_id, utm_campaign, utm_source, utm_medium, utm_term, utm_content }
 
         let currentUser = {}
 
-        let firstName
-        let lastName
-        let username
-        let phone
-        let street
-        let city
-        let state
-        let zipcode
-        let email
+        let firstName = ''
+        let lastName = ''
+        let username = ''
+        let phone = ''
+        let street = ''
+        let city = ''
+        let state = ''
+        let zipcode = ''
+        let email = ''
 
         let currentSourceSelected = 'CLIENT';
         let generateGA4ContextReady = false
@@ -60,8 +60,7 @@
         analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3",{
             //useQueryString: false
           })
-        
-        analytics.page();
+          analytics.page();
         }}();
           
         
@@ -87,16 +86,70 @@
 
 
         // Use ternary operator to assign values to form fields
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('firstName').value = usertraits.firstName ? usertraits.firstName : '';
-            document.getElementById('lastName').value = usertraits.lastName ? usertraits.lastName : '';
-            document.getElementById('username').value = usertraits.username ? usertraits.username : '';
-            document.getElementById('phone').value = usertraits.phone ? usertraits.phone : '';
-            document.getElementById('email').value = usertraits.email ? usertraits.email : '';
-        });
+        //document.addEventListener('DOMContentLoaded', () => {
+            //document.getElementById('firstName').value = usertraits.firstName ? usertraits.firstName : '';
+            //document.getElementById('lastName').value = usertraits.lastName ? usertraits.lastName : '';
+            //document.getElementById('username').value = usertraits.username ? usertraits.username : '';
+            //document.getElementById('phone').value = usertraits.phone ? usertraits.phone : '';
+            //document.getElementById('email').value = usertraits.email ? usertraits.email : '';
+//
+            //utm_id= document.getElementById('campaignId-input')?.value || '',
+            //utm_campaign= document.getElementById('campaign-input')?.value || '',
+            //utm_source= document.getElementById('campaignSource-input')?.value || '',
+            //utm_medium= document.getElementById('campaignMedium-input')?.value || '',
+            //utm_term= document.getElementById('campaignTerm-input')?.value || '',
+            //utm_content= document.getElementById('campaignContent-input')?.value || '',
+            //campaign = {
+            //    utm_id: document.getElementById('campaignId-input')?.value || '',
+            //    utm_campaign: document.getElementById('campaign-input')?.value || '',
+            //    utm_source: document.getElementById('campaignSource-input')?.value || '',
+            //    utm_medium: document.getElementById('campaignMedium-input')?.value || '',
+            //    utm_term: document.getElementById('campaignTerm-input')?.value || '',
+            //    utm_content: document.getElementById('campaignContent-input')?.value || '',
+            //};
+            //referrer = document.getElementById('referrer-input')?.value || '';
+//
+            //console.log('campaign : ',campaign)
+            //console.log('Does this campaign reflect the latest changes : ',campaign)
+
+            
+        //});
+        const sendCampaignServerSide = async (campaign, referrer) => {
+            let latest_campaign = {
+                utm_id: document.getElementById('campaignId-input').value,
+                utm_campaign: document.getElementById('campaign-input').value,
+                utm_source: document.getElementById('campaignSource-input').value,
+                utm_medium: document.getElementById('campaignMedium-input').value,
+                utm_term: document.getElementById('campaignTerm-input').value,
+                utm_content: document.getElementById('campaignContent-input').value,
+            };
+            let latest_referrer = document.getElementById('referrer-input').value;
+            console.log('campaign and referrer', latest_campaign, latest_referrer, {...latest_campaign});
+            try {
+                let response = await fetch('/campaignDetails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ latest_campaign, latest_referrer, ...latest_campaign }),
+                });
         
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+        
+                let data = await response.json();
+                console.log('Campaign details sent successfully:', data);
+                return data;
+            } catch (error) {
+                console.error('Error sending campaign details:', error);
+            }
+        };
+        sendCampaignServerSide()
+
         //generateGA4ContextReady = true;
-        analytics.page();
+        //analytics.page();
+
         console.log('currentSourceSelected : ',currentSourceSelected)
     });
     
