@@ -1,24 +1,25 @@
     <!-- NAV BAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <img src="./segment.svg" alt="Icon 1" class="segment-svg-icon">
-        <h3 class="segment-green-text"><a class="navbar-brand" href="/user">Segment Demo</a></h3>
-        <a href="/user">
+        <h3 class="segment-green-text"><a class="navbar-brand" href="/config">SEGMENT DEMO</a></h3>
+        <a href="/config">
             <span class="segment-green-text zoom">_ __ ___ </span>
             <i class="bi bi-scooter" style="font-size: 2rem; color:#4fb58b;"></i>
         </a>
-        <h5 class="segment-green-text user-nav"><a href="/user"> User & Campaign </a></h5>
-        <h5 class="segment-green-text ecommerce-nav"><a href="/ecommerce"> Ecommerce </a></h5>
-        <!-- <h5></h5> -->
-        <!-- <h5></h5> -->
-
+        <h5 class="segment-green-text user-nav"><a href="/user"> USER </a></h5>
+        <h5 class="segment-green-text ecommerce-nav"><a href="/ecommerce"> ECOMMERCE </a></h5>
+        <!-- <h5 class="segment-green-text config"><a href="/config"> Ecommerce </a></h5> -->
+        <h5 class="segment-green-text" id="ajs-nav" href="/config">AJS : <span></span></h5>
+        <h5 class="segment-green-text" id="node-nav" href="/config">NODE : <span></span></h5>
+        
         <!-- CLIENT vs SERVER toggle -->
         <div class="toggle-container">
             <!-- CODEPEN TOGGLE : https://codepen.io/mallendeo/pen/QWKrEL -->
             <ul class="tg-list">
-                <li class="tg-list-item">
+                <li class="tg-list-item" >
                     <!-- <h4>Flip</h4> -->
-                    <input id="source-selection" class="tgl tgl-flip" type="checkbox" checked/>
-                    <label class="tgl-btn" data-tg-off="SERVER" data-tg-on="CLIENT" for="source-selection"></label>
+                    <input id="source-selection" class="tgl tgl-flip" type="checkbox" checked />
+                    <label class="tgl-btn" data-tg-off="SERVER" data-tg-on="CLIENT" for="source-selection" data-tooltip="Toggle between sending data CLIENT and SERVER"></label>
                 </li>
             </ul>
         </div>

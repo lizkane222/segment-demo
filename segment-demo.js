@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-console.log("JS FILE")
+// console.log("JS FILE")
 
 // ------------------------------------
 
@@ -128,20 +128,30 @@ console.log("JS FILE")
 // Spec Track : https://segment.com/docs/connections/spec/track/
 //    The Track method follows this format :
 //    analytics.track(event, [properties], [options], [callback]);
-let Track = (event, properties, context, anonymousId, userId,callback) => {
+let Track = ({event, properties, context, anonymousId, userId, callback}) => {
+    // console.log('@Track - anonymousId : ', event.anonymousId)
+    // console.log('@TRACK param event : ',event)
+    // console.log('@TRACK params : ', 'event : ', event, 'properties : ', event.properties, 'context : ', event.context, 'anonymousId : ', event.anonymousId, 'userId : ', event.userId)  
+    // let eventName = event.event
+    // let eventProperties = event.properties
+    // let eventContext = event.context
+    // let eventAnonymousId = event.anonymousId
+    // let eventUserId = event.userId
+
     const pageData = {
         path : window.location.pathname,
-        referrer : context.referrer,
+        referrer : document.getElementById('referrer-input').value,
         search : window.location.search,
         title : document.title,
         url : window.location.href
     }
-    
+    // console.log('pageData : ', pageData)    
     const payload = {
       event: event,
-      ...(properties ? properties : {}),
+      properties : properties ? properties : {},
       page : pageData,
-      ...(anonymousId ? anonymousId : analytics.user().anonymousId())
+      anonymousId : anonymousId ? anonymousId : analytics.user().anonymousId(),
+    //   context : context ? context : {},
   };
   console.log(`Initiating Track Event on ${currentSourceSelected}`)
   
@@ -150,6 +160,7 @@ let Track = (event, properties, context, anonymousId, userId,callback) => {
       // analytics.track(event, payload.properties, payload.context, callback);
       console.log('Client-side Track:', payload);
   } else {
+      console.log('Server-side Track:', payload);
       fetch('/track', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -185,8 +196,11 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         url : window.location.href
     }
 
+    let campaignData = sendCampaignServerSide()
+    // console.log('campaignData : ', campaignData)
+
     // let {usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, currentUser} = globalVariables
-    console.log('IDENTIFY globalVariables : ',globalVariables);
+    // console.log('IDENTIFY globalVariables : ',globalVariables);
     // let globalUserId = globalVariables.userId
     // let globalAnonymousId = globalVariables.anonymousId
     // let usertraits = globalVariables.usertraits
@@ -210,7 +224,7 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         context: context || {}, 
         campaign : campaign || null
     }
-    console.log('IDENTIFY currentUser : ',currentUser)
+    // console.log('IDENTIFY currentUser : ',currentUser)
     // console.log('IDENTIFY userId : ',userId)
     // console.log('IDENTIFY anonymousId : ',anonymousId)
     // console.log('IDENTIFY traits : ',traits)
@@ -239,11 +253,12 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         anonymousId: anonymousId ? anonymousId  : null,
         traits: traits,
         context: { context, campaign : campaign? campaign : null , page : pageData},
-        globalVariables : globalVariables
+        globalVariables : globalVariables,
+        page : pageData
     };
     console.log('IDENTIFY PAYLOAD (SERVER) : ', payload)
 
-    updateGA4Fields();
+    // updateGA4Fields();
 
     if (currentSourceSelected==='CLIENT') {
         // Send data client-side via Segment's analytics.js library
@@ -611,44 +626,46 @@ analytics.ready(() => {
 
 // ------------------------------------
 
+
+
 // Generic function to update the <span> with the result of the passed function
-const updateCookie = async (getValueFunc, spanId) => {
-    return new Promise((resolve, reject) => {
-        try {
-            // Check if getValueFunc is an object or a function
-            let value = typeof getValueFunc === "function" ? getValueFunc() : getValueFunc;
+// const updateCookie = async (getValueFunc, spanId) => {
+//     return new Promise((resolve, reject) => {
+//         try {
+//             // Check if getValueFunc is an object or a function
+//             let value = typeof getValueFunc === "function" ? getValueFunc() : getValueFunc;
 
-            // If the value is an object, convert it to a readable JSON string
-            if (typeof value === "object") {
-                value = JSON.stringify(value, null, 2); // Pretty-print the JSON
-            }
+//             // If the value is an object, convert it to a readable JSON string
+//             if (typeof value === "object") {
+//                 value = JSON.stringify(value, null, 2); // Pretty-print the JSON
+//             }
 
-            // Update the span with the formatted value or a default message if not set
-            const spanElement = document.getElementById(spanId);
-            if (spanElement) {
-                spanElement.innerText = value || "not set";
-                resolve(value); // Resolve with the value
-            } else {
-                reject(`Element with ID ${spanId} not found.`);
-            }
-        } catch (error) {
-            reject(error);
-        }
-    });
-};
-// let updateCookie = (getValueFunc, spanId) => {
-//     // Check if getValueFunc is an object or a function
-//     let value = typeof getValueFunc === "function" ? getValueFunc() : getValueFunc;
-
-//     // If the value is an object, convert it to a readable JSON string
-//     if (typeof value === "object") {
-//         value = JSON.stringify(value, null, 2); // Pretty-print the JSON
-//     }
-
-//     // Update the span with the formatted value or a default message if not set
-//     document.getElementById(spanId).innerText = value || "not set";
-//     return value;
+//             // Update the span with the formatted value or a default message if not set
+//             const spanElement = document.getElementById(spanId);
+//             if (spanElement) {
+//                 spanElement.innerText = value || "not set";
+//                 resolve(value); // Resolve with the value
+//             } else {
+//                 reject(`Element with ID ${spanId} not found.`);
+//             }
+//         } catch (error) {
+//             reject(error);
+//         }
+//     });
 // };
+let updateCookie = (getValueFunc, spanId) => {
+    // Check if getValueFunc is an object or a function
+    let value = typeof getValueFunc === "function" ? getValueFunc() : getValueFunc;
+
+    // If the value is an object, convert it to a readable JSON string
+    if (typeof value === "object") {
+        value = JSON.stringify(value, null, 2); // Pretty-print the JSON
+    }
+
+    // Update the span with the formatted value or a default message if not set
+    document.getElementById(spanId).innerText = value || "not set";
+    return value;
+};
 
 // Function to copy text to the clipboard
 function copyToClipboard(pId) {
@@ -703,21 +720,36 @@ document.addEventListener("DOMContentLoaded", () => {
         "unify-i-city": { field: "queryParameters", name: "city" },
         "unify-i-state": { field: "queryParameters", name: "state" },
         "unify-i-zipcode": { field: "queryParameters", name: "zipcode" },
+        "unify-i-audience": { field: "queryParameters", name: "audience" },
+        "unify-i-computed-trait": { field: "queryParameters", name: "computed_trait" },
     };
 
     // Helper Functions
     const updateProfileAPIField = (fieldName, fieldValue, targetFieldId) => {
         const targetField = document.getElementById(targetFieldId);
-
+        console.log('fieldName : ', fieldName)
+        console.log('fieldValue : ', fieldValue)
+        console.log('targetFieldId : ', targetFieldId)
+        // if(fieldName==='traits'){{
+        //     fieldValue= 
+        // }
         if (targetField) {
             if (targetFieldId === "externalId") {
                 targetField.value = `${fieldName}:${fieldValue}`;
                 console.log(`Updated ${targetFieldId} with value: ${targetField.value}`);
             } else if (targetFieldId === "queryParameters") {
-                targetField.value = targetField.value
-                    ? `${targetField.value}&includes=${fieldName}`
-                    : `includes=${fieldName}`;
-                console.log(`Updated ${targetFieldId} with value: ${targetField.value}`);
+                if(fieldName=== "audience" || fieldName=== "computed_trait"){
+                    targetField.value = targetField.value
+                    ? `${targetField.value}&class=${fieldName}`
+                    : `class=${fieldName}`;
+                    console.log(`Updated ${targetFieldId} with value: ${targetField.value}`);
+                }
+                else {
+                    targetField.value = targetField.value
+                        ? `${targetField.value}&includes=${fieldName}`
+                        : `includes=${fieldName}`;
+                    console.log(`Updated ${targetFieldId} with value: ${targetField.value}`);
+                }
             }
         } else {
             console.error(`Target field with ID ${targetFieldId} not found.`);
@@ -762,8 +794,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const spanId = button.dataset.target;
             const value = updateCookie(button.id.replace("-cookie-get", ""), spanId);
             console.log(`Updated cookie for ${button.id}:`, value);
+            // copyToClipboard("userId-p")
         });
     });
+
+    document.getElementById("userId-cookie-get").addEventListener("click", () => updateCookie(userId, "userId-p"));
+    document.getElementById("userId-p").addEventListener("click", () => copyToClipboard("userId-p"));
+    document.getElementById("anonymousId-cookie-get").addEventListener("click", () => updateCookie(anonymousId, "anonymousId-p"));
+    document.getElementById("anonymousId-p").addEventListener("click", () => copyToClipboard("anonymousId-p"));
+    document.getElementById("traits-cookie-get").addEventListener("click", () => updateCookie(usertraits, "traits-p"));
+    document.getElementById("traits-p").addEventListener("click", () => copyToClipboard("traits-p"));
+    document.getElementById("groupId-cookie-get").addEventListener("click", () => updateCookie(groupId, "groupId-p"));
+    document.getElementById("groupId-p").addEventListener("click", () => copyToClipboard("groupId-p"));
+    document.getElementById("groupTraits-cookie-get").addEventListener("click", () => updateCookie(groupTraits, "groupTraits-p"));
+    document.getElementById("groupTraits-p").addEventListener("click", () => copyToClipboard("groupTraits-p"));
+
+    
 
     // Session Field Clicks
     const sessionFields = [
@@ -820,7 +866,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-    // Send API Request
+    
+    // Function to send the Profile API request with retry logic
+    const sendProfileApiRequest = async (endpointUrl, profileAPIKey, retryCount = 0, maxRetries = 5, retryDelay = 60000) => {
+        try {
+            console.log(`Attempt ${retryCount + 1}: Sending API request to ${endpointUrl}`);
+
+            const response = await fetch("/profile-api", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ endpointUrl, profileAPIKey }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("API Response:", data);
+                showToast("API Request Successful!", response, "green");
+                return; // Exit function on success
+            } else if (response.status === 404) {
+                console.warn(`User does not yet exist. Retrying... ${retryCount+1}/${maxRetries}`);
+                if (retryCount < maxRetries) {
+                    setTimeout(() => {
+                        sendProfileApiRequest(endpointUrl, profileAPIKey, retryCount + 1, maxRetries, retryDelay*(retryCount+1));
+                    }, retryDelay*(retryCount+1));
+                } else {
+                    console.error("Max retries reached. User does not exist.");
+                    showToast("Max retries reached. User does not exist.", null, "yellow");
+                }
+            } else {
+                console.error("API Error:", data);
+                showToast("API Request Failed!", data, "red");
+            }
+        } catch (error) {
+            console.error("Request Error:", error);
+            showToast("API Request Error!", error, "orange");
+        }
+    };
+    
+    // Send PROFILE API Request
     const sendApiRequestButton = document.getElementById("sendApiRequest");
     sendApiRequestButton.addEventListener("click", async () => {
         const spaceIdInput = document.getElementById("spaceId");
@@ -837,83 +923,94 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Space ID and External ID are required.");
             return;
         }
-    
-        try {
-            const queryString = queryParams ? `?${queryParams}` : "";
-    
-            const endpointUrl = `https://profiles.segment.com/v1/spaces/${spaceId}/collections/users/profiles/${externalId}/traits${queryString}`;
+        
+        const queryString = queryParams ? `?${queryParams}` : "";
+        const endpointUrl = `https://profiles.segment.com/v1/spaces/${spaceId}/collections/users/profiles/${externalId}/traits${queryString}`;
 
-            console.log("Sending API request to:", endpointUrl);
-            console.log("API request profileAPIKey :", profileAPIKey);
+        sendProfileApiRequest(endpointUrl, profileAPIKey);
+        
+        
+        // try {
+        //     console.log("Sending API request to:", endpointUrl);
+        //     console.log("API request profileAPIKey :", profileAPIKey);
     
-            const response = await fetch("/profile-api", {
-                method: "POST",
-                headers: {
-                    // Authorization: `Basic ${profileAPIKey.value}`, // Replace with a valid token
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ endpointUrl, profileAPIKey }),
-            });
+        //     const response = await fetch("/profile-api", {
+        //         method: "POST",
+        //         headers: {
+        //             // Authorization: `Basic ${profileAPIKey.value}`, // Replace with a valid token
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({ endpointUrl, profileAPIKey }),
+        //     });
     
-            const data = await response.json();
+        //     const data = await response.json();
     
-            if (response.ok) {
-                console.log("API Response:", data);
-                // alert("API Request Successful!");
-                showToast("API Request Successful!", response, "green");
+        //     if (response.ok) {
+        //         console.log("API Response:", data);
+        //         // alert("API Request Successful!");
+        //         showToast("API Request Successful!", response, "green");
                 
 
-                // Get the response list container
-                // const profileApiResList = document.getElementById('profile-api-res-list');
-                // profileApiResList.innerHTML = ''; // Clear the list before adding new items
+        //         // Get the response list container
+        //         // const profileApiResList = document.getElementById('profile-api-res-list');
+        //         // profileApiResList.innerHTML = ''; // Clear the list before adding new items
 
-                // // Helper function to add key-value pairs as <li>
-                // const addKeyValuePairs = (obj) => {
-                //     Object.entries(obj).forEach(([field, value]) => {
-                //         // Format the value nicely if it's an object or array
-                //         const formattedValue = typeof value === 'object' && value !== null
-                //             ? JSON.stringify(value, null, 2) // Prettify JSON strings
-                //             : value;
+        //         // // Helper function to add key-value pairs as <li>
+        //         // const addKeyValuePairs = (obj) => {
+        //         //     Object.entries(obj).forEach(([field, value]) => {
+        //         //         // Format the value nicely if it's an object or array
+        //         //         const formattedValue = typeof value === 'object' && value !== null
+        //         //             ? JSON.stringify(value, null, 2) // Prettify JSON strings
+        //         //             : value;
 
-                //         // Create a new <li> element
-                //         const listItem = document.createElement('li');
-                //         listItem.innerHTML = `<span class="bold">${field}:</span> ${formattedValue}`;
+        //         //         // Create a new <li> element
+        //         //         const listItem = document.createElement('li');
+        //         //         listItem.innerHTML = `<span class="bold">${field}:</span> ${formattedValue}`;
                         
-                //         // Append the <li> to the list
-                //         profileApiResList.appendChild(listItem);
-                //     });
-                // };
+        //         //         // Append the <li> to the list
+        //         //         profileApiResList.appendChild(listItem);
+        //         //     });
+        //         // };
 
-                // // Add traits
-                // if (data.traits) {
-                //     const traitsHeader = document.createElement('li');
-                //     traitsHeader.innerHTML = `<span class="section-header">Traits:</span>`;
-                //     profileApiResList.appendChild(traitsHeader);
-                //     addKeyValuePairs(data.traits);
-                // }
-                // const profileApiResElement = document.getElementById('profile-api-res');
-                // // profileApiResElement.style.display = 'block';
-                // profileApiResElement.classList.add('show');
+        //         // // Add traits
+        //         // if (data.traits) {
+        //         //     const traitsHeader = document.createElement('li');
+        //         //     traitsHeader.innerHTML = `<span class="section-header">Traits:</span>`;
+        //         //     profileApiResList.appendChild(traitsHeader);
+        //         //     addKeyValuePairs(data.traits);
+        //         // }
+        //         // const profileApiResElement = document.getElementById('profile-api-res');
+        //         // // profileApiResElement.style.display = 'block';
+        //         // profileApiResElement.classList.add('show');
 
 
                 
 
-            } else {
-                console.error("API Error:", data);
-                showToast("API Request Failed!", data, "red");
-                // alert("API Request Failed!");
-            }
-        } catch (error) {
-            console.error("Request Error:", error);
-            showToast("API Request Error!", error, "orange");
-            // alert("An error occurred while sending the request.");
-        }
+        //     } else if(data.status==='404 (Not Found)') {
+        //         console.error("User does not yet exist. Try again in a few minutes. :", data);
+        //         showToast("API Request Failed!", data, "yellow");
+        //         // alert("API Request Failed
+
+        //     }
+        //     else {
+        //         console.error("API Error:", data);
+        //         showToast("API Request Failed!", data, "red");
+        //         // alert("API Request Failed!");
+        //     }
+        // } catch (error) {
+        //     console.error("Request Error:", error);
+        //     showToast("API Request Error!", error, "orange");
+        //     // alert("An error occurred while sending the request.");
+        // }
     });
 
 
 // END // PROFILE API REQUEST @ LEFT SIDEBAR
 // ------------------------------------
 
+
+
+// ------------------------------------
 const getUserFormValues = () => {
     firstName = document.getElementById('firstName').value;
     lastName = document.getElementById('lastName').value;
@@ -1058,12 +1155,12 @@ function updateProfile(event, button, type) {
     let {firstName, lastName, username, phone, email, street, city, state, zipcode} = userFormFields;
 
     // GET CURRENT DATA FROM GLOBAL VARIABLES
-    const globalVariables = getGlobalVariables()
-    let {userId, anonymousId , usertraits , groupId , groupTraits , sessionId , sessionNumber , clientId , cid , campaign , currentUser} = globalVariables
+    // const globalVariables = getGlobalVariables()
+    // let {userId, anonymousId , usertraits , groupId , groupTraits , sessionId , sessionNumber , clientId , cid , campaign , currentUser} = globalVariables
     // GET CURRENT DATA FROM CAMPAIGN FORM
 
-    console.log('GLOBAL VARIABLES @901 : ', userId, anonymousId, usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, campaign, currentUser)
-    console.log('GLOBAL VARIABLES @902 : ', globalVariables)
+    // console.log('GLOBAL VARIABLES @901 : ', userId, anonymousId, usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, campaign, currentUser)
+    // console.log('GLOBAL VARIABLES @902 : ', globalVariables)
 
     if(username || phone || email || street || city || state || zipcode){
       forceType='userId'  
@@ -1073,6 +1170,8 @@ function updateProfile(event, button, type) {
         forceType='anonymousId'
         console.log()
     }
+
+    console.log('@updateProfile - userId : ', userId)
 
     // IF IDENTIFY:USERID IS CLICKED OR IF PII IS INCLUDED IN FORM THEN FORCE USERID GENERATION
     if(btnIDType==='userId' ||  forceType==='userId'){
@@ -1143,7 +1242,7 @@ function updateProfile(event, button, type) {
             tempTraits, 
             data.context, 
             campaign, 
-            globalVariables
+            // globalVariables
         )
     }
 
@@ -1211,6 +1310,9 @@ const checkData = () => {
     updateCookie(groupId, "groupId-p")
     updateCookie(groupTraits, "groupTraits-p")
     autoUpdate()
+    // populate userForm fields by traits cookie
+    loadFormData()
+    displayUserFormData()
 }
 // document.getElementById('check-data').addEventListener('click', checkData);
 
@@ -1241,10 +1343,10 @@ const resetAjsUser = () => {
 
 
     // Reset GA4 context on the server each time reset is clicked on client
-    console.log('PREVIOUS clientId : ', clientId)
-    console.log('PREVIOUS cid : ', cid)
-    console.log('PREVIOUS sessionId : ', sessionId)
-    console.log('PREVIOUS sessionNumber : ', sessionNumber)
+    // console.log('PREVIOUS clientId : ', clientId)
+    // console.log('PREVIOUS cid : ', cid)
+    // console.log('PREVIOUS sessionId : ', sessionId)
+    // console.log('PREVIOUS sessionNumber : ', sessionNumber)
 
     fetch('/reset-ga4-context', {
         method: 'POST',
@@ -1274,10 +1376,10 @@ const resetAjsUser = () => {
         })
         .catch(err => console.error('Error resetting GA4 context:', err))
     updateGA4Fields();
-    console.log('CURRENT clientId : ', clientId)
-    console.log('CURRENT cid : ', cid)
-    console.log('CURRENT sessionId : ', sessionId)
-    console.log('CURRENT sessionNumber : ', sessionNumber)
+    // console.log('CURRENT clientId : ', clientId)
+    // console.log('CURRENT cid : ', cid)
+    // console.log('CURRENT sessionId : ', sessionId)
+    // console.log('CURRENT sessionNumber : ', sessionNumber)
     
     // Track('campaign_details',{campaign : campaign, referrer : referrer, anonymousId}, {campaign : {...campaign}, referrer : referrer, google : {clientId, sessionId, sessionNumber}}, anonymousId);
 
@@ -1298,6 +1400,15 @@ document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser
 
 document.getElementById('clearUserForm').addEventListener('click', () => clearForm('userForm'));
 document.getElementById('clearCampaignForm').addEventListener('click', () => clearForm('campaignForm'));
+
+
+
+
+
+
+
+// START // RIGHT SIDEBAR 
+// some code for cookie buttons are included above in left sidebar
 
 
 // Function to display cookies
@@ -1325,12 +1436,192 @@ function displayCookies(cookieType, containerId) {
 }
 
 
+
+
+// Append Network Request to UI
+const appendNetworkRequest = (type, name, status, duration, payload, response) => {
+    const networkRequestsList = document.getElementById("network-requests-list");
+
+    // Determine the section (CLIENT, SERVER, SERVER INTERNAL, PROFILE API)
+    const sectionId =
+        type === "CLIENT" ? "client-requests" :
+        type === "SERVER" ? "server-requests" :
+        type === "SERVER_INTERNAL" ? "server-internal-requests" :
+        "profile-api-requests";
+
+    let section = document.getElementById(sectionId);
+    if (!section) {
+        section = document.createElement("ul");
+        section.id = sectionId;
+        section.className = "network-request-section";
+        section.innerHTML = `<h6 class="network-request-header">${type} Requests</h6>`;
+        networkRequestsList.appendChild(section);
+    }
+
+    // Create <li> for the request
+    const listItem = document.createElement("div");
+    listItem.className = "network-request-item";
+    listItem.innerHTML = `
+        <p><b>URL:</b><span> ${name}</span><br>
+        <b>Status:</b><span> ${status || "N/A"}</span></p>
+        <div class="payload" style="display:none;">
+            <b>Payload:</b> <pre>${JSON.stringify(payload, null, 2)}</pre>
+            <b>Response:</b> <pre>${response ? JSON.stringify(response, null, 2) : "No response available"}</pre>
+        </div>
+    `;
+
+    listItem.addEventListener("click", () => {
+        const payloadDiv = listItem.querySelector(".payload");
+        payloadDiv.style.display = payloadDiv.style.display === "none" ? "block" : "none";
+        listItem.classList.add("active");
+        payloadDiv.style.margin = "0 auto";
+    });
+
+    section.appendChild(listItem);
+};
+
+// Monitor Performance API for Requests
+const monitorPerformance = () => {
+    const observedRequests = new Set();
+
+    const logRequests = () => {
+        const resources = performance.getEntriesByType("resource");
+        resources.forEach(async (resource) => {
+            if (!observedRequests.has(resource.name)) {
+                let type;
+                let payload = { method: "GET", body: "" }; // Example payload, replace as necessary
+                let displayName = resource.name;
+                let response = null;
+
+                if (resource.name.startsWith("https://api.segment.io/v1/")) {
+                    type = "CLIENT";
+                } else if (resource.name.startsWith("http://localhost:3001/track") ||
+                           resource.name.startsWith("http://localhost:3001/identify") ||
+                           resource.name.startsWith("http://localhost:3001/page") ||
+                           resource.name.startsWith("http://localhost:3001/group") ||
+                           resource.name.startsWith("http://localhost:3001/alias")) {
+                    type = "SERVER";
+                    displayName = resource.name.replace("http://localhost:3001/", "analytics.");
+                } else if (resource.name.startsWith("http://localhost:3001/config") ||
+                           resource.name.startsWith("http://localhost:3001/ga4Context") ||
+                           resource.name.startsWith("http://localhost:3001/reset-ga4-context")) {
+                    type = "SERVER_INTERNAL";
+                } else if (resource.name.startsWith("http://localhost:3001/profile-api")) {
+                    type = "PROFILE_API";
+                    try {
+                        const res = await fetch(resource.name);
+                        if (res.ok) {
+                            response = await res.json();
+                        } else {
+                            response = { error: `HTTP ${res.status}: ${res.statusText}` };
+                        }
+                    } catch (error) {
+                        response = { error: error.message };
+                    }
+                }
+
+                if (type) {
+                    appendNetworkRequest(type, displayName, resource.status, resource.duration, payload, response);
+                }
+
+                observedRequests.add(resource.name);
+            }
+        });
+    };
+
+    // Observe performance entries periodically
+    setInterval(logRequests, 1000);
+};
+
+// Initialize Monitoring
+monitorPerformance();
+
+
+// Toggle content open/closed when clicking on <h5> and <h6> headers
+document.addEventListener("DOMContentLoaded", () => {
+    // Function to attach click event listeners to <h5> tags
+    const attachHeader5Listeners = () => {
+        const headers5 = document.querySelectorAll("#rightSidebarContent h5");
+        headers5.forEach((header) => {
+            header.addEventListener("click", () => {
+                const content = header.nextElementSibling;
+                if (content) {
+                    content.style.display = content.style.display === "none" ? "block" : "none";
+                }
+            });
+        });
+    };
+
+    // Function to attach click event listeners to <h6> tags
+    const attachHeader6Listeners = () => {
+        const headers6 = document.querySelectorAll("#segment-network-requests h6");
+        headers6.forEach((header) => {
+            header.addEventListener("click", () => {
+                const content = header.nextElementSibling;
+                if (content) {
+                    content.style.display = content.style.display === "none" ? "block" : "none";
+                }
+            });
+        });
+    };
+
+    // Initially hide all content following <h5> and <h6> tags
+    const hideInitialContent = () => {
+        const contents5 = document.querySelectorAll("#rightSidebarContent h5 + *");
+        const contents6 = document.querySelectorAll("#segment-network-requests h6 + *");
+        contents5.forEach((content) => (content.style.display = "none"));
+        contents6.forEach((content) => (content.style.display = "none"));
+    };
+
+    // Observe dynamically added <h6> elements and attach event listeners
+    const observeDynamicH6 = () => {
+        const observer = new MutationObserver(() => {
+            attachHeader6Listeners();
+        });
+
+        observer.observe(document.getElementById("segment-network-requests"), {
+            childList: true,
+            subtree: true,
+        });
+    };
+
+    // Run setup functions
+    attachHeader5Listeners();
+    attachHeader6Listeners();
+    // hideInitialContent();
+    observeDynamicH6();
+});
+
+
+
+
 // Function to display Segment network requests (replace with actual implementation)
-function displaySegmentRequests() {
-    const requestDiv = document.getElementById('segment-network-requests');
-    requestDiv.innerHTML = '<p>Segment network request tracking coming soon!</p>';
-    // Implement logic to capture and display Segment requests here
-}
+// function displaySegmentRequests() {
+//     const requestDiv = document.getElementById('segment-network-requests');
+//     requestDiv.innerHTML = '<p>Segment network request tracking coming soon!</p>';
+//     // Implement logic to capture and display Segment requests here
+// }
+
+// // List all completed network requests
+// const getNetworkRequests = () => {
+//     const resources = performance.getEntriesByType("resource");
+//     resources.forEach(resource => {
+//         console.log("Network Request:", {
+//             name: resource.name, // URL
+//             type: resource.initiatorType, // e.g., "fetch", "xmlhttprequest"
+//             duration: resource.duration, // Time taken
+//             size: resource.transferSize // Size in bytes
+//         });
+//     });
+// };
+
+// Call after page load
+// window.addEventListener("load", getNetworkRequests);
+
+
+
+// END // RIGHT SIDEBAR 
+
 
 // Event listener for form submission
 const form = document.getElementById('userForm');
@@ -1351,14 +1642,14 @@ const autoUpdate = () => {
     displayCookies('client', 'client-cookies');
 
     // Display Segment network requests
-    displaySegmentRequests();    
+    // displaySegmentRequests();    
 }
 // Display cookies on page load
 displayCookies('localStorage', 'local-storage-cookies');
 displayCookies('client', 'client-cookies');
 
 // Display Segment network requests
-displaySegmentRequests();
+// displaySegmentRequests();
 
 
 // Function to save form data to localStorage
@@ -1376,7 +1667,6 @@ function saveFormData() {
 
 
 // Function to load form data from localStorage & querystring
-
 function loadFormData() {
     let userForm = document.getElementById('userForm');
     let campaignForm = document.getElementById('campaignForm');
@@ -1456,7 +1746,7 @@ function loadFormData() {
             referrerInput.value = matchedCampaign.utm.referrer || '';
             referrer = matchedCampaign.utm.referrer
             context['referrer'] = referrer
-            console.log("Referrer field set to:", referrer);
+            // console.log("Referrer field set to:", referrer);
             // console.log("@loadFormData - Referrer field set to:", referrerInput.value);
         }
     }
@@ -1465,11 +1755,11 @@ function loadFormData() {
         document.getElementById('clientId-input').value = clientId
     } else{console.log('clientId does not exist')}
     
-    console.log('loadFormData document.title : ',document.title);
-    console.log('loadFormData Campaign : ','Campaign');
+    // console.log('loadFormData document.title : ',document.title);
+    // console.log('loadFormData Campaign : ','Campaign');
     console.log('loadFormData properties : ',properties);
-    console.log('loadFormData context : ',context);
-    console.log('loadFormData context.campaign : ',context.campaign);
+    // console.log('loadFormData context : ',context);
+    // console.log('loadFormData context.campaign : ',context.campaign);
     
     userId = userId ? analytics.user().id() :  '';
     anonymousId = anonymousId ? analytics.user().anonymousId() :  '';
@@ -1479,7 +1769,8 @@ function loadFormData() {
     
     analytics.ready(() => {
         Page(document.title, 'Campaign', properties, context, campaign, userId, anonymousId);
-        Track('campaign_details',{campaign : context.campaign, referrer : referrer, anonymousId}, {campaign : {...context.campaign}, referrer : referrer, google : {clientId, sessionId, sessionNumber}}, anonymousId);
+        
+        Track({event : 'campaign_details', properties : {campaign : context.campaign, referrer : referrer, anonymousId}, context : {campaign : {...context.campaign}, referrer : referrer, google : {clientId, sessionId, sessionNumber}}, anonymousId, userId});
         // loadFormData()
     })
 }
@@ -1554,9 +1845,10 @@ function loadFormData() {
 
 // Call the loadFormData function on DOM load
 // document.addEventListener('DOMContentLoaded', () => {loadFormData()});
-analytics.ready(
-    document.addEventListener('DOMContentLoaded', loadFormData)
-)
+analytics.ready(() => {
+    document.addEventListener('DOMContentLoaded', loadFormData);
+    sendCampaignServerSide();
+})
 
 // Event listeners to save and load form data
 //   const form = document.getElementById('userForm');
@@ -1739,19 +2031,53 @@ function generateCampaignData() {
 
 
 // ------------------------------------
+const sendCampaignServerSide = async (campaign, referrer) => {
+    let latest_campaign = {
+        utm_id: document.getElementById('campaignId-input').value,
+        utm_campaign: document.getElementById('campaign-input').value,
+        utm_source: document.getElementById('campaignSource-input').value,
+        utm_medium: document.getElementById('campaignMedium-input').value,
+        utm_term: document.getElementById('campaignTerm-input').value,
+        utm_content: document.getElementById('campaignContent-input').value,
+    };
+    let latest_referrer = document.getElementById('referrer-input').value;
+    console.log('campaign and referrer', latest_campaign, latest_referrer, {...latest_campaign});
+    try {
+        let response = await fetch('/campaignDetails', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ latest_campaign, latest_referrer, ...latest_campaign }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        let data = await response.json();
+        console.log('Campaign details sent successfully:', data);
+        return data;
+    } catch (error) {
+        console.error('Error sending campaign details:', error);
+    }
+};
+
+
+
 
 function updateCampaignFormAndQueryString(ignore) {
     // console.log('Button clicked'); // Debug log
     
     // if(ignore !== false){
         const data = generateCampaignData();
-        console.log('updateCampaignFormAndQueryString / generateCampaignData : (data)', data)
+        // console.log('updateCampaignFormAndQueryString / generateCampaignData : (data)', data)
         // let data = loadFormData()
         let formData = loadFormData()
         console.log('Generated Campaign Data:', data);
         
         const utmParams = data.utm;
-        console.log(data.utm)
+        // console.log(data.utm)
     // }
 
     // Update form fields
@@ -1807,11 +2133,11 @@ function updateCampaignFormAndQueryString(ignore) {
         ...(sessionNumber ? { sessionNumber } : {}),
         ...(clientId ? { cid } : {})
     }
-    console.log('Segment page call'); // Log Segment call
+    // console.log('Segment page call'); // Log Segment call
     let resData = {pageName : pageName, category:'', properties : properties, context : context, campaign : data, userId : userId, anonymousId : anonymousId}
     if(ignore === false){
         Page(resData)
-        console.log('Page(resData)')
+        // console.log('Page(resData)')
     }
     else{
 
@@ -1837,7 +2163,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to populate the form with random user data
     function populateFormWithUserData() {
-        console.log("inside populateFormWithUserData")
+        // console.log("inside populateFormWithUserData")
         // Select a random user from the userData array
         const randomIndex = Math.floor(Math.random() * userData.length);
         const randomUser = userData[randomIndex];
@@ -1856,17 +2182,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const triggerEvent = (type) => {
     if(type ==='page'){
-        console.log('Page event triggered');
+        // console.log('Page event triggered');
         loadFormData()
     }
     if(type ==='identify'){
-        console.log('Identify event triggered');
-        console.log("identify button : campaignData obj",campaignData)
+        // console.log('Identify event triggered');
+        // console.log("identify button : campaignData obj",campaignData)
         // console.log("identify button : google obj", google)
         Identify(userId, anonymousId, usertraits, context)
     }
     if(type ==='track'){
-        Track(userId, anonymousId, 'General Event', properties, context)
+        Track('General Event', {},{},anonymousId, userId)
+        // Track(userId, anonymousId, 'General Event', properties, context)
     }
     if(type ==='group'){
         Group(userId, groupId, groupTraits, context)
@@ -1900,8 +2227,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tooltipText) {
             hoverTimeout = setTimeout(() => {
                 tooltip.textContent = tooltipText;
-                tooltip.style.left = `${e.pageX + 10}px`;
-                tooltip.style.top = `${e.pageY + 10}px`;
+                tooltip.style.left = `${e.pageX + 0}px`;
+                tooltip.style.top = `${e.pageY + 15}px`;
                 tooltip.classList.add('show');
             }, 2000); // Delay of 2 seconds
         }
@@ -1909,8 +2236,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const moveTooltip = (e) => {
         if (tooltip.classList.contains('show')) {
-            tooltip.style.left = `${e.pageX + 10}px`;
-            tooltip.style.top = `${e.pageY + 10}px`;
+            tooltip.style.left = `${e.pageX + 0}px`;
+            tooltip.style.top = `${e.pageY + 15}px`;
         }
     };
 

@@ -3,9 +3,13 @@ html, body {
     margin: 0;
     display: flex;
     flex-direction: column;
+    /* font-family: 'Playfair Display', serif; */
+    font-family: 'Montserrat', sans-serif;
+    /* letter-spacing: 0.3rem; */
   }
 
   body {
+    /* background-color: #333333; */
     padding-top: 60px; /* Account for fixed navbar height */
     margin: 0;
     /* height: 100%;
@@ -21,8 +25,8 @@ html, body {
 /* COLORS */
 :root {
     --segment-green: #4fb58b;
-    --text-white: #ffffff;
-    --text-dark: #333333;
+    --white: #ffffff;
+    --dark: #333333;
     --green-transparent: #b7e1cf;
     /* 
     #edf7f3
@@ -56,7 +60,7 @@ html, body {
 }
 
 .white-text {
-    color: var(--text-white);
+    color: var(--white);
 }
 
 .segment-green-text {
@@ -95,8 +99,15 @@ html, body {
 
 /* START : NAVBAR */
 
-nav.navbar-dark .segment-green-text a.navbar-brand { 
-    color: #44a27b;
+.navbar {
+    /* border-bottom:#333 solid 1px; */
+    background-color: var(--white) ;
+    box-shadow: 0px 0px 12px 0px rgba(0, 0, 245, 0.1);
+}
+
+nav .segment-green-text a.navbar-brand { 
+    /* color: #44a27b; */
+    color: blue;
 }
 
 
@@ -105,7 +116,7 @@ nav.navbar-dark .segment-green-text a.navbar-brand {
     height: 1.5em;
     margin-right: .5em;
 }
-label .unify-svg-icon{
+label .unify-svg-icon, #unify-i-audience, #unify-i-computed-trait {
     width: 1.2em;
     height: 1.2em;
     /* margin-right: .5em; */
@@ -118,6 +129,10 @@ label .unify-svg-icon:hover{
     filter: hue-rotate(90deg);
 
 }
+
+/* #unify-i-audience, #unify-i-computed-trait {
+    color: white;
+} */
 
 .get-cookie-btns {
     display: block;
@@ -235,9 +250,8 @@ label .unify-svg-icon:hover{
     /* min-width: 0;
     width:20%; */
     top: 56px;
-    margin:0;
-    padding-top:1em;
-    padding-top: 1.5em;
+    margin: 0;
+    padding-top: 5em;
     bottom: 0;
     left: 0;
     /* width: 20vw; */
@@ -272,9 +286,9 @@ label .unify-svg-icon:hover{
     /* margin-left: 2vw; */
 }
 
-.sidebar-right div {
+/* .sidebar-right div {
     margin-top: 5em;
-}
+} */
 
 .sidebar-left {
     right: auto;
@@ -357,6 +371,7 @@ label .unify-svg-icon:hover{
     cursor: pointer;
     z-index: 100; /* Ensure visibility above other elements */
     transition: filter 0.3s ease-out;
+    padding-top:.7em;
 }
 
 .toggle-icon:active, .toggle-icon:hover {
@@ -401,12 +416,16 @@ label .unify-svg-icon:hover{
     text-align: center;
 }
 
+/* #userId-cookie-get, #anonymousId-cookie-get, #traits-cookie-get, #groupId-cookie-get, #groupTraits-cookie-get */
 #check-data {
     /* position: absolute; */
-     /* Position the container of the button absolutely */
+    /* Position the container of the button absolutely */
     /* top: 3.5em; */
     /* right: .5em; */
     margin-bottom: 2em;
+}
+#check-data:hover, #userId-cookie-get:hover, #anonymousId-cookie-get:hover, #traits-cookie-get:hover, #groupId-cookie-get:hover, #groupTraits-cookie-get:hover, #identifyAnonymousId:hover, #identifyUserId:hover {
+    color:white;
 }
 
 #user-list {
@@ -427,11 +446,104 @@ label .unify-svg-icon:hover{
     width:100%;
 }
 
+
 .sidebar-right div button{
     font-size: 0.7rem; /* Adjust this value to make the text smaller */
     padding: .5em;
     height: 3em;
     width: 8em;
+}
+
+
+#rightSidebarContent h5, #rightSidebarContent h6 {
+    cursor : pointer;
+}
+
+.segment-network-requests {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align content to the left */
+    justify-content: flex-start;
+    margin: 0;
+}
+
+.segment-network-requests ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left */
+    justify-content: flex-start;
+    margin-top: .5em;
+    padding-inline-start: 0; /* Removes default ul padding */
+    width: 100%; /* Ensures full width */
+    box-sizing: border-box; /* Includes padding and border in width calculations */
+    list-style-type: none; /* Removes bullet points */
+    border-radius: 10px;
+    box-shadow: 0 0px 5px rgba(0, 0, 245, 0.1); /* Subtle shadow */
+}
+
+.network-requests-list {
+    width: 100%; /* Ensures full width */
+    padding: 0; /* Removes padding */
+    margin: 1.5em 0; 
+    /* Adjust margin between sections */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align content to the left */
+    justify-content: flex-start;
+    
+}
+
+.network-request-section {
+    box-shadow: 0 0px 5px rgba(0, 0, 245, 0.3);
+    width: 100%; /* Ensures full width */
+    padding: 0; /* Removes padding */
+    margin: 1.5em 0; 
+    border-radius: 10px;
+    box-sizing: border-box; /* Ensures consistent sizing */
+}
+
+.network-request-header {
+    padding-left: .5em;
+}
+
+.network-request-item {
+    display: block; /* Ensures block-level layout */
+    width: 95%; /* Full width */
+    margin: .3em 2.5%; /* Removes margins */
+    box-sizing: border-box; /* Ensures consistent sizing */
+    border-radius: 10px;
+    border: 1px solid #a9a8a7; /* Highlight active item */
+    /* box-shadow: 0 0px 5px rgba(0, 0, 245, 0.1); */
+     /* Subtle shadow */
+    padding: 0.5em; /* Add consistent spacing inside each item */
+}
+
+.network-request-item:active {
+    border: 1px solid #ffc107; /* Highlight active item */
+    border-radius: 10px;
+}
+
+.network-request-item p {
+    margin: 0; /* Removes extra spacing */
+    padding: 0; /* Removes extra spacing */
+    color: rgb(65, 63, 63); /* Adjusts color */
+    text-align: left; /* Ensures text aligns to the left */
+}
+
+.network-request-item p span {
+    color: rgb(102, 99, 99);
+}
+
+/* Optional: Customize header styling */
+.network-request-header {
+    margin: 0.5em 0; /* Adjust margin above and below */
+    text-align: left; /* Align text to the left */
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+ul ul {
+    margin: 0 -1em 0 0;
 }
 
 /* end : sidebar content */
@@ -572,12 +684,13 @@ main .forms-wrapper .form-container form , #campaignForm{
 }
 
 #userForm {
+    border: #ffc107 solid 3px;
     border-radius: 0 10px 10px 0; /* Curved edges on the right side only */
-    box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); /* Optional: Add a shadow to the form */
     box-shadow: 5px 0px 12px rgba(0, 0, 245, 0.1); /* Shadow only on the right side */
 }
 
 #campaignForm {
+    border: #17a2b8 solid 3px;
     border-radius: 10px 0 0 10px; /* Curved edges on the left side only */
     box-shadow: -5px 0px 12px rgba(0, 0, 245, 0.1); /* Shadow only on the left side */
 }
@@ -642,19 +755,26 @@ main .forms-wrapper .form-container form , #campaignForm{
 /* form's side buttons */
 #generateFakerUserData{
     width: 3em;
+    border: #ffc107 solid 3px;
+    border: none solid 1px;
     border-radius: 10px 0px 0px 10px; /* Curved edges on the right side only */
     box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); /* Add shadow to the button */
-    color: var(--text-white);
+    /* color: #ffc107; */
     display: flex; /* Use Flexbox to center the icon */
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
+    color : white;
+}
+
+#generateFakerUserData:hover{
+    color : white;
 }
 
 #newCampaign {
     width: 3em;
     border-radius: 0px 10px 10px 0px; /* Curved edges on the right side only */
     box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1); /* Add shadow to the button */
-    color: var(--text-white);
+    color: var(--white);
     display: flex; /* Use Flexbox to center the icon */
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
@@ -1094,7 +1214,7 @@ li .tg-list-item{
 #profileApiForm {
     border : 0px solid #ddd;
     width: 100%;
-    background-color: none;
+    background-color: white;
 }
 
 /* Form Title */
@@ -1104,10 +1224,10 @@ li .tg-list-item{
     margin-bottom: 0px;
     text-align: center;
     font-weight: 600;
-/* } */
+}
 
-#profile-api-res {
-    display: none; /* Initially hidden */
+/* #profile-api-res {
+    display: none; 
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
 }
@@ -1115,9 +1235,9 @@ li .tg-list-item{
 #profile-api-res.show {
     display: block;
     opacity: 1;
-}
+} */
 
-/* .profile-api-container .left-sidebar-content { */
+.profile-api-container .left-sidebar-content {
     display:flex;
     flex-direction: row;
     align-items: baseline;
@@ -1140,7 +1260,7 @@ li .tg-list-item{
     box-sizing: border-box; /* Ensure padding is included in width */
     width: 100%;
     padding: 10px;
-    margin: 10px 0;
+    margin: 5px 0;
     /* border-radius: 4px; */
     font-size: 0.9rem;
     border: 1px solid #ced4da;
@@ -1153,23 +1273,27 @@ li .tg-list-item{
 .profile-api-container label {
     font-size: 0.9rem;
     font-weight: 500;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     display: block;
+    margin-bottom: 0;
 }
 
 /* Buttons */
 .profile-api-container .api-button, .profile-api-container div .api-button {
     width: 100%;
-    height: 2em;
+    height: 1.5em;
     font-size: 1em;
-    background: var(--segment-green);
+    /* background: var(--segment-green); */
     color: #fff;
     border: none;
     padding: 10px;
-    margin: 10px 0;
+    margin: 5px 0;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 5px;
     transition: background 0.3s ease;
+    display: flex;
+    justify-content: center; /* Center the button horizontally */
+    align-items: center; /* Center the button vertically */
 }
 
 .profile-api-container .api-button:hover {
@@ -1187,11 +1311,19 @@ li .tg-list-item{
 
 .query-param-buttons .api-button {
     flex: 1;
-    background: #007bff;
+    /* background: #007bff; */
+    /* line-height: 5em; */
 }
 
+/* #sendApiRequest {
+    height: 2em;
+    font-size: 1em;
+    padding: 20px;
+    margin: 10px 0;
+} */
+
 .query-param-buttons .api-button:hover {
-    background: #0056b3;
+    /* background: #0056b3; */
 }
 
 /* Query String Display */
