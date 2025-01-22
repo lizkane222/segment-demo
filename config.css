@@ -11,6 +11,20 @@ html { font-size: 62.5%; }
 body { font-size: 1.4rem; } /* =14px */
 h1   { font-size: 2.4rem; } /* =24px */
 
+.container {
+    min-width: 100vw;
+    left: 50%;
+    /* margin: 0 10vw 0 15vw; */
+    /* margin: 0 auto; */
+    
+    max-width: 1200px;
+    padding: 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: var(--tiber);
+}
+
 .container__item {
     margin: 0 auto 40px;
 }
@@ -19,7 +33,7 @@ h1   { font-size: 2.4rem; } /* =24px */
     width: 100%;
     min-height: 100%;
     height: 90rem;
-    background-image: url('https://s29.postimg.org/vho8xb2pj/landing_bg.jpg');
+    /* background-image: url('https://s29.postimg.org/vho8xb2pj/landing_bg.jpg'); */
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom;
@@ -52,7 +66,7 @@ h1   { font-size: 2.4rem; } /* =24px */
 
 .header__item {
     display: inline-block;
-    float: left;
+    float: center;
 }
 
 .menu-icon__line {
@@ -147,11 +161,13 @@ h1   { font-size: 2.4rem; } /* =24px */
     margin: 0 auto;
     position: relative;
     top: 10.5rem;
+    /* text-align: center; */
+    /* padding-right: 2vw; */
 
-    .greeting {
+    .config-msg {
         position: absolute;
         top: 11.6rem;
-        left: 13rem;
+        left: 16%;
         right: 0;
         margin: 0 auto;
         text-transform: uppercase;
@@ -176,6 +192,54 @@ h1   { font-size: 2.4rem; } /* =24px */
 
 }
 
+.config-hr{
+    width: 25rem;
+    /* width: 2.5rem; */
+    height: 3rem;
+    border-width: 3px;
+    border-color: var(--tiber);
+}
+
+#config-hr-1 {
+    top: 20.6rem;
+    /* left: 47.75%; */
+    left: 48%;
+}
+#config-hr-2{
+    top: 26.6rem;
+    left: -49.5%;
+}
+
+#config-msg-sources{
+    /* ALONE - COMMENT OUT WHEN GROUP */
+    top: 22.6rem;
+    /* left: 5%; */
+}
+#config-msg-write-keys {
+    /* GROUP */
+    top: 20.6rem;
+    left: 5%;
+    
+    /* top: 29.6rem;
+    left: 27.5%; */
+}
+#config-msg-api-keys {
+    /* GROUP */
+    top: 29.6rem;
+    left: 15.5%;
+    
+    /* top: 29.6rem;
+    left: 27.5%; */
+}
+#config-msg-ids {
+    /* GROUP */
+    top: 38.6rem;
+    left: 38.5%;
+    
+    /* top: 20.6rem;
+    left: 38.5%; */
+}
+
 .ellipses {
     border-radius: 50%;
     position: absolute;
@@ -194,7 +258,7 @@ h1   { font-size: 2.4rem; } /* =24px */
 
     &:after {
       content: "";
-      background-image: url('https://s29.postimg.org/5h0r4ftkn/ellipses_dial.png');
+      /* background-image: url('https://s29.postimg.org/5h0r4ftkn/ellipses_dial.png'); */
       background-repeat: no-repeat;
       background-position: center;
       top: 0;
@@ -207,8 +271,8 @@ h1   { font-size: 2.4rem; } /* =24px */
 }
 
 .ellipses__outer--thick {
-    width: 99.5%;
-    height: 99.5%;
+    width: 99.75%;
+    height: 99.75%;
     border-color: var(--tiber) transparent;
     border-width: 2px;
     transform: rotate(-45deg);
@@ -220,8 +284,8 @@ h1   { font-size: 2.4rem; } /* =24px */
     height: 2.5rem;
     border-width: 2px;
     border-color: var(--tiber);
-    top: 5rem;
-    right: 6.75rem;
+    /* top: 5rem; */
+    /* right: 6.75rem; */
 
     &:before {
         content: '';
@@ -240,23 +304,43 @@ h1   { font-size: 2.4rem; } /* =24px */
     }
 }
 
+#orbit-ball-right {
+    top: 5.5rem;
+    right: 6.75rem;
+}
+#orbit-ball-left{
+    top: 42rem;
+    left: 6.75rem;
+}
+
+/* #config-ajs-source-writeKey
+#config-node-source-writeKey
+#config-unify-engage-spaceid
+#config-profile-api-key
+#config-gtag-id */
+
+
 .scroller {
-    width: 12rem;
+    width: 35rem;
+    height: 45vh;
     /* display: block; */
     display: inline-block;
     float: right;
+    /* margin-left: 5vw; */
+    /* padding-left: 1vw; */
     position: relative;
-    top: -15%;
+    top: -70%;
+    right: -10vw;
     transform: translateY(50%);
     overflow: hidden;
+    color: var(--tiber);
 
-
-    .page-title {
+    .config-label {
         font-family: 'Playfair Display', serif;
         letter-spacing: 0.5rem;
         display: inline-block;
         float: left;
-        margin-top: 1rem;
+        margin-top: 3rem;
     }
 
     input { 
@@ -274,8 +358,10 @@ h1   { font-size: 2.4rem; } /* =24px */
         outline: none;
         font-family: 'Playfair Display', serif;
         color: rgb(174, 174, 174);          /* Placeholder text color */
+        letter-spacing: 0.3rem;
         font-size: .8em;      /* Text size */
-        font-style: italic;   /* Italicize text */
+        /* font-style: italic; */
+           /* Italicize text */
     }
 
     /* Specific Input Styling */
@@ -286,6 +372,7 @@ h1   { font-size: 2.4rem; } /* =24px */
     } */
 
     .timeline {
+        margin-top: 2rem;
         width: 1.5rem;
         height: 9rem;
         display: inline-block;
@@ -341,3 +428,24 @@ h1   { font-size: 2.4rem; } /* =24px */
         transform: rotate(360deg);
     }
 }
+
+
+.tooltip {
+    position: absolute;
+    background-color: #cfd8e2;
+    color: #56728f;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.tooltip.show {
+    visibility: visible;
+    opacity: 1;
+}
+

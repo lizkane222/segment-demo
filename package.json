@@ -8,6 +8,7 @@
     "bootstrap-icons": "^1.11.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "dotenv-flow": "^4.1.0",
     "express": "^4.21.2",
     "uuid": "^11.0.3"
   }

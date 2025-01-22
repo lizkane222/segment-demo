@@ -1,4 +1,20 @@
-    <!-- NAV BAR -->
+<head>
+<script>
+    
+    
+    if(document.getElementById('ajs-nav-writekey')){
+        console.log('ajs_write_key : ',ajs_write_key)
+        !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey=`${ajs_write_key}`;;analytics.SNIPPET_VERSION="5.2.0";
+    
+        analytics.load(`${ajs_write_key}`,{
+            })
+            analytics.page();
+        }}();
+    }
+</script>    
+</head>
+
+<!-- NAV BAR -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <img src="./segment.svg" alt="Icon 1" class="segment-svg-icon">
         <h3 class="segment-green-text"><a class="navbar-brand" href="/config">SEGMENT DEMO</a></h3>
@@ -6,11 +22,11 @@
             <span class="segment-green-text zoom">_ __ ___ </span>
             <i class="bi bi-scooter" style="font-size: 2rem; color:#4fb58b;"></i>
         </a>
-        <h5 class="segment-green-text user-nav"><a href="/user"> USER </a></h5>
-        <h5 class="segment-green-text ecommerce-nav"><a href="/ecommerce"> ECOMMERCE </a></h5>
-        <!-- <h5 class="segment-green-text config"><a href="/config"> Ecommerce </a></h5> -->
-        <h5 class="segment-green-text" id="ajs-nav" href="/config">AJS : <span></span></h5>
-        <h5 class="segment-green-text" id="node-nav" href="/config">NODE : <span></span></h5>
+        <h5 class="segment-green-text nav-item user-nav"><a href="/user"> USER </a></h5>
+        <h5 class="segment-green-text nav-item ecommerce-nav"><a href="/ecommerce"> ECOMMERCE </a></h5>
+        <!-- <h5 class="segment-green-text nav-item config"><a href="/config"> Ecommerce </a></h5> -->
+        <h5 class="nav-item" id="ajs-nav" href="/config">AJS : <span id="ajs-nav-writekey"></span></h5>
+        <h5 class="nav-item" id="node-nav" href="/config">SERVER : <span id="node-nav-writekey"></span></h5>
         
         <!-- CLIENT vs SERVER toggle -->
         <div class="toggle-container">

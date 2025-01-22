@@ -1,9 +1,11 @@
 // command
 // > node generateData.js
-// This will generate data for 100 new users and append it to the users.json file
+// This will generate data for (numNewUsers) 500 new users and append it to the users.json file
 
-const fs = require('fs');
-const { faker } = require('@faker-js/faker');
+// const fs = require('fs');
+// const { faker } = require('@faker-js/faker');
+import fs from 'fs';
+import { faker } from '@faker-js/faker';
 
 // Function to sanitize and format phone numbers as ###-###-####
 const sanitizePhoneNumber = (phone) => {

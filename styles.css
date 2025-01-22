@@ -24,6 +24,8 @@ html, body {
   }
 /* COLORS */
 :root {
+    --tiber: #09383E;
+    --elephant: #0C383E;
     --segment-green: #4fb58b;
     --white: #ffffff;
     --dark: #333333;
@@ -103,11 +105,14 @@ html, body {
     /* border-bottom:#333 solid 1px; */
     background-color: var(--white) ;
     box-shadow: 0px 0px 12px 0px rgba(0, 0, 245, 0.1);
+    display:flex;
+    justify-content: space-between;
 }
 
 nav .segment-green-text a.navbar-brand { 
     /* color: #44a27b; */
-    color: blue;
+    color: var(--segment-green)
+    /* color: blue; */
 }
 
 
@@ -151,6 +156,18 @@ label .unify-svg-icon:hover{
 
 }
 
+.nav-item {
+    margin: 0 2rem;
+    padding: 0 2rem;
+    font-size: 1.5rem;
+    /* color: var(--segment-green); */
+}
+nav h5 span {
+    color : var(--tiber);
+    opacity: 0.5;
+    /* color: var(--segment-green); */
+}
+
 .user-nav a, .ecommerce-nav a {
     text-decoration: none !important;
     color: #44a27b;
@@ -169,6 +186,14 @@ label .unify-svg-icon:hover{
     margin-left: -4.5em;
 }
 
+#ajs-nav, #node-nav {
+    margin-left: 4rem;
+    color: var(--elephant);
+    opacity: 0.8;
+}
+/* #node-nav {
+    
+} */
 
 /* END : NAVBAR */
 
@@ -176,16 +201,15 @@ label .unify-svg-icon:hover{
 /* START : SIDEBARS */
 /* wrapper => rightSidebarWrapper / leftSidebarWrapper */
 #rightSidebarWrapper, #leftSidebarWrapper {
-    position: absolute;
+    /* position: absolute; */
     top: 0;
     bottom: 0;
-    height: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: scroll;
+    overflow-y: scroll;
     width: 20%;
     transition: width 0.3s ease, visibility 0.3s ease;
-
     /* -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     flex-direction: column;
@@ -220,7 +244,7 @@ label .unify-svg-icon:hover{
     flex-shrink: 0;
     position: relative;
     display: flex;
-    overflow: scroll;
+    /* overflow: scroll; */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -255,7 +279,7 @@ label .unify-svg-icon:hover{
     bottom: 0;
     left: 0;
     /* width: 20vw; */
-    overflow-y: auto;
+    /* overflow-y: auto; */
     border-right: 1px solid #eee;
     background-color: #ffffff;
     box-shadow: 0px 5px 12px rgba(0, 0, 245, 0.1);
@@ -459,6 +483,15 @@ label .unify-svg-icon:hover{
     cursor : pointer;
 }
 
+#network-requests {
+    /* margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 5px; */
+    margin-bottom: 5rem
+}
+
 .segment-network-requests {
     display: flex;
     flex-direction: column;
@@ -546,8 +579,44 @@ ul ul {
     margin: 0 -1em 0 0;
 }
 
-/* end : sidebar content */
+
+#segment-responses {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.segment-response-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.segment-response-item pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+.event-response {
+    cursor: pointer;
+    transition: 1ms ease-in-out;
+}
+.event-response:hover {
+    background-color: #dedede;
+}
+
+    /* end : sidebar content */
 /* END : SIDEBARS */
+
+
+
+
 
 
 #main {

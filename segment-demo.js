@@ -1,9 +1,11 @@
 // JAVASCRIPT
 
-// import { campaignData, generateCampaignData, matchedCampaign, campaignId } from './campaignData.js';
+// import { campaignData, generateNewCampaignData, matchedCampaign, campaignId } from './campaignData.js';
 // import { btoa } from "abab";
 import { campaignData } from './campaignData.js';
 import { userData } from './userData.js';
+import { surfacePayload } from './middleware.js';
+
 
 // import { getUserData } from './Components/getUserData.js';
 
@@ -67,6 +69,8 @@ const updateGA4Fields = () => {
         url.searchParams.set('session_id', data.session_id);
         url.searchParams.set('session_number', data.session_number);
         window.history.replaceState({}, '', url.toString()); // Update the URL without reloading
+
+        return data;
     })
     .catch(error => {
         console.error('Error fetching GA4 context:', error);
@@ -81,54 +85,181 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// import {trackServer, identifyServer, pageServer, groupServer} from './server-events-node.js'
+// START // NETWORK REQUESTS : SERVER-SIDE TRACKING
+document.addEventListener("DOMContentLoaded", () => {
+    // Function to toggle between hidden and shown states
+    const toggleResponseState = (responseItem) => {
+        const isHidden = responseItem.classList.contains("responseHidden");
+        const data = JSON.parse(responseItem.getAttribute("data-response"));
 
-// import { userData } from './userData.js';
-// import fakerUserData  from './users.json';
+        if (isHidden) {
+            // Show the full response
+            responseItem.innerHTML = `
+                <p class="event-response"><b>${data.type} Event:</b> <span>Status: ${data.status}</span></p>
+                <p><b>Message:</b> ${data.message}</p>
+                <p><b>Payload:</b> <pre>${JSON.stringify(data.payload, null, 2)}</pre></p>
+            `;
+            responseItem.classList.remove("responseHidden");
+            responseItem.classList.add("responseShown");
+        } else {
+            // Show only the summary
+            responseItem.innerHTML = `
+                <p class="event-response"><b>${data.type} Event:</b> <span>Status: ${data.status}</span></p>
+            `;
+            responseItem.classList.remove("responseShown");
+            responseItem.classList.add("responseHidden");
+        }
+    };
 
-// let fakerUserData;
+    // Attach event listeners to dynamically added response items
+    const attachSegmentEventResponsesListeners = () => {
+        const responseItems = document.querySelectorAll(".segment-response-item.responseHidden");
+        responseItems.forEach((response) => {
+            response.addEventListener("click", () => {
+                toggleResponseState(response);
+            });
+        });
+    };
 
-// fetch('./users.json')
-//     .then(response => response.json())
-//     .then(data => {
-        // fakerUserData = data;
-        // console.log('Loaded fakerUserData:', fakerUserData);
-//     })
-//     .catch(error => console.error('Error loading users.json:', error));
+    // Observe dynamically added response items and attach event listeners
+    const observeDynamicResponses = () => {
+        const observer = new MutationObserver(() => {
+            attachSegmentEventResponsesListeners();
+        });
 
-// fetch('./users.json') // Relative path for `http-server`
-// .then(response => response.json())
-// .then(users => {
-//     // Select a random user from the array
-//     const randomIndex = Math.floor(Math.random() * users.length);
-//     const user = users[randomIndex];
+        observer.observe(document.getElementById("segment-responses"), {
+            childList: true,
+            subtree: true,
+        });
+    };
 
-//     // Display the random user in the DOM
-//     const userItem = document.createElement('li');
-//     userItem.textContent = `${user.firstName} ${user.lastName}, Username: ${user.username}, Phone: ${user.phone}, Email: ${user.email}, Address: ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`;
-//     userList.appendChild(userItem);
-// })
-// .catch(err => console.error('Error fetching user data:', err));
+    attachSegmentEventResponsesListeners();
+    observeDynamicResponses();
+});
+
+// Add responses to the DOM dynamically
+const renderResponse = (type, data) => {
+    const responseContainer = document.getElementById("segment-responses");
+    if (!responseContainer) return;
+
+    const responseItem = document.createElement("div");
+    responseItem.className = "segment-response-item responseHidden";
+    responseItem.setAttribute(
+        "data-response",
+        JSON.stringify({
+            type,
+            status: data.status,
+            message: data.message,
+            payload: data.payload,
+        })
+    );
+
+    // Initially render the hidden state
+    responseItem.innerHTML = `
+        <p><b>${type} Event:</b> <span>Status: ${data.status}</span></p>
+    `;
+
+    // Optional: Add styling or interactivity
+    responseItem.style.border = "1px solid #ccc";
+    responseItem.style.padding = "10px";
+    responseItem.style.marginBottom = "10px";
+
+    responseContainer.appendChild(responseItem);
+};
+// END // NETWORK REQUESTS : SERVER-SIDE TRACKING
 
 
+// document.addEventListener("DOMContentLoaded", () => {
+//     // Function to toggle between hidden and shown states
+//     const toggleResponseState = (responseItem) => {
+//         const isHidden = responseItem.classList.contains("responseHidden");
 
-// import { v4 as uuidv4 } from 'uuid';
+//         if (isHidden) {
+//             // Show the full response
+//             const data = JSON.parse(responseItem.getAttribute("data-response"));
+//             responseItem.innerHTML = `
+//                 <p class="event-response"><b>${type} Event:</b> <span>Status: ${data.status}</span></p>
+//                 <p><b>Message:</b> ${data.message}</p>
+//                 <p><b>Payload:</b> <pre>${JSON.stringify(data.payload, null, 2)}</pre></p>
+//             `;
+//             responseItem.classList.remove("responseHidden");
+//             responseItem.classList.add("responseShown");
+//         } else {
+//             // Show only the summary
+//             const data = JSON.parse(responseItem.getAttribute("data-response"));
+//             responseItem.innerHTML = `
+//                 <p class="event-response"><b>${type} Event:</b> <span>Status: ${data.status}</span></p>
+//             `;
+//                 // <p><b>${data.type} Event:</b> <span>Status: ${data.status}</span></p>
+//             responseItem.classList.remove("responseShown");
+//             responseItem.classList.add("responseHidden");
+//         }
+//     };
 
-// const uuid = uuidv4();
-// console.log(uuid);
+//     // Attach event listeners to dynamically added response items
+//     const attachSegmentEventResponsesListeners = () => {
+//         const responseItems = document.querySelectorAll(".segment-response-item.responseHidden");
+//         responseItems.forEach((response) => {
+//             response.addEventListener("click", () => {
+//                 toggleResponseState(response);
+//             });
+//         });
+//     };
+
+//     // Observe dynamically added response items and attach event listeners
+//     const observeDynamicResponses = () => {
+//         const observer = new MutationObserver(() => {
+//             attachSegmentEventResponsesListeners();
+//         });
+
+//         observer.observe(document.getElementById("segment-responses"), {
+//             childList: true,
+//             subtree: true,
+//         });
+//     };
+
+//     attachSegmentEventResponsesListeners();
+//     observeDynamicResponses();
+// });
+
+// // Add responses to the DOM dynamically
+// const renderResponse = (type, data) => {
+//     const responseContainer = document.getElementById("segment-responses");
+//     if (!responseContainer) return;
+
+//     const responseItem = document.createElement("div");
+//     responseItem.className = "segment-response-item responseHidden";
+//     responseItem.setAttribute(
+//         "data-response",
+//         JSON.stringify({
+//             type,
+//             status: data.status,
+//             message: data.message,
+//             payload: data.payload,
+//         })
+//     );
+
+//     // Initially render the hidden state
+//     responseItem.innerHTML = `
+//         <p><b>${type} Event:</b> <span>Status: ${data.status}</span></p>
+//     `;
+
+//     // Optional: Add styling or interactivity
+//     responseItem.style.border = "1px solid #ccc";
+//     responseItem.style.padding = "10px";
+//     responseItem.style.marginBottom = "10px";
+
+//     responseContainer.appendChild(responseItem);
+// };
 
 
-
-// console.log("JS FILE")
-
-// ------------------------------------
 
 // START // SEGMENT'S ANALYTICS.JS EVENTS : SPECS & FORMATS
 
 // Spec Track : https://segment.com/docs/connections/spec/track/
 //    The Track method follows this format :
 //    analytics.track(event, [properties], [options], [callback]);
-let Track = ({event, properties, context, anonymousId, userId, callback}) => {
+let Track = async ({event, properties, context, anonymousId, userId, callback}) => {
     // console.log('@Track - anonymousId : ', event.anonymousId)
     // console.log('@TRACK param event : ',event)
     // console.log('@TRACK params : ', 'event : ', event, 'properties : ', event.properties, 'context : ', event.context, 'anonymousId : ', event.anonymousId, 'userId : ', event.userId)  
@@ -137,6 +268,11 @@ let Track = ({event, properties, context, anonymousId, userId, callback}) => {
     // let eventContext = event.context
     // let eventAnonymousId = event.anonymousId
     // let eventUserId = event.userId
+
+    //   1/21 ADDED LINE BELOW
+    let campaignData = await sendCampaignServerSide()
+    //   1/21 ADDED LINE BELOW
+    let ga4Data = await updateGA4Fields()
 
     const pageData = {
         path : window.location.pathname,
@@ -151,6 +287,8 @@ let Track = ({event, properties, context, anonymousId, userId, callback}) => {
       properties : properties ? properties : {},
       page : pageData,
       anonymousId : anonymousId ? anonymousId : analytics.user().anonymousId(),
+    //   1/21 ADDED LINE BELOW
+      context : { campaign:campaignData, page : pageData, google:ga4Data} || {},
     //   context : context ? context : {},
   };
   console.log(`Initiating Track Event on ${currentSourceSelected}`)
@@ -176,6 +314,9 @@ let Track = ({event, properties, context, anonymousId, userId, callback}) => {
     .then((data) => {
         console.log('Server-side Track response:', data);
         if (callback) callback(data);
+
+        renderResponse('Track', data); // Render the response
+
     })
     .catch((err) => {
         console.error('Error triggering server-side Track:', err);
@@ -187,7 +328,7 @@ let Track = ({event, properties, context, anonymousId, userId, callback}) => {
 // Spec Identify : https://segment.com/docs/connections/spec/identify/
 //    The Identify method follows this format : 
 //    analytics.identify([userId], [traits], [options], [callback]);
-let Identify = (userId, anonymousId, traits, context, campaign, globalVariables, callback) => {
+let Identify = async (userId, anonymousId, traits, context, campaign, globalVariables, callback) => {
     const pageData = {
         path : window.location.pathname,
         referrer : context.referrer,
@@ -196,7 +337,7 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         url : window.location.href
     }
 
-    let campaignData = sendCampaignServerSide()
+    let campaignData = await sendCampaignServerSide()
     // console.log('campaignData : ', campaignData)
 
     // let {usertraits, groupId, groupTraits, sessionId, sessionNumber, clientId, cid, currentUser} = globalVariables
@@ -218,13 +359,13 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
     // console.log('!!! IDENTIFY !!! anonymousId : ', anonymousId)
 
     currentUser = {
-        userId : userId || analytics.user().id() || null, 
-        anonymousId : anonymousId || analytics.user().anonymousId() || null, 
-        traits : traits || usertraits || {}, 
+        userId : userId ? userId : analytics.user().id() || null, 
+        anonymousId : anonymousId ? analytics.user().anonymousId() : anonymousId || null, 
+        traits : traits? traits : usertraits || {}, 
         context: context || {}, 
         campaign : campaign || null
     }
-    // console.log('IDENTIFY currentUser : ',currentUser)
+    console.log('IDENTIFY currentUser : ',currentUser)
     // console.log('IDENTIFY userId : ',userId)
     // console.log('IDENTIFY anonymousId : ',anonymousId)
     // console.log('IDENTIFY traits : ',traits)
@@ -249,14 +390,16 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
     });
 
     const payload = {
-        userId: userId ? userId  : null,
-        anonymousId: anonymousId ? anonymousId  : null,
-        traits: traits,
-        context: { context, campaign : campaign? campaign : null , page : pageData},
+        userId: currentUser.userId ? currentUser.userId  : userId || null,
+        anonymousId: currentUser.anonymousId ? currentUser.anonymousId  : anonymousId || null,
+        traits: currentUser.traits ? currentUser.traits : traits || null,
+        context: { ...context, campaign : campaignData? campaignData : null , page : pageData},
         globalVariables : globalVariables,
         page : pageData
     };
     console.log('IDENTIFY PAYLOAD (SERVER) : ', payload)
+    console.log('IDENTIFY PAYLOAD (SERVER) context : ', payload.context)
+
 
     // updateGA4Fields();
 
@@ -264,13 +407,7 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         // Send data client-side via Segment's analytics.js library
         analytics.identify(
             (payload.userId ? payload.userId : {}),
-            // (payload.anonymousId ? payload.anonymousId : {}),
             (payload.traits ? payload.traits
-            //   ...(traits.firstName ? { firstName : traits.firstName } : {}),
-            //   ...(traits.lastName ? { lastName : traits.lastName } : {}),
-            //   ...(traits.email ? { email : traits.email } : {}),
-            //   ...(traits.username ? { username : traits.username } : {}),
-            //   ...(traits.phone ? { phone : traits.phone } : {})
              : {}),
              payload.context ? {...payload['context'], anonymousId : payload.anonymousId} : {}
             )
@@ -290,24 +427,25 @@ let Identify = (userId, anonymousId, traits, context, campaign, globalVariables,
         })
         .then((data) => {
             console.log('Server-side identify response:', data);
+            renderResponse('Identify', data); // Render the response
             if (callback) callback(data);
         })
         .catch((err) => {
             console.error('Error triggering server-side identify:', err);
             console.log(JSON.stringify(payload));
         });
-    // if(callback){{
-    //     callback()
-    // }
-    // usertraits = {...usertraits, ...traits}
-    // currentUser.traits = usertraits
     }
 }
 
 // Spec Page : https://segment.com/docs/connections/spec/page/
 //    The Page method follows this format : 
 //    analytics.page([category], [name], [properties], [options], [callback]);
-let Page = (name, category, properties, context, campaign, userId, anonymousId, callback) => {
+let Page = async (name, category, properties, context, campaign, userId, anonymousId, callback) => {
+    //   1/21 ADDED LINE BELOW
+    let campaignData = await sendCampaignServerSide()
+    //   1/21 ADDED LINE BELOW
+    let ga4Data = await updateGA4Fields()
+    
     const pageData = {
         path : window.location.pathname,
         referrer : context.referrer,
@@ -315,20 +453,22 @@ let Page = (name, category, properties, context, campaign, userId, anonymousId, 
         title : document.title,
         url : window.location.href
     }
-    // page : pageData
 
     const payload = {
         name: name? name: null,
         category: category? category : null,
         properties: properties? properties : {},
-        context: context ? {traits : context.traits, campaign : context.campaign, page : pageData} : {},
+        //   1/21 ADDED LINE BELOW
+        context : { campaign:campaignData, page:pageData, google:ga4Data, traits:context.traits} || {},
+        // PREVIOUSLY before : //   1/21 ADDED LINE BELOW
+        // context: context ? {traits : context.traits, campaign : context.campaign, page : pageData} : {},
         ...(userId ?  userId  : analytics.user().id() ||  ''),
         // userId : userId ? userId : analytics.user().id() ||  '',
         anonymousId : anonymousId ? anonymousId : analytics.user().anonymousId() || '',
   };
   console.log('PAGE PAYLOAD : ', payload)
 
-  updateGA4Fields();
+//   updateGA4Fields();
   
   if (currentSourceSelected === 'CLIENT') {
       // analytics.page(payload.name, payload.category, payload.properties, payload.context, callback);
@@ -344,7 +484,22 @@ let Page = (name, category, properties, context, campaign, userId, anonymousId, 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
-      }).then(response => console.log('Server-side Page:', response));
+      })
+    //   .then(response => console.log('Server-side Page:', response));
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then((data) => {
+        console.log('Server-side Page response:', data);
+        renderResponse('Page', data); // Render the response
+        if (callback) callback(data);
+    })
+    .catch((err) => {
+        console.error('Error triggering server-side Page:', err);
+    });
   }
 }
 
@@ -374,7 +529,22 @@ let Group = (groupId, traits, context, callback) => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
-      }).then(response => console.log('Server-side Group:', response));
+      })
+    //   .then(response => console.log('Server-side Group:', response));
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then((data) => {
+        console.log('Server-side Group response:', data);
+        renderResponse('Group', data); // Render the response
+        if (callback) callback(data);
+    })
+    .catch((err) => {
+        console.error('Error triggering server-side Group:', err);
+    });
   }
 }
 
@@ -402,7 +572,16 @@ let Alias = (userId, previousId, context, callback) => {
            method: 'POST',
            headers: { 'Content-Type': 'application/json' },
            body: JSON.stringify(payload),
-       }).then(response => console.log('Server-side Alias:', response));
+       })
+        // .then(response => console.log('Server-side Alias:', response));
+        .then((data) => {
+            console.log('Server-side Alias response:', data);
+            renderResponse('Alias', data); // Render the response
+            if (callback) callback(data);
+        })
+        .catch((err) => {
+            console.error('Error triggering server-side Alias:', err);
+        });
    }
 }
 
@@ -698,9 +877,7 @@ function showToast(responseType, responseData, color) {
 
 
 
-// START // PROFILE API 
-
-// FINAL ITERATION : DRY CODE
+// START : PROFILE API 
 
 document.addEventListener("DOMContentLoaded", () => {
     // Field Mappings
@@ -929,79 +1106,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         sendProfileApiRequest(endpointUrl, profileAPIKey);
         
-        
-        // try {
-        //     console.log("Sending API request to:", endpointUrl);
-        //     console.log("API request profileAPIKey :", profileAPIKey);
-    
-        //     const response = await fetch("/profile-api", {
-        //         method: "POST",
-        //         headers: {
-        //             // Authorization: `Basic ${profileAPIKey.value}`, // Replace with a valid token
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify({ endpointUrl, profileAPIKey }),
-        //     });
-    
-        //     const data = await response.json();
-    
-        //     if (response.ok) {
-        //         console.log("API Response:", data);
-        //         // alert("API Request Successful!");
-        //         showToast("API Request Successful!", response, "green");
-                
-
-        //         // Get the response list container
-        //         // const profileApiResList = document.getElementById('profile-api-res-list');
-        //         // profileApiResList.innerHTML = ''; // Clear the list before adding new items
-
-        //         // // Helper function to add key-value pairs as <li>
-        //         // const addKeyValuePairs = (obj) => {
-        //         //     Object.entries(obj).forEach(([field, value]) => {
-        //         //         // Format the value nicely if it's an object or array
-        //         //         const formattedValue = typeof value === 'object' && value !== null
-        //         //             ? JSON.stringify(value, null, 2) // Prettify JSON strings
-        //         //             : value;
-
-        //         //         // Create a new <li> element
-        //         //         const listItem = document.createElement('li');
-        //         //         listItem.innerHTML = `<span class="bold">${field}:</span> ${formattedValue}`;
-                        
-        //         //         // Append the <li> to the list
-        //         //         profileApiResList.appendChild(listItem);
-        //         //     });
-        //         // };
-
-        //         // // Add traits
-        //         // if (data.traits) {
-        //         //     const traitsHeader = document.createElement('li');
-        //         //     traitsHeader.innerHTML = `<span class="section-header">Traits:</span>`;
-        //         //     profileApiResList.appendChild(traitsHeader);
-        //         //     addKeyValuePairs(data.traits);
-        //         // }
-        //         // const profileApiResElement = document.getElementById('profile-api-res');
-        //         // // profileApiResElement.style.display = 'block';
-        //         // profileApiResElement.classList.add('show');
-
-
-                
-
-        //     } else if(data.status==='404 (Not Found)') {
-        //         console.error("User does not yet exist. Try again in a few minutes. :", data);
-        //         showToast("API Request Failed!", data, "yellow");
-        //         // alert("API Request Failed
-
-        //     }
-        //     else {
-        //         console.error("API Error:", data);
-        //         showToast("API Request Failed!", data, "red");
-        //         // alert("API Request Failed!");
-        //     }
-        // } catch (error) {
-        //     console.error("Request Error:", error);
-        //     showToast("API Request Error!", error, "orange");
-        //     // alert("An error occurred while sending the request.");
-        // }
     });
 
 
@@ -1084,7 +1188,8 @@ const displayUserFormData = () => {
     console.log('GLOBAL VARIABLES @902 : ', globalVariables)
 
     // GET CURRENT DATA FROM CAMPAIGN FORM
-    let data = updateCampaignFormAndQueryString(true)
+    // let data = updateCampaignFormAndQueryString(true)
+    let data = currentCampaign
 
     userList.innerHTML = '';
 
@@ -1136,7 +1241,7 @@ const displayUserFormData = () => {
 }
                                     
 // Function to update user profile (LEFT SIDEBAR)
-function updateProfile(event, button, type) {
+async function updateProfile(event, button, type) {
     event.preventDefault(); // Prevent default form submission
     let btnIDType, forceType
     
@@ -1151,7 +1256,7 @@ function updateProfile(event, button, type) {
     // displayUserFormData()
 
     // GET CURRENT DATA FROM USER FORM
-    const userFormFields = getUserFormValues() 
+    const userFormFields = await getUserFormValues() 
     let {firstName, lastName, username, phone, email, street, city, state, zipcode} = userFormFields;
 
     // GET CURRENT DATA FROM GLOBAL VARIABLES
@@ -1168,7 +1273,7 @@ function updateProfile(event, button, type) {
     }
     else{
         forceType='anonymousId'
-        console.log()
+        console.log('FORCE TYPE : ',forceType, ' - fallback to anonymousId')
     }
 
     console.log('@updateProfile - userId : ', userId)
@@ -1188,7 +1293,8 @@ function updateProfile(event, button, type) {
             console.log('INSIDE !userId (4) : ', userId)
         }
     }
-    let data = updateCampaignFormAndQueryString(true)
+    // Await the completion of updateCampaignFormAndQueryString
+    let data = await updateCampaignFormAndQueryString(true)
     
     userList.innerHTML = '';
 
@@ -1564,6 +1670,20 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     };
+    
+    // Function to attach click event listeners to <h6> tags
+    const attachSegmentEventResponsesListeners = () => {
+        const responseItem = document.querySelectorAll(".segment-response-item");
+        responseItem.forEach((response) => {
+            response.addEventListener("click", () => {
+                const content = response.nextElementSibling;
+                if (content) {
+                    content.style.display = content.style.display === "none" ? "block" : "none";
+                }
+            });
+        });
+    };
+
 
     // Initially hide all content following <h5> and <h6> tags
     const hideInitialContent = () => {
@@ -1584,14 +1704,30 @@ document.addEventListener("DOMContentLoaded", () => {
             subtree: true,
         });
     };
+    
+    // // Observe dynamically added <h6> elements and attach event listeners
+    // const observeDynamicResponses = () => {
+    //     const observer = new MutationObserver(() => {
+    //         attachSegmentEventResponsesListeners();
+    //     });
+
+    //     observer.observe(document.getElementsByClassName("segment-response-item"), {
+    //         childList: true,
+    //         subtree: true,
+    //     });
+    // };
 
     // Run setup functions
     attachHeader5Listeners();
     attachHeader6Listeners();
+    attachSegmentEventResponsesListeners();
+    // observeDynamicResponses();
     // hideInitialContent();
     observeDynamicH6();
 });
 
+//   Use the middleware function
+analytics.addSourceMiddleware(surfacePayload);
 
 
 
@@ -2020,13 +2156,19 @@ function toggleSidebar(sidebar, icon, resizer) {
 // ------------------------------------
 
 
-
-
-function generateCampaignData() {
+// CREATE
+let currentCampaign = {}
+function generateNewCampaignData() {
     // Generate random index to select data
     const randomIndex = Math.floor(Math.random() * campaignData.length);
     // /campaignObject
+    currentCampaign = campaignData[randomIndex]
     return campaignData[randomIndex];
+}
+
+// READ
+let getCurrentCampaign = () => {
+    return currentCampaign
 }
 
 
@@ -2065,13 +2207,13 @@ const sendCampaignServerSide = async (campaign, referrer) => {
 
 
 
-
+// UPDATE
 function updateCampaignFormAndQueryString(ignore) {
     // console.log('Button clicked'); // Debug log
     
     // if(ignore !== false){
-        const data = generateCampaignData();
-        // console.log('updateCampaignFormAndQueryString / generateCampaignData : (data)', data)
+        const data = generateNewCampaignData();
+        // console.log('updateCampaignFormAndQueryString / generateNewCampaignData : (data)', data)
         // let data = loadFormData()
         let formData = loadFormData()
         console.log('Generated Campaign Data:', data);
@@ -2147,6 +2289,8 @@ function updateCampaignFormAndQueryString(ignore) {
     return resData
 }
 // document.getElementById('newCampaign').addEventListener('click', updateCampaignFormAndQueryString);
+
+// ADDED to user.js
 document.getElementById('newCampaign').addEventListener('click', (event) => {
     event.preventDefault(); // Prevent form submission and page reload
     updateCampaignFormAndQueryString();
@@ -2158,6 +2302,7 @@ document.getElementById('newCampaign').addEventListener('click', (event) => {
 // });
 
 
+// ADDED to user.js
 document.addEventListener('DOMContentLoaded', () => {
     // Ensure the DOM is fully loaded before accessing elements
 
@@ -2203,6 +2348,7 @@ const triggerEvent = (type) => {
     }
 }
 
+// ADDED to user.js
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pageTrigger').addEventListener('click', () => triggerEvent('page'));
     document.getElementById('identifyTrigger').addEventListener('click', () => triggerEvent('identify'));
@@ -2212,6 +2358,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ------------------------------------
+// ADDED to user.js
 // START : TOOLTIP
 
 document.addEventListener('DOMContentLoaded', () => {

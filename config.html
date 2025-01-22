@@ -60,9 +60,9 @@
             <div class="content__wrapper">
 
                 <header class="header">
-                    <div class="menu-icon header__item">
+                    <!-- <div class="menu-icon header__item">
                         <span class="menu-icon__line"></span>
-                    </div>
+                    </div> -->
 
                     <h1 class="heading header__item">configuration</h1>
 
@@ -82,29 +82,58 @@
                 <p class="coords">N 37° 47' 33.329"  /  W 122° 23' 34.937"</p>
 
                 <div class="ellipses-container">
-
-                    <h2 class="greeting">sources</h2>
+                    <hr id="config-hr-1" class="config-hr config-msg">
+                    <h2 id="config-msg-sources" class="config-msg">sources</h2>
+                    <hr id="config-hr-2" class="config-hr config-msg">
+                    <!-- <h2 id="config-msg-write-keys" class="config-msg">writekeys</h2>
+                    <h2 id="config-msg-api-keys" class="config-msg">apikeys</h2>
+                    <h2 id="config-msg-ids" class="config-msg">ids</h2> -->
 
                     <div class="ellipses ellipses__outer--thin">
-
-                        <div class="ellipses ellipses__orbit"></div>
-
+                        <div id="orbit-ball-right" class="ellipses ellipses__orbit"></div>
+                        <div id="orbit-ball-left" class="ellipses ellipses__orbit"></div>
                     </div>
-
                     <div class="ellipses ellipses__outer--thick"></div>
+
+                    <div id="ellipses-ajs-source-writekey" class="ellipses-input-orbit"></div>
+                    <div id="ellipses-node-source-writekey" class="ellipses-input-orbit"></div>
+                    <div id="ellipses-unify-engage-spaceid" class="ellipses-input-orbit"></div>
+                    <div id="ellipses-profile-api-key" class="ellipses-input-orbit"></div>
+                    <div id="ellipses-gtag-id" class="ellipses-input-orbit"></div>
+
+
                 </div>
 
                 <div class="scroller">
-                    <label class="page-title" for="ajs-source-writeKey">ajs source writeKey</label>
-                    <input type="text" id="ajs-source-writeKey" placeholder="ajs source writeKey">
+                    <label class="config-label" for="config-ajs-source-writeKey" data-tooltip="Locate : Go to your Segment Workspace, click on a JavaScript source, click on the source's Settings tab, click on the API Keys tab, copy the Write Key, paste the value into input the below.">
+                    AJS SOURCE WRITEKEY *</label>
+                    <input type="text" id="config-ajs-source-writeKey" placeholder="ajs source writekey *">
                     
-                    <label class="page-title" for="node-source-writeKey">node source writeKey</label>
-                    <input type="text" id="node-source-writeKey" placeholder="node source writeKey">
+                    <label class="config-label" for="config-node-source-writeKey" data-tooltip="Locate : Go to your Segment Workspace, click on any Server source, click on the source's Settings tab, click on the API Keys tab, copy the Write Key, paste the value into input the below.">
+                        SERVER SOURCE WRITEKEY *</label>
+                    <input type="text" id="config-node-source-writeKey" placeholder="server source writekey *">
+                    
+                    <label class="config-label" for="config-unify-engage-spaceid" data-tooltip="Locate : Go to your Segment Workspace, click on the Unify tab, click on the Unify Settings tab, click on the API Access tab, copy the Space ID which starts with 'spa_', paste the value into input the below.">
+                        UNIFY | ENGAGE SPACEID</label>
+                    <input type="text" id="config-unify-engage-spaceid" placeholder="unify / engage spaceid">
+
+                    
+                    <label class="config-label" for="config-profile-api-key" data-tooltip="Locate : Go to your Segment Workspace, click on the Unify tab, click on the Unify Settings tab, click on the API Access tab, click the button '+ Generate Token', complete the steps : naming, validation, saving the value, paste the value into input the below.">
+                        PROFILE API KEY</label>
+                    <input type="text" id="config-profile-api-key" placeholder="profile api key">
+
+                    
+                    <label class="config-label" for="config-gtag-id" data-tooltip="">GTAG ID</label>
+                    <input type="text" id="config-gtag-id" placeholder="gtag id">
 
                     <div class="timeline">
-                        <span class="timeline__unit"></span>
-                        <span class="timeline__unit timeline__unit--active"></span>
-                        <span class="timeline__unit"></span>
+                        <!-- timeline__unit--active when corresponding input is selected above -->
+                        <!-- timeline__unit--ready when corresponding input has value -->
+                        <span for="config-ajs-source-writeKey" class="timeline__unit"></span>
+                        <span for="config-node-source-writeKey" class="timeline__unit"></span>
+                        <span for="config-unify-engage-spaceid" class="timeline__unit"></span>
+                        <span for="config-profile-api-key" class="timeline__unit"></span>
+                        <span for="config-gtag-id" class="timeline__unit"></span>
                     </div>
                 </div>
             </div>
