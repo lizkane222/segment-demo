@@ -1,97 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Ecommerce</title>
-    <script>
-        fetch('./Components/head.html')
-        .then(response => response.text())
-        .then(data => {
-            document.head.innerHTML += data; // Append to the existing head
-        })
-        .catch(error => console.error('Error loading head.html:', error));
-    </script>
-    <link rel="stylesheet" href="./ecommerce.css">
-</head>
-<body>
+    <head>
+        <title>Ecommerce</title>
+        <script>
+            fetch("./Components/head.html")
+                .then((response) => response.text())
+                .then((data) => {
+                    document.head.innerHTML += data; // Append to the existing head
+                })
+                .catch((error) =>
+                    console.error("Error loading head.html:", error)
+                );
+        </script>
+        <link rel="stylesheet" href="./ecommerce.css" />
+    </head>
+    <body>
+        <!-- LOAD NAV BAR -->
+        <div id="navbar-placeholder"></div>
 
-    <!-- LOAD NAV BAR -->
-    <div id="navbar-placeholder"></div>
+        <script>
+            fetch("./Components/nav.html")
+                .then((response) => response.text())
+                .then((data) => {
+                    document.getElementById("navbar-placeholder").innerHTML =
+                        data;
+                })
+                .catch((err) => console.error("Error loading navbar:", err));
+        </script>
 
-    <script>
-        fetch('./Components/nav.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-            })
-            .catch(err => console.error('Error loading navbar:', err));
-    </script>
-
-    <header class="ecommerce-header">
-        <!-- <h1>Ecommerce</h1> -->
-        <!-- <h1>Ecommerce Store</h1> -->
-        <input type="text" id="searchBar" placeholder=" Search for products...">
-        <div id="tags">
-            <!-- Tags will be dynamically added here -->
-        </div>
-    </header>
-    <main>
-        <section id="products">
-            <!-- Product categories and products will be dynamically added here by ecommerce.js loadProducts(./data/products.json) & renderProducts()-->
-            <div class="product-list">
-                <!-- Example Product -->
-                <div class="carousel">
-                    <h3>Category Name</h3>
-                    <button class="carousel-button left">&lt;</button>
-                    <div class="carousel-wrapper">
-                        <div class="product-row">
-                            <div class="product" data-product-id="1">
-                                <img src="laptop.jpg" alt="Laptop">
-                                <h4>Laptop</h4>
-                                <p class="price">$999</p>
-                                <i class="bi bi-cart product-cart" style="font-size: 3rem; color:#44a27b;"></i>
-                                <i class="bi bi-bookmark product-bookmark"></i>
+        <header class="ecommerce-header">
+            <!-- <h1>Ecommerce</h1> -->
+            <!-- <h1>Ecommerce Store</h1> -->
+            <input
+                type="text"
+                id="searchBar"
+                placeholder=" Search for products..."
+            />
+            <div id="tags">
+                <!-- Tags will be dynamically added here -->
+            </div>
+        </header>
+        <main>
+            <section id="products">
+                <!-- Product categories and products will be dynamically added here by ecommerce.js loadProducts(./data/products.json) & renderProducts()-->
+                <div class="product-list">
+                    <!-- Example Product -->
+                    <div class="carousel">
+                        <h3>Category Name</h3>
+                        <button class="carousel-button left">&lt;</button>
+                        <div class="carousel-wrapper">
+                            <div class="product-row">
+                                <div class="product" data-product-id="1">
+                                    <img src="laptop.jpg" alt="Laptop" />
+                                    <h4>Laptop</h4>
+                                    <p class="price">$999</p>
+                                    <i
+                                        class="bi bi-cart product-cart"
+                                        style="font-size: 3rem; color: #44a27b"
+                                    ></i>
+                                    <i
+                                        class="bi bi-bookmark product-bookmark"
+                                    ></i>
+                                </div>
+                                <!-- Repeat for other products in the category -->
                             </div>
-                            <!-- Repeat for other products in the category -->
                         </div>
+                        <button class="carousel-button right">&gt;</button>
                     </div>
-                    <button class="carousel-button right">&gt;</button>
+                    <!-- Repeat for other products -->
                 </div>
-                <!-- Repeat for other products -->
-            </div>
-        </section>
-    </main>
-    <aside id="cartSidebar" >
-        <h3 class="right"><i class="bi bi-cart product-cart" style="font-size: 3rem; color:#44a27b;"></i></h3>
-        <ul id="cartList"></ul>
-        <p>Subtotal: <span id="subtotal">$0.00</span></p>
-        <p>Tax: <span id="tax">$0.00</span></p>
-        <p>Shipping: <span id="shipping">$0.00</span></p>
-        <p>Total: <span id="total">$0.00</span></p>
-        <button id="checkoutButton" class="btn bkgrdSegmentGreen white-text">Checkout</button>
+            </section>
+        </main>
+        <aside id="cartSidebar">
+            <h3 class="right">
+                <i
+                    class="bi bi-cart product-cart"
+                    style="font-size: 3rem; color: #44a27b"
+                ></i>
+            </h3>
+            <ul id="cartList"></ul>
+            <p>Subtotal: <span id="subtotal">$0.00</span></p>
+            <p>Tax: <span id="tax">$0.00</span></p>
+            <p>Shipping: <span id="shipping">$0.00</span></p>
+            <p>Total: <span id="total">$0.00</span></p>
+            <button
+                id="checkoutButton"
+                class="btn bkgrdSegmentGreen white-text"
+            >
+                Checkout
+            </button>
 
-        <div id="recentOrdersWrapper" class="wrapper hidden">
-            <h5>Recent Orders</h5>
-            <ul id="recentOrdersList">
-                <!-- Recent Orders will appear here -->
-            </ul>
-        </div>
-    </aside>
-
-    <!-- Footer for bookmarked products -->
-    <footer class="bookmark-footer">
-        <div id="bookmarked-products">
-            <i class="bi bi-bookmarks toggle-bookmark-footer" style="font-size: 3rem; color:#4fb58b;"></i>
-            <div class="bookmarked-list">
-                <!-- Bookmarked products will appear here -->
+            <div id="recentOrdersWrapper" class="wrapper hidden">
+                <h5>Recent Orders</h5>
+                <ul id="recentOrdersList">
+                    <!-- Recent Orders will appear here -->
+                </ul>
             </div>
-        </div>
-    </footer>
-</body>
-<script src="./segment-demo.js" type="module"></script> 
-<script src="./ecommerce.js" type="module"></script> 
+        </aside>
+
+        <!-- Footer for bookmarked products -->
+        <footer class="bookmark-footer">
+            <div id="bookmarked-products">
+                <i
+                    class="bi bi-bookmarks toggle-bookmark-footer"
+                    style="font-size: 3rem; color: #4fb58b"
+                ></i>
+                <div class="bookmarked-list">
+                    <!-- Bookmarked products will appear here -->
+                </div>
+            </div>
+        </footer>
+
+        <script src="./segment-demo.js" type="module"></script>
+        <script src="./ecommerce.js" type="module"></script>
+    </body>
 </html>
-
-
 
 <!-- cart icon that should be visible at all times to toggle cart sidebar and this icon should be visible on all products-->
 <!-- <i class="bi bi-cart" style="font-size: 3rem; color:#44a27b;"></i> -->
@@ -104,7 +127,6 @@
 
 <!-- icon on the product when hovering over the bi-cart-plus icon, this should only appear on hover when bi-cart-plus icon exists and remove the product from the cart -->
 <!-- <i class="bi bi-cart-dash" style="font-size: 3rem; color:#435A6F;"></i> -->
-
 
 <!-- bookmark icon that should be visible on all products -->
 <!-- <i class="bi bi-bookmark" style="font-size: 3rem; color:#44a27b;"></i> -->
@@ -121,7 +143,6 @@
 <!-- create a new section that sits as a footer at the bottom of the page which contains in a row the list of products that have been bookmarked (all products with bi-bookmark-check). when clicked it can toggle open and close this section. it should remain visible at all times -->
 <!--  -->
 <!-- <i class="bi bi-bookmarks" style="font-size: 3rem; color:#357e5f;"></i> -->
-
 
 <!-- summary cart : 
 all products have a cart icon that is always visible : bi-cart

@@ -35,33 +35,33 @@ $ node server.js
 Open your browser and visit http://localhost:3001/. 
 
 
-## Configure the Analytics.js & Server Sources with your writeKey : 
-1. Update the .env.primary file with these variables and their values from your Segment workspace. Update the links with the links to your Segment Resources.
-      GTAGID=""
+## Configure the Analytics.js & Server Sources with your writeKey
 
+1. Update the `.env.primary` file with these variables and their values from your Segment workspace. Update the links with the links to your Segment Resources.
 
-      # LINK TO AJS SOURCE : https://app.segment.com/
-      SEGMENTAJSWRITEKEY=""
+```ini
+GTAGID=""
 
-      # LINK TO SERVER SOURCE : https://app.segment.com/
-      SEGMENTNODEWRITEKEY=""
+# LINK TO AJS SOURCE : https://app.segment.com/
+SEGMENTAJSWRITEKEY=""
 
-      # LINK TO UNIFY SPACE : "Segment Demo Space"
-      SPACEID=""
+# LINK TO SERVER SOURCE : https://app.segment.com/
+SEGMENTNODEWRITEKEY=""
 
-      # UNIFY SPACE'S PROFILE API KEY
-      PROFILEAPIKEY=""
+# LINK TO UNIFY SPACE : "Segment Demo Space"
+SPACEID=""
 
-      # UNIFY SPACE'S PROFILE API KEY base64 encoded value
-      BASE64PROFILEAPIKEY = ""
+# UNIFY SPACE'S PROFILE API KEY
+PROFILEAPIKEY=""
 
+# UNIFY SPACE'S PROFILE API KEY base64 encoded value
+BASE64PROFILEAPIKEY = ""
+```
 
-2. Update the index.html file's <head> with your AJS source's writeKey in 2 places within the Segment Snippet.
+2. Update the `index.html` file's `<head>` with your AJS source's writeKey in 2 places within the Segment Snippet.
 
+## Upcoming Features
 
-## Upcoming Features : 
-1. The Config page (config.html) will locally store the provided values from the form to be used throughout the app.
-
-2. Code blocks will be added the User Page to allow pasting, manual modification, and translating of event payloads between different languages (AJS, Node.js, Python, Ruby, JSON) which can be sent to the currently configured sources.
-
-3. Ecommerce page needs to be updated with more accurate Ecommerce data that also includes images.
+1. The Config page (`config.html`) will locally store the provided values from the form to be used throughout the app.
+2. Code blocks will be added the User Page to allow pasting, manual modification, and translating of event payloads between different languages (analytics.js, Node.js, Python, Ruby, JSON) which can be sent to the currently configured sources.
+3. Ecommerce page needs to be updated with more accurate e-commerce data that also includes images.
