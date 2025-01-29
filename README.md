@@ -19,20 +19,32 @@
 
 
 ## Configure the Analytics.js & Server Sources with your writeKey : 
-    Create a new .env at the top-level with these variables. Update the links with the links to your Segment Resources.
+    Update the .env.primary file with these variables and their values from your Segment workspace. Update the links with the links to your Segment Resources.
         GTAGID=""
 
-        # https://app.segment.com/liz-kane/sources/segment_demo/debugger
+        
+        # LINK TO AJS SOURCE : https://app.segment.com/
         SEGMENTAJSWRITEKEY=""
 
-        # https://app.segment.com/liz-kane/sources/segment_demo_node/debugger
+        # LINK TO SERVER SOURCE : https://app.segment.com/
         SEGMENTNODEWRITEKEY=""
 
-        # Segment Demo Space
+        # LINK TO UNIFY SPACE : "Segment Demo Space"
         SPACEID=""
 
+        # UNIFY SPACE'S PROFILE API KEY
         PROFILEAPIKEY=""
 
+        # UNIFY SPACE'S PROFILE API KEY base64 encoded value
         BASE64PROFILEAPIKEY = ""
 
-    In the Components/nav.html file, past in your AJS source's writeKey in 2 places within the Segment Snippet 
+
+    Update the index.html file's <head> with your AJS source's writeKey in 2 places within the Segment Snippet.
+
+
+## Upcoming Features : 
+    1. The Config page (config.html) will locally store the provided values from the form to be used throughout the app.
+    
+    2. Code blocks will be added the User Page to allow pasting, manual modification, and translating of event payloads between different languages (AJS, Node.js, Python, Ruby, JSON) which can be sent to the currently configured sources.
+
+    3. Ecommerce page needs to be updated with more accurate Ecommerce data that also includes images.
