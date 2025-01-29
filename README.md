@@ -53,3 +53,11 @@ Create a new .env at the top-level with these variables. Update the links with t
     BASE64PROFILEAPIKEY = ""
 
 In the `Components/nav.html` file, past in your Analytics.js source's `writeKey` in 2 places within the Segment Snippet.
+
+## Upcoming Features
+
+1. The Config page (config.html) will locally store the provided values from the form to be used throughout the app.
+
+2. Code blocks will be added the User Page to allow pasting, manual modification, and translating of event payloads between different languages (AJS, Node.js, Python, Ruby, JSON) which can be sent to the currently configured sources.
+
+3. Ecommerce page needs to be updated with more accurate Ecommerce data that also includes images.
