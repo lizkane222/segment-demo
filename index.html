@@ -1,207 +1,313 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Segment Demo</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Segment Demo</title>
 
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- STYLESHEET FOR BOOTSTRAP ICONS -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.x.x/font/bootstrap-icons.css"
+        />
+        <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+
+        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./styles.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script> -->
-    <!-- <script src="./.env"></script> -->
+        <!-- <script src="./.env"></script> -->
 
-    <!-- <script src="path/to/uuidv4.min.js"></script> -->
+        <!-- <script src="path/to/uuidv4.min.js"></script> -->
 
-    <!-- <link rel="stylesheet" href="https://lizkane222.github.io/segment-demo/styles.css">
+        <!-- <link rel="stylesheet" href="https://lizkane222.github.io/segment-demo/styles.css">
     <script src="https://lizkane222.github.io/segment-demo/segment-demo.js"></script> -->
 
-    <script type="module">
-        import { v4 as uuidv4 } from 'https://cdn.jsdelivr.net/npm/uuid@9.0.0/dist/esm-browser/index.js';
-      
-        //const tempUserId = uuidv4();
-        //console.log(tempUserId); // Outputs a valid UUID
-      </script>
+        <script type="module">
+            import { v4 as uuidv4 } from "https://cdn.jsdelivr.net/npm/uuid@9.0.0/dist/esm-browser/index.js";
 
+            //const tempUserId = uuidv4();
+            //console.log(tempUserId); // Outputs a valid UUID
+        </script>
 
-    <script>
+        <script>
+            let userId = "";
+            let anonymousId = "";
+            let usertraits = {};
+            let groupId = "";
+            let groupTraits = {};
+            let utm_id = "";
+            let utm_campaign = "";
+            let utm_source = "";
+            let utm_medium = "";
+            let utm_term = "";
+            let utm_content = "";
+            let referrer = "";
+            let sessionId = "";
+            let sessionNumber = "";
+            let clientId = "";
+            let cid = "";
+            let campaign = {
+                utm_id,
+                utm_campaign,
+                utm_source,
+                utm_medium,
+                utm_term,
+                utm_content,
+            };
 
-        let userId = ''
-        let anonymousId = ''
-        let usertraits = {}
-        let groupId = ''
-        let groupTraits = {}
-        let utm_id = ''
-        let utm_campaign = ''
-        let utm_source = ''
-        let utm_medium = ''
-        let utm_term = ''
-        let utm_content = ''
-        let referrer = ''
-        let sessionId = ''
-        let sessionNumber = ''
-        let clientId = ''
-        let cid = ''
-        let campaign = {utm_id, utm_campaign, utm_source, utm_medium, utm_term, utm_content }
+            let currentUser = {};
 
-        let currentUser = {}
+            let firstName = "";
+            let lastName = "";
+            let username = "";
+            let phone = "";
+            let street = "";
+            let city = "";
+            let state = "";
+            let zipcode = "";
+            let email = "";
 
-        let firstName = ''
-        let lastName = ''
-        let username = ''
-        let phone = ''
-        let street = ''
-        let city = ''
-        let state = ''
-        let zipcode = ''
-        let email = ''
+            let currentSourceSelected = "CLIENT";
+            let generateGA4ContextReady = false;
 
-        let currentSourceSelected = 'CLIENT';
-        let generateGA4ContextReady = false
- 
-        //loadAJSSegmentSnippet()
+            //loadAJSSegmentSnippet()
 
-        !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
-        //if(!ajs_write_key){
-        //    console.log('ajs_write_key : ',ajs_write_key)
-        //    !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)//window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.//methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready",//"alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId",//"addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)//return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen",//"alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push//({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.//title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.//length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var //t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute//("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.//js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};//analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
-//
-            analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3",{
-              })
-              analytics.page();
-            }}();
-        //} else {
-        //    console.log('ajs_write_key : ',ajs_write_key)
-        //    !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)//window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.//methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready",//"alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId",//"addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)//return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen",//"alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push//({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.//title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.//length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var //t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute//("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.//js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};//analytics._writeKey=`${ajs_write_key}`;;analytics.SNIPPET_VERSION="5.2.0";
-//
-        //    analytics.load(`${ajs_write_key}`,{
-        //      })
-        //      analytics.page();
-        //    }}();
-        //}
-        
-          
-        
+            !(function () {
+                var i = "analytics",
+                    analytics = (window[i] = window[i] || []);
+                if (!analytics.initialize)
+                    if (analytics.invoked)
+                        window.console &&
+                            console.error &&
+                            console.error("Segment snippet included twice.");
+                    else {
+                        analytics.invoked = !0;
+                        analytics.methods = [
+                            "trackSubmit",
+                            "trackClick",
+                            "trackLink",
+                            "trackForm",
+                            "pageview",
+                            "identify",
+                            "reset",
+                            "group",
+                            "track",
+                            "ready",
+                            "alias",
+                            "debug",
+                            "page",
+                            "screen",
+                            "once",
+                            "off",
+                            "on",
+                            "addSourceMiddleware",
+                            "addIntegrationMiddleware",
+                            "setAnonymousId",
+                            "addDestinationMiddleware",
+                            "register",
+                        ];
+                        analytics.factory = function (e) {
+                            return function () {
+                                if (window[i].initialized)
+                                    return window[i][e].apply(
+                                        window[i],
+                                        arguments
+                                    );
+                                var n = Array.prototype.slice.call(arguments);
+                                if (
+                                    [
+                                        "track",
+                                        "screen",
+                                        "alias",
+                                        "group",
+                                        "page",
+                                        "identify",
+                                    ].indexOf(e) > -1
+                                ) {
+                                    var c = document.querySelector(
+                                        "link[rel='canonical']"
+                                    );
+                                    n.push({
+                                        __t: "bpc",
+                                        c:
+                                            (c && c.getAttribute("href")) ||
+                                            void 0,
+                                        p: location.pathname,
+                                        u: location.href,
+                                        s: location.search,
+                                        t: document.title,
+                                        r: document.referrer,
+                                    });
+                                }
+                                n.unshift(e);
+                                analytics.push(n);
+                                return analytics;
+                            };
+                        };
+                        for (var n = 0; n < analytics.methods.length; n++) {
+                            var key = analytics.methods[n];
+                            analytics[key] = analytics.factory(key);
+                        }
+                        analytics.load = function (key, n) {
+                            var t = document.createElement("script");
+                            t.type = "text/javascript";
+                            t.async = !0;
+                            t.setAttribute(
+                                "data-global-segment-analytics-key",
+                                i
+                            );
+                            t.src =
+                                "https://cdn.segment.com/analytics.js/v1/" +
+                                key +
+                                "/analytics.min.js";
+                            var r = document.getElementsByTagName("script")[0];
+                            r.parentNode.insertBefore(t, r);
+                            analytics._loadOptions = n;
+                        };
+                        analytics._writeKey =
+                            "mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";
+                        analytics.SNIPPET_VERSION = "5.2.0";
+                        //if(!ajs_write_key){
+                        //    console.log('ajs_write_key : ',ajs_write_key)
+                        //    !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)//window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.//methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready",//"alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId",//"addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)//return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen",//"alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push//({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.//title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.//length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var //t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute//("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.//js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};//analytics._writeKey="mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3";;analytics.SNIPPET_VERSION="5.2.0";
+                        //
+                        analytics.load("mzFg1bcMNNrz9AsGargWg9cFrA0ddnO3", {});
+                        analytics.page();
+                    }
+            })();
+            //} else {
+            //    console.log('ajs_write_key : ',ajs_write_key)
+            //    !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)//window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.//methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready",//"alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId",//"addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)//return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen",//"alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push//({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.//title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.//length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var //t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute//("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.//js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};//analytics._writeKey=`${ajs_write_key}`;;analytics.SNIPPET_VERSION="5.2.0";
+            //
+            //    analytics.load(`${ajs_write_key}`,{
+            //      })
+            //      analytics.page();
+            //    }}();
+            //}
+
             // Wait for analytics to be ready before assigning values
-    analytics.ready(function() {
-        userId = analytics.user().id();
-        anonymousId = analytics.user().anonymousId();
-        usertraits = analytics.user().traits();
-        groupId = analytics.group().id();
-        groupTraits = analytics.group().traits();
+            analytics.ready(function () {
+                userId = analytics.user().id();
+                anonymousId = analytics.user().anonymousId();
+                usertraits = analytics.user().traits();
+                groupId = analytics.group().id();
+                groupTraits = analytics.group().traits();
 
-        currentUser= {...currentUser, userId, anonymousId, usertraits, groupId, groupTraits, }
-        //console.log('currentUser : ',currentUser)
+                currentUser = {
+                    ...currentUser,
+                    userId,
+                    anonymousId,
+                    usertraits,
+                    groupId,
+                    groupTraits,
+                };
+                //console.log('currentUser : ',currentUser)
 
-        //console.log("ANALYTICS.JS IS READY");
+                //console.log("ANALYTICS.JS IS READY");
 
-        // Log values to check
-        //console.log("User ID: " + userId);
-        //console.log("Anonymous ID: " + anonymousId);
-        //console.log("Traits: " + JSON.stringify(usertraits, null, 2));
-        //console.log("Group ID: " + groupId);
-        //console.log("Group Traits: " + JSON.stringify(groupTraits, null, 2));
+                // Log values to check
+                //console.log("User ID: " + userId);
+                //console.log("Anonymous ID: " + anonymousId);
+                //console.log("Traits: " + JSON.stringify(usertraits, null, 2));
+                //console.log("Group ID: " + groupId);
+                //console.log("Group Traits: " + JSON.stringify(groupTraits, null, 2));
 
+                // Use ternary operator to assign values to form fields
+                //document.addEventListener('DOMContentLoaded', () => {
+                //document.getElementById('firstName').value = usertraits.firstName ? usertraits.firstName : '';
+                //document.getElementById('lastName').value = usertraits.lastName ? usertraits.lastName : '';
+                //document.getElementById('username').value = usertraits.username ? usertraits.username : '';
+                //document.getElementById('phone').value = usertraits.phone ? usertraits.phone : '';
+                //document.getElementById('email').value = usertraits.email ? usertraits.email : '';
+                //
+                //utm_id= document.getElementById('campaignId-input')?.value || '',
+                //utm_campaign= document.getElementById('campaign-input')?.value || '',
+                //utm_source= document.getElementById('campaignSource-input')?.value || '',
+                //utm_medium= document.getElementById('campaignMedium-input')?.value || '',
+                //utm_term= document.getElementById('campaignTerm-input')?.value || '',
+                //utm_content= document.getElementById('campaignContent-input')?.value || '',
+                //campaign = {
+                //    utm_id: document.getElementById('campaignId-input')?.value || '',
+                //    utm_campaign: document.getElementById('campaign-input')?.value || '',
+                //    utm_source: document.getElementById('campaignSource-input')?.value || '',
+                //    utm_medium: document.getElementById('campaignMedium-input')?.value || '',
+                //    utm_term: document.getElementById('campaignTerm-input')?.value || '',
+                //    utm_content: document.getElementById('campaignContent-input')?.value || '',
+                //};
+                //referrer = document.getElementById('referrer-input')?.value || '';
+                //
+                //console.log('campaign : ',campaign)
+                //console.log('Does this campaign reflect the latest changes : ',campaign)
 
-        // Use ternary operator to assign values to form fields
-        //document.addEventListener('DOMContentLoaded', () => {
-            //document.getElementById('firstName').value = usertraits.firstName ? usertraits.firstName : '';
-            //document.getElementById('lastName').value = usertraits.lastName ? usertraits.lastName : '';
-            //document.getElementById('username').value = usertraits.username ? usertraits.username : '';
-            //document.getElementById('phone').value = usertraits.phone ? usertraits.phone : '';
-            //document.getElementById('email').value = usertraits.email ? usertraits.email : '';
-//
-            //utm_id= document.getElementById('campaignId-input')?.value || '',
-            //utm_campaign= document.getElementById('campaign-input')?.value || '',
-            //utm_source= document.getElementById('campaignSource-input')?.value || '',
-            //utm_medium= document.getElementById('campaignMedium-input')?.value || '',
-            //utm_term= document.getElementById('campaignTerm-input')?.value || '',
-            //utm_content= document.getElementById('campaignContent-input')?.value || '',
-            //campaign = {
-            //    utm_id: document.getElementById('campaignId-input')?.value || '',
-            //    utm_campaign: document.getElementById('campaign-input')?.value || '',
-            //    utm_source: document.getElementById('campaignSource-input')?.value || '',
-            //    utm_medium: document.getElementById('campaignMedium-input')?.value || '',
-            //    utm_term: document.getElementById('campaignTerm-input')?.value || '',
-            //    utm_content: document.getElementById('campaignContent-input')?.value || '',
-            //};
-            //referrer = document.getElementById('referrer-input')?.value || '';
-//
-            //console.log('campaign : ',campaign)
-            //console.log('Does this campaign reflect the latest changes : ',campaign)
+                //});
+                // const sendCampaignServerSide = async (campaign, referrer) => {
+                //     let latest_campaign = {
+                //         utm_id: document.getElementById('campaignId-input').value,
+                //         utm_campaign: document.getElementById('campaign-input').value,
+                //         utm_source: document.getElementById('campaignSource-input').value,
+                //         utm_medium: document.getElementById('campaignMedium-input').value,
+                //         utm_term: document.getElementById('campaignTerm-input').value,
+                //         utm_content: document.getElementById('campaignContent-input').value,
+                //     };
+                //     let latest_referrer = document.getElementById('referrer-input').value;
+                //     console.log('campaign and referrer', latest_campaign, latest_referrer, {...latest_campaign});
+                //     try {
+                //         let response = await fetch('/campaignDetails', {
+                //             method: 'POST',
+                //             headers: {
+                //                 'Content-Type': 'application/json',
+                //             },
+                //             body: JSON.stringify({ latest_campaign, latest_referrer, ...latest_campaign }),
+                //         });
+                //
+                //         if (!response.ok) {
+                //             throw new Error(`HTTP error! status: ${response.status}`);
+                //         }
+                //
+                //         let data = await response.json();
+                //         console.log('Campaign details sent successfully:', data);
+                //         return data;
+                //     } catch (error) {
+                //         console.error('Error sending campaign details:', error);
+                //     }
+                // };
+                // sendCampaignServerSide()
 
-            
-        //});
-       // const sendCampaignServerSide = async (campaign, referrer) => {
-       //     let latest_campaign = {
-       //         utm_id: document.getElementById('campaignId-input').value,
-       //         utm_campaign: document.getElementById('campaign-input').value,
-       //         utm_source: document.getElementById('campaignSource-input').value,
-       //         utm_medium: document.getElementById('campaignMedium-input').value,
-       //         utm_term: document.getElementById('campaignTerm-input').value,
-       //         utm_content: document.getElementById('campaignContent-input').value,
-       //     };
-       //     let latest_referrer = document.getElementById('referrer-input').value;
-       //     console.log('campaign and referrer', latest_campaign, latest_referrer, {...latest_campaign});
-       //     try {
-       //         let response = await fetch('/campaignDetails', {
-       //             method: 'POST',
-       //             headers: {
-       //                 'Content-Type': 'application/json',
-       //             },
-       //             body: JSON.stringify({ latest_campaign, latest_referrer, ...latest_campaign }),
-       //         });
-       // 
-       //         if (!response.ok) {
-       //             throw new Error(`HTTP error! status: ${response.status}`);
-       //         }
-       // 
-       //         let data = await response.json();
-       //         console.log('Campaign details sent successfully:', data);
-       //         return data;
-       //     } catch (error) {
-       //         console.error('Error sending campaign details:', error);
-       //     }
-       // };
-       // sendCampaignServerSide()
+                //generateGA4ContextReady = true;
+                //analytics.page();
 
-        //generateGA4ContextReady = true;
-        //analytics.page();
+                console.log("currentSourceSelected : ", currentSourceSelected);
+            });
+        </script>
 
-        console.log('currentSourceSelected : ',currentSourceSelected)
-    });
-    
+        <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKHZZPMN4Y"></script> -->
+        <script>
+            // ------------------------------------
+            // GA4 PROTOCOLS MEASURES : CAMPAIGN DATA
+            //      GA4 DOCS : https://support.google.com/analytics/answer/11242841?hl=en#zippy=%2Cin-this-article
+            //      GSHEET : https://docs.google.com/spreadsheets/d/1mjVdj5VtywFVOPWFvvoJywKpMBznLIiRbAgn4oHLUss/edit?usp=sharing
+            //  Google tag (gtag.js) -->
+            //window.dataLayer = window.dataLayer || [];
+            //function gtag(){dataLayer.push(arguments);}
+            //gtag('js', new Date());
 
-    </script>
-   
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKHZZPMN4Y"></script> -->
-    <script>
-        // ------------------------------------
-        // GA4 PROTOCOLS MEASURES : CAMPAIGN DATA
-        //      GA4 DOCS : https://support.google.com/analytics/answer/11242841?hl=en#zippy=%2Cin-this-article
-        //      GSHEET : https://docs.google.com/spreadsheets/d/1mjVdj5VtywFVOPWFvvoJywKpMBznLIiRbAgn4oHLUss/edit?usp=sharing
-        //  Google tag (gtag.js) -->
-        //window.dataLayer = window.dataLayer || [];
-        //function gtag(){dataLayer.push(arguments);}
-        //gtag('js', new Date());
-        
-        //gtag('config', 'G-BKHZZPMN4Y'), { 'debug_mode':true };
+            //gtag('config', 'G-BKHZZPMN4Y'), { 'debug_mode':true };
 
-        // GTAG Segment Doc : Set up consent mod
-        // https://segment.com/docs/connections/destinations/catalog/google-ads-gtag/#set-up-consent-mode
-        //analytics.ready(function() {
-        //    window.gtag('consent', 'default', {
-        //        'ad_storage': 'granted',
-        //        'ad_user_data': 'granted',
-        //        'ad_personalization': 'granted',
-        //        'analytics_storage': 'granted'
-        //    });
+            // GTAG Segment Doc : Set up consent mod
+            // https://segment.com/docs/connections/destinations/catalog/google-ads-gtag/#set-up-consent-mode
+            //analytics.ready(function() {
+            //    window.gtag('consent', 'default', {
+            //        'ad_storage': 'granted',
+            //        'ad_user_data': 'granted',
+            //        'ad_personalization': 'granted',
+            //        'analytics_storage': 'granted'
+            //    });
 
-    
-        // Segment retrieve Google's session data : session stitching server-side   
+            // Segment retrieve Google's session data : session stitching server-side
             //const sessionIdPromise =  new  Promise(resolve => {gtag('get', //'G-BKHZZPMN4Y', 'session_id', resolve)});
             //const sessionNumPromise =  new  Promise(resolve => {gtag('get', //'G-BKHZZPMN4Y', 'session_number', resolve)});
 
@@ -210,51 +316,43 @@
             //    sessionNumber = session_data[1]
             //    document.getElementById('sessionId-input').value = sessionId;
             //    document.getElementById('sessionNumber-input').value = sessionNumber;
-            //    
-            //});    
-    
-        // Segment retrieve Google's client_id : session stitching server-side 
-        //    const retrieved = new Promise(resolve => {
-        //    gtag('get', 'G-BKHZZPMN4Y', 'client_id', resolve)
-        //    });
-        //    retrieved.then((client_id) => {
-        //    cid = client_id
-        //    clientId = client_id
-        //    document.getElementById('clientId-input').value = clientId;
-        //    if(clientId || cid){
-        //        console.log('clientId exists', clientId, 'cid exist', cid)
-        //        document.getElementById('clientId-input').value = clientId
-        //        document.getElementById('clientId-input').value = cid
-        //        //let clientIdInputValue = document.getElementById('clientId-input').value
-        //        const label = document.getElementById('clientIdLabel');
-        //        label.addEventListener('click', ()=> {document.getElementById//('clientId-input').value = cid})
-        //        const clickLabelSession = () => {}
-        //    }
-        //    else{
-        //        console.log('clientId does not exist')
-        //    }
-//
-        //    })
-        //});
-        // ------------------------------------
-    </script>
-    <!-- STYLESHEET FOR BOOTSTRAP ICONS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.x.x/font/bootstrap-icons.css">
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+            //
+            //});
 
-    <!-- ONLY UNCOMMENT FAKER SCRIPT WHEN GENERATING NEW USERS -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@latest/dist/browser/umd.min.js"></script>
+            // Segment retrieve Google's client_id : session stitching server-side
+            //    const retrieved = new Promise(resolve => {
+            //    gtag('get', 'G-BKHZZPMN4Y', 'client_id', resolve)
+            //    });
+            //    retrieved.then((client_id) => {
+            //    cid = client_id
+            //    clientId = client_id
+            //    document.getElementById('clientId-input').value = clientId;
+            //    if(clientId || cid){
+            //        console.log('clientId exists', clientId, 'cid exist', cid)
+            //        document.getElementById('clientId-input').value = clientId
+            //        document.getElementById('clientId-input').value = cid
+            //        //let clientIdInputValue = document.getElementById('clientId-input').value
+            //        const label = document.getElementById('clientIdLabel');
+            //        label.addEventListener('click', ()=> {document.getElementById//('clientId-input').value = cid})
+            //        const clickLabelSession = () => {}
+            //    }
+            //    else{
+            //        console.log('clientId does not exist')
+            //    }
+            //
+            //    })
+            //});
+            // ------------------------------------
+        </script>
 
-    
-    <script src="./users.json" ></script> 
-
-
-    
-</head>
-<body>
-    <!-- NAV BAR -->
-    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <!-- ONLY UNCOMMENT FAKER SCRIPT WHEN GENERATING NEW USERS -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@latest/dist/browser/umd.min.js"></script>
+        <script src="./users.json"></script>
+    </head>
+    <body>
+        <!-- NAV BAR -->
+        <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <h3 class="segment-green-text"><a class="navbar-brand" href="/user">Segment Demo</a></h3>
         <span class="segment-green-text zoom">_ __ ___ </span>
         <i class="bi bi-scooter" style="font-size: 2rem; color:#4fb58b;"></i>
@@ -266,8 +364,8 @@
 
         <!-- CLIENT vs SERVER toggle -->
         <!-- <div class="toggle-container"> -->
-            <!-- CODEPEN TOGGLE : https://codepen.io/mallendeo/pen/QWKrEL -->
-            <!-- <ul class="tg-list">
+        <!-- CODEPEN TOGGLE : https://codepen.io/mallendeo/pen/QWKrEL -->
+        <!-- <ul class="tg-list">
                 <li class="tg-list-item">
                     <input id="source-selection" class="tgl tgl-flip" type="checkbox" checked/>
                     <label class="tgl-btn" data-tg-off="SERVER" data-tg-on="CLIENT" for="source-selection"></label>
@@ -275,450 +373,877 @@
             </ul>
         </div>
     </nav> -->
-    
-    <!-- LOAD NAV BAR -->
-    <div id="navbar-placeholder"></div>
 
-    <script>
-        fetch('./Components/nav.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-            
-                // Call the updateNavSpans function after navbar is loaded
-                //updateNavSpans();    
-            })
-            .catch(err => console.error('Error loading navbar:', err));
-    </script>
-        
-    <div class="container-fluid">
-        <div class="row" id="main-content">
-            <!-- LEFT SIDEBAR -->
-            <div id="leftSidebarWrapper">
-                <div id="sidebar-container">
-                    <nav class="col-md-3 sidebar sidebar-left" id="leftSidebarContent">
-                        <div class="left-sidebar-content">
-                            <i id=toggleLeftSidebar class="bi bi-person toggle-icon left" style="font-size: 3rem;" data-tooltip="Hide Left Sidebar"></i>
-                            <h3 id="userProfileHeader">USER PROFILE</h3>
-                        </div>
-                        <button type="button" class="btn btn-outline-warning" id="check-data">CHECK DATA</button>
-                                    
-                        <div id="user-profile">
-                            <h5>User Data</h5>
-                            <ul id="user-list">
-                                <li class="hidden">test</li>
-                                <!-- user form data added as li -->
-                            </ul>
-                        </div>
-                    
-                        <div class="profile-api-container">
-                            <div id="profile-api-res" class="hidden">
-                                <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Profile API Results">
-                                <p class="bold">User Profile Data</p>
-                                <ul id="profile-api-res-list">
-                                    <li >test</li>
+        <!-- LOAD NAV BAR -->
+        <div id="navbar-placeholder"></div>
+
+        <script>
+            fetch("./Components/nav.html")
+                .then((response) => response.text())
+                .then((data) => {
+                    document.getElementById("navbar-placeholder").innerHTML =
+                        data;
+
+                    // Call the updateNavSpans function after navbar is loaded
+                    //updateNavSpans();
+                })
+                .catch((err) => console.error("Error loading navbar:", err));
+        </script>
+
+        <div class="container-fluid">
+            <div class="row" id="main-content">
+                <!-- LEFT SIDEBAR -->
+                <div id="leftSidebarWrapper">
+                    <div id="sidebar-container">
+                        <nav
+                            class="col-md-3 sidebar sidebar-left"
+                            id="leftSidebarContent"
+                        >
+                            <div class="left-sidebar-content">
+                                <i
+                                    id="toggleLeftSidebar"
+                                    class="bi bi-person toggle-icon left"
+                                    style="font-size: 3rem"
+                                    data-tooltip="Hide Left Sidebar"
+                                ></i>
+                                <h3 id="userProfileHeader">USER PROFILE</h3>
+                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-outline-warning"
+                                id="check-data"
+                            >
+                                CHECK DATA
+                            </button>
+
+                            <div id="user-profile">
+                                <h5>User Data</h5>
+                                <ul id="user-list">
+                                    <li class="hidden">test</li>
                                     <!-- user form data added as li -->
                                 </ul>
                             </div>
-                            <div class="left-sidebar-content">
-                                <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" data-tooltip="Add fields to Profile API request by clicking on the icons">
-                                <h3>Segment Profile API</h3>
-                            </div>
-                            <form id="profileApiForm">
-                                <label for="spaceId">Space ID:</label>
-                                <input type="text" id="spaceId" placeholder="Enter Space ID" />
-                                <label for="profileAPIKey">Profile API Key:</label>
-                                <input type="text" id="profileAPIKey" placeholder="Enter Profile API Key" />
-                        
-                                <label for="externalId">External ID:</label>
-                                <input type="text" id="externalId" placeholder="Enter External ID" />
-                        
-                                <label for="queryParameters">Query Parameters:</label>
-                                <input type="text" id="queryParameters" placeholder="Enter Query Parameters" />
-                        
-                                <div class="query-param-buttons">
-                                    <button type="btn  button" class="btn api-button btn-outline-segment-green" id="addAudienceClass">
-                                        Audience 
-                                        <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-audience" data-tooltip="Add field to Profile API request" style="color:white; background-color:white;">
-                                    </button>
-                                    <button type="button" class="btn api-button btn-outline-segment-green" id="addComputedTraitClass">
-                                        Computed Trait <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-computed-trait" data-tooltip="Add field to Profile API request">
-                                    </button>
+
+                            <div class="profile-api-container">
+                                <div id="profile-api-res" class="hidden">
+                                    <img
+                                        src="./unify-icon.svg"
+                                        alt="Profile API"
+                                        class="unify-svg-icon"
+                                        data-tooltip="Profile API Results"
+                                    />
+                                    <p class="bold">User Profile Data</p>
+                                    <ul id="profile-api-res-list">
+                                        <li>test</li>
+                                        <!-- user form data added as li -->
+                                    </ul>
                                 </div>
-                        
-                                <button type="button" class="btn api-button btn-outline-segment-green" id="sendApiRequest">Send Profile API Request</button>
-                            </form>
-                        
-                            <textarea class="query-string-display" id="queryStringDisplay">
+                                <div class="left-sidebar-content">
+                                    <img
+                                        src="./unify-icon.svg"
+                                        alt="Profile API"
+                                        class="unify-svg-icon"
+                                        data-tooltip="Add fields to Profile API request by clicking on the icons"
+                                    />
+                                    <h3>Segment Profile API</h3>
+                                </div>
+                                <form id="profileApiForm">
+                                    <label for="spaceId">Space ID:</label>
+                                    <input
+                                        type="text"
+                                        id="spaceId"
+                                        placeholder="Enter Space ID"
+                                    />
+                                    <label for="profileAPIKey"
+                                        >Profile API Key:</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="profileAPIKey"
+                                        placeholder="Enter Profile API Key"
+                                    />
+
+                                    <label for="externalId">External ID:</label>
+                                    <input
+                                        type="text"
+                                        id="externalId"
+                                        placeholder="Enter External ID"
+                                    />
+
+                                    <label for="queryParameters"
+                                        >Query Parameters:</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="queryParameters"
+                                        placeholder="Enter Query Parameters"
+                                    />
+
+                                    <div class="query-param-buttons">
+                                        <button
+                                            type="btn  button"
+                                            class="btn api-button btn-outline-segment-green"
+                                            id="addAudienceClass"
+                                        >
+                                            Audience
+                                            <img
+                                                src="./unify-icon.svg"
+                                                alt="Profile API"
+                                                class="unify-svg-icon"
+                                                id="unify-i-audience"
+                                                data-tooltip="Add field to Profile API request"
+                                                style="
+                                                    color: white;
+                                                    background-color: white;
+                                                "
+                                            />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn api-button btn-outline-segment-green"
+                                            id="addComputedTraitClass"
+                                        >
+                                            Computed Trait
+                                            <img
+                                                src="./unify-icon.svg"
+                                                alt="Profile API"
+                                                class="unify-svg-icon"
+                                                id="unify-i-computed-trait"
+                                                data-tooltip="Add field to Profile API request"
+                                            />
+                                        </button>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        class="btn api-button btn-outline-segment-green"
+                                        id="sendApiRequest"
+                                    >
+                                        Send Profile API Request
+                                    </button>
+                                </form>
+
+                                <textarea
+                                    class="query-string-display"
+                                    id="queryStringDisplay"
+                                >
                                 <!-- <p id="endpointDisplay">https://profiles.segment.com/v1/spaces/&lt;space_id&gt;/collections/</p>
                                 <p>users/profiles/&lt;external_id&gt;/traits</p>
                                 <p>users/profiles/&lt;external_id&gt;/traits</p>
                                 <p>users/profiles/&lt;external_id&gt;/traits</p> -->
 
                                 No query string present.
-                            </textarea>
-                        </div>
-                        <!-- END Profile API Form -->
-                    </nav>
-                </div>
-            </div>
-            <div id="resizer-left" class="resizer left"></div>
-
-
-            <main role="main" id="main" class="col-md-6 main container">
-                <div class="forms-wrapper">
-
-                    <!-- USER DETAILS FORM -->
-                    <div class="form-container">
-                        <button type="button" id="generateFakerUserData" class="btn btn-warning" data-tooltip="Generate New User Data">
-                            <i   class="bi bi-lightning-charge" style="font-size: 2rem;" ></i>
-                        </button>
-                        <form id="userForm">
-                            <div class="form-group">
-                                <label id="firstNameLabel" for="firstName">First Name: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-firstName" data-tooltip="Add field to Profile API request">
-                                </label>
-                                <input type="text" name="firstName" class="form-control" id="firstName" >
+                            </textarea
+                                >
                             </div>
-                            <div class="form-group">
-                                <label id="lastNameLabel" for="lastName">Last Name: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-lastName" data-tooltip="Add field to Profile API request">
-                                </label>
-                                <input type="text" name="lastName" class="form-control" id="lastName" >
-                            </div>
-                            <div class="form-group">
-                                <label id="usernameLabel" for="username">Username: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-username" data-tooltip="Add field to Profile API request">
-                                </label>
-                                <input type="text" name="username" class="form-control" id="username" >
-                            </div>
-                            <div class="form-group">
-                                <label id="phoneLabel" for="phone">Phone: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-phone" data-tooltip="Add field to Profile API request">
-                                </label>
-                                <input type="text" name="phone" class="form-control" id="phone" >
-                            </div>
-                            <div class="form-group" id="email-row">
-                                <label id="emailLabel" for="email">Email: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-email" data-tooltip="Add field to Profile API request">
-                                </label>
-                                <input type="email" name="email" class="form-control" id="email" >
-                            </div>
-                            <div class="form-group">
-                                <label id="streetLabel" for="street">Street Address: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-street" data-tooltip="Add field to Profile API request">
-                                </label>
-                                <input type="text" name="street" class="form-control" id="street" >
-                            </div>
-                            <div class="form-group">
-                                <label id="cityLabel" for="city">City: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-city" data-tooltip="Add field to Profile API request">
-                                </label>
-                                <input type="text" name="city" class="form-control" id="city" >
-                            </div>
-                            <div class="form-group">
-                                <label id="stateLabel" for="state">State: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-state" data-tooltip="Add field to Profile API request">
-                                </label>
-                                <input type="text" name="state" class="form-control" id="state" >
-                            </div>
-                            <div class="form-group">
-                                <label id="zipcodeLabel" for="zipcode">Zipcode: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                    <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-zipcode" data-tooltip="Add field to Profile API request">
-                                </label>
-                                <input type="text" name="zipcode" class="form-control" id="zipcode" >
-                            </div>
-                            
-                            <div class="button-row">
-                                <button type="submit" id="identifyAnonymousId" class="btn btn-outline-warning" >Identify : AnonymousId</button>
-                                <button type="submit" id="identifyUserId" class="btn btn-outline-warning" >Identify : UserId</button>
-                            </div>
-
-                            <div class="extra-buttons">
-                                <button type="button" class="btn btn-outline-secondary" id="clearUserForm">Clear Form</button>
-                                <button type="button" class="btn btn-outline-danger" id="reset-ajs-user" data-tooltip="Resets user data on client and server including Google's ClientId & Session Data">Reset AJS User</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- CAMPAIGN FORM -->
-                    <div class="form-container">
-                        <form id="campaignForm">
-                            <div class="form-group" id="campaignId-row">
-                                <label for="campaignId">campaignId: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#718ba9;"></i> -->
-                                </label>
-                                <input type="campaignId" name="utm_id" class="form-control" id="campaignId-input" >
-                            </div>
-                            <div class="form-group" id="campaign-row">
-                                <label for="campaign">campaign: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#718ba9;"></i> -->
-                                </label>
-                                <input type="campaign" name="utm_campaign" class="form-control" id="campaign-input" >
-                            </div>
-                            <div class="form-group" id="campaignSource-row">
-                                <label for="campaignSource">campaignSource: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                </label>
-                                <input type="campaignSource" name="utm_source" class="form-control" id="campaignSource-input" >
-                            </div>
-                            <div class="form-group" id="campaignMedium-row">
-                                <label for="campaignMedium">campaignMedium: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                </label>
-                                <input type="campaignMedium" name="utm_medium" class="form-control"id="campaignMedium-input" >
-                            </div>
-                            <div class="form-group" id="campaignTerm-row">
-                                <label for="campaignTerm">campaignTerm: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                </label>
-                                <input type="campaignTerm" name="utm_term" class="form-control" id="campaignTerm-input" >
-                            </div>
-                            <div class="form-group" id="campaignContent-row">
-                                <label for="campaignContent">campaignContent: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                </label>
-                                <input type="campaignContent" name="utm_content" class="form-control" id="campaignContent-input" >
-                            </div>
-                            <div class="form-group" id="referrer-row">
-                                <label for="referrer">referrer: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#718ba9;"></i> -->
-                                </label>
-                                <input type="referrer" name="referrer"  class="form-control" id="referrer-input" >
-                            </div>
-                            <div class="form-group" id="sessionId-row">
-                                <label id="sessionIdLabel" for="sessionId">sessionId: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 3rem1; color:#708ba9"></i> -->
-                                </label>
-                                <input type="sessionId" name="sessionId" class="form-control" id="sessionId-input" >
-                            </div>
-                            <div class="form-group" id="sessionNumber-row">
-                                <label id="sessionNumberLabel" for="sessionNumber">sessionNumber: 
-                                    <!-- <i class="bi bi-node-plus"1style="font-size: 3rem; color:#708ba9;"></i> -->
-                                </label>
-                                <input type="sessionNumber" name="sessionNumber" class="form-control" id="sessionNumber-input" >
-                            </div>
-                            <div class="form-group" id="clientId-row">
-                                <label id="clientIdLabel" for="clientId">clientId: 
-                                    <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
-                                </label>
-                                <input type="clientId" name="clientId" class="form-control" id="clientId-input" >
-                            </div>
-                            <!-- Display Query String -->
-                            <div id="querystring-display">
-                                <p></p>
-                            </div>
-                            <div class="button-container">
-                                    <button type="button" class="btn btn-outline-secondary" id="clearCampaignForm">Clear Form</button>
-                            </div>
-                        </form>
-                        <button class="btn btn-info" id="newCampaign" data-tooltip="Generate New Campaign Data">
-                            <i   class="bi bi-lightning-charge" style="font-size: 2rem;"></i>
-                        </button>
+                            <!-- END Profile API Form -->
+                        </nav>
                     </div>
                 </div>
-            </main>
+                <div id="resizer-left" class="resizer left"></div>
 
+                <main role="main" id="main" class="col-md-6 main container">
+                    <div class="forms-wrapper">
+                        <!-- USER DETAILS FORM -->
+                        <div class="form-container">
+                            <button
+                                type="button"
+                                id="generateFakerUserData"
+                                class="btn btn-warning"
+                                data-tooltip="Generate New User Data"
+                            >
+                                <i
+                                    class="bi bi-lightning-charge"
+                                    style="font-size: 2rem"
+                                ></i>
+                            </button>
+                            <form id="userForm">
+                                <div class="form-group">
+                                    <label id="firstNameLabel" for="firstName"
+                                        >First Name:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                        <img
+                                            src="./unify-icon.svg"
+                                            alt="Profile API"
+                                            class="unify-svg-icon"
+                                            id="unify-i-firstName"
+                                            data-tooltip="Add field to Profile API request"
+                                        />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        class="form-control"
+                                        id="firstName"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label id="lastNameLabel" for="lastName"
+                                        >Last Name:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                        <img
+                                            src="./unify-icon.svg"
+                                            alt="Profile API"
+                                            class="unify-svg-icon"
+                                            id="unify-i-lastName"
+                                            data-tooltip="Add field to Profile API request"
+                                        />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        class="form-control"
+                                        id="lastName"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label id="usernameLabel" for="username"
+                                        >Username:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                        <img
+                                            src="./unify-icon.svg"
+                                            alt="Profile API"
+                                            class="unify-svg-icon"
+                                            id="unify-i-username"
+                                            data-tooltip="Add field to Profile API request"
+                                        />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        class="form-control"
+                                        id="username"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label id="phoneLabel" for="phone"
+                                        >Phone:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                        <img
+                                            src="./unify-icon.svg"
+                                            alt="Profile API"
+                                            class="unify-svg-icon"
+                                            id="unify-i-phone"
+                                            data-tooltip="Add field to Profile API request"
+                                        />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        class="form-control"
+                                        id="phone"
+                                    />
+                                </div>
+                                <div class="form-group" id="email-row">
+                                    <label id="emailLabel" for="email"
+                                        >Email:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                        <img
+                                            src="./unify-icon.svg"
+                                            alt="Profile API"
+                                            class="unify-svg-icon"
+                                            id="unify-i-email"
+                                            data-tooltip="Add field to Profile API request"
+                                        />
+                                    </label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        class="form-control"
+                                        id="email"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label id="streetLabel" for="street"
+                                        >Street Address:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                        <img
+                                            src="./unify-icon.svg"
+                                            alt="Profile API"
+                                            class="unify-svg-icon"
+                                            id="unify-i-street"
+                                            data-tooltip="Add field to Profile API request"
+                                        />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="street"
+                                        class="form-control"
+                                        id="street"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label id="cityLabel" for="city"
+                                        >City:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                        <img
+                                            src="./unify-icon.svg"
+                                            alt="Profile API"
+                                            class="unify-svg-icon"
+                                            id="unify-i-city"
+                                            data-tooltip="Add field to Profile API request"
+                                        />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="city"
+                                        class="form-control"
+                                        id="city"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label id="stateLabel" for="state"
+                                        >State:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                        <img
+                                            src="./unify-icon.svg"
+                                            alt="Profile API"
+                                            class="unify-svg-icon"
+                                            id="unify-i-state"
+                                            data-tooltip="Add field to Profile API request"
+                                        />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="state"
+                                        class="form-control"
+                                        id="state"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label id="zipcodeLabel" for="zipcode"
+                                        >Zipcode:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                        <img
+                                            src="./unify-icon.svg"
+                                            alt="Profile API"
+                                            class="unify-svg-icon"
+                                            id="unify-i-zipcode"
+                                            data-tooltip="Add field to Profile API request"
+                                        />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="zipcode"
+                                        class="form-control"
+                                        id="zipcode"
+                                    />
+                                </div>
 
-            <!-- RIGHT SIDEBAR -->
-            <!-- <div class="sidebar-content"> -->
-            <div id="resizer-right" class="resizer right"></div>
-            <div id="rightSidebarWrapper">
-                <div class="sidebar-container">
-                    <nav class="col-md-3 sidebar sidebar-right" id="rightSidebarContent">
-                        <i id="toggleRightSidebar" class="bi bi-cookie toggle-icon right" style="font-size: 3rem; color:#4fb58b;" data-tooltip="Hide Right Sidebar"></i>
-                        <div>
-                            <h5>Local Storage Cookies</h5>
-                            <ul class="cookie-list" id="local-storage-cookies">
-                                <!-- LOCAL STORAGE COOKIES AS LI -->
-                            </ul>
+                                <div class="button-row">
+                                    <button
+                                        type="submit"
+                                        id="identifyAnonymousId"
+                                        class="btn btn-outline-warning"
+                                    >
+                                        Identify : AnonymousId
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        id="identifyUserId"
+                                        class="btn btn-outline-warning"
+                                    >
+                                        Identify : UserId
+                                    </button>
+                                </div>
+
+                                <div class="extra-buttons">
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        id="clearUserForm"
+                                    >
+                                        Clear Form
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-danger"
+                                        id="reset-ajs-user"
+                                        data-tooltip="Resets user data on client and server including Google's ClientId & Session Data"
+                                    >
+                                        Reset AJS User
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        <div>
-                            <h5>Client Cookies</h5>
-                            <ul class="cookie-list" id="client-cookies">
-                                <!-- COOKIES AS LI -->
-                            </ul>
-                            <div id="getCookieBtns">
-                                <div class="get-cookie-btns">                                    
-                                    <p>
-                                        <button class="btn btn-outline-warning" id="userId-cookie-get" data-target="userId-p">userId</button> 
-                                        <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-userId" data-tooltip="Add field to Profile API request">
-                                    </p>
-                                    <p class="click-mouse" id="userId-p"></p>
+
+                        <!-- CAMPAIGN FORM -->
+                        <div class="form-container">
+                            <form id="campaignForm">
+                                <div class="form-group" id="campaignId-row">
+                                    <label for="campaignId"
+                                        >campaignId:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#718ba9;"></i> -->
+                                    </label>
+                                    <input
+                                        type="campaignId"
+                                        name="utm_id"
+                                        class="form-control"
+                                        id="campaignId-input"
+                                    />
                                 </div>
-                                <div class="get-cookie-btns">                                
-                                    <p>
-                                        <button class="btn btn-outline-warning" id="anonymousId-cookie-get" data-target="anonymousId-p">anonymousId</button> 
-                                        <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-anonymousId" data-tooltip="Add field to Profile API request">
-                                    </p>
-                                    <p class="click-mouse" id="anonymousId-p"></p>
+                                <div class="form-group" id="campaign-row">
+                                    <label for="campaign"
+                                        >campaign:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#718ba9;"></i> -->
+                                    </label>
+                                    <input
+                                        type="campaign"
+                                        name="utm_campaign"
+                                        class="form-control"
+                                        id="campaign-input"
+                                    />
                                 </div>
-                                <div class="get-cookie-btns">                                
-                                    <p>
-                                        <button class="btn btn-outline-warning" id="traits-cookie-get" data-target="traits-p">traits</button> 
-                                        <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-traits" data-tooltip="Add field to Profile API request">
-                                    </p>
+                                <div class="form-group" id="campaignSource-row">
+                                    <label for="campaignSource"
+                                        >campaignSource:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                    </label>
+                                    <input
+                                        type="campaignSource"
+                                        name="utm_source"
+                                        class="form-control"
+                                        id="campaignSource-input"
+                                    />
                                 </div>
-                                <p class="click-mouse" id="traits-p"></p>
-                                <div class="get-cookie-btns">                                    
-                                    <p>
-                                        <button class="btn btn-outline-warning" id="groupId-cookie-get" data-target="groupId-p">groupId</button>
-                                        <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-groupId" data-tooltip="Add field to Profile API request">
-                                    </p>
-                                    <p class="click-mouse" id="groupId-p"></p>
+                                <div class="form-group" id="campaignMedium-row">
+                                    <label for="campaignMedium"
+                                        >campaignMedium:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                    </label>
+                                    <input
+                                        type="campaignMedium"
+                                        name="utm_medium"
+                                        class="form-control"
+                                        id="campaignMedium-input"
+                                    />
                                 </div>
-                                <div class="get-cookie-btns">                                    
-                                    <p>
-                                        <button class="btn btn-outline-warning" id="groupTraits-cookie-get" data-target="groupTraits-p">groupTraits</button>
-                                        <img src="./unify-icon.svg" alt="Profile API" class="unify-svg-icon" id="unify-i-groupTraits" data-tooltip="Add field to Profile API request">
-                                    </p>
-                                    <p class="click-mouse" id="groupTraits-p"></p>
+                                <div class="form-group" id="campaignTerm-row">
+                                    <label for="campaignTerm"
+                                        >campaignTerm:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                    </label>
+                                    <input
+                                        type="campaignTerm"
+                                        name="utm_term"
+                                        class="form-control"
+                                        id="campaignTerm-input"
+                                    />
                                 </div>
-                            </div>
+                                <div
+                                    class="form-group"
+                                    id="campaignContent-row"
+                                >
+                                    <label for="campaignContent"
+                                        >campaignContent:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                    </label>
+                                    <input
+                                        type="campaignContent"
+                                        name="utm_content"
+                                        class="form-control"
+                                        id="campaignContent-input"
+                                    />
+                                </div>
+                                <div class="form-group" id="referrer-row">
+                                    <label for="referrer"
+                                        >referrer:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#718ba9;"></i> -->
+                                    </label>
+                                    <input
+                                        type="referrer"
+                                        name="referrer"
+                                        class="form-control"
+                                        id="referrer-input"
+                                    />
+                                </div>
+                                <div class="form-group" id="sessionId-row">
+                                    <label id="sessionIdLabel" for="sessionId"
+                                        >sessionId:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 3rem1; color:#708ba9"></i> -->
+                                    </label>
+                                    <input
+                                        type="sessionId"
+                                        name="sessionId"
+                                        class="form-control"
+                                        id="sessionId-input"
+                                    />
+                                </div>
+                                <div class="form-group" id="sessionNumber-row">
+                                    <label
+                                        id="sessionNumberLabel"
+                                        for="sessionNumber"
+                                        >sessionNumber:
+                                        <!-- <i class="bi bi-node-plus"1style="font-size: 3rem; color:#708ba9;"></i> -->
+                                    </label>
+                                    <input
+                                        type="sessionNumber"
+                                        name="sessionNumber"
+                                        class="form-control"
+                                        id="sessionNumber-input"
+                                    />
+                                </div>
+                                <div class="form-group" id="clientId-row">
+                                    <label id="clientIdLabel" for="clientId"
+                                        >clientId:
+                                        <!-- <i class="bi bi-node-plus" style="font-size: 1rem; color:#708ba9;"></i> -->
+                                    </label>
+                                    <input
+                                        type="clientId"
+                                        name="clientId"
+                                        class="form-control"
+                                        id="clientId-input"
+                                    />
+                                </div>
+                                <!-- Display Query String -->
+                                <div id="querystring-display">
+                                    <p></p>
+                                </div>
+                                <div class="button-container">
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        id="clearCampaignForm"
+                                    >
+                                        Clear Form
+                                    </button>
+                                </div>
+                            </form>
+                            <button
+                                class="btn btn-info"
+                                id="newCampaign"
+                                data-tooltip="Generate New Campaign Data"
+                            >
+                                <i
+                                    class="bi bi-lightning-charge"
+                                    style="font-size: 2rem"
+                                ></i>
+                            </button>
                         </div>
-                        <div id="network-requests">
-                            <h5>Segment Network Requests</h5>
-                            <div id="segment-network-requests">
-                                <ul class="network-requests-list" id="network-requests-list">
-                                <!-- NETWORK REQUESTS AS LI -->
+                    </div>
+                </main>
+
+                <!-- RIGHT SIDEBAR -->
+                <!-- <div class="sidebar-content"> -->
+                <div id="resizer-right" class="resizer right"></div>
+                <div id="rightSidebarWrapper">
+                    <div class="sidebar-container">
+                        <nav
+                            class="col-md-3 sidebar sidebar-right"
+                            id="rightSidebarContent"
+                        >
+                            <i
+                                id="toggleRightSidebar"
+                                class="bi bi-cookie toggle-icon right"
+                                style="font-size: 3rem; color: #4fb58b"
+                                data-tooltip="Hide Right Sidebar"
+                            ></i>
+                            <div>
+                                <h5>Local Storage Cookies</h5>
+                                <ul
+                                    class="cookie-list"
+                                    id="local-storage-cookies"
+                                >
+                                    <!-- LOCAL STORAGE COOKIES AS LI -->
                                 </ul>
-
                             </div>
-
-                            <div id="segment-responses" class="segment-responses">
-                                <h5>Segment Event Requests</h5>
+                            <div>
+                                <h5>Client Cookies</h5>
+                                <ul class="cookie-list" id="client-cookies">
+                                    <!-- COOKIES AS LI -->
+                                </ul>
+                                <div id="getCookieBtns">
+                                    <div class="get-cookie-btns">
+                                        <p>
+                                            <button
+                                                class="btn btn-outline-warning"
+                                                id="userId-cookie-get"
+                                                data-target="userId-p"
+                                            >
+                                                userId
+                                            </button>
+                                            <img
+                                                src="./unify-icon.svg"
+                                                alt="Profile API"
+                                                class="unify-svg-icon"
+                                                id="unify-i-userId"
+                                                data-tooltip="Add field to Profile API request"
+                                            />
+                                        </p>
+                                        <p
+                                            class="click-mouse"
+                                            id="userId-p"
+                                        ></p>
+                                    </div>
+                                    <div class="get-cookie-btns">
+                                        <p>
+                                            <button
+                                                class="btn btn-outline-warning"
+                                                id="anonymousId-cookie-get"
+                                                data-target="anonymousId-p"
+                                            >
+                                                anonymousId
+                                            </button>
+                                            <img
+                                                src="./unify-icon.svg"
+                                                alt="Profile API"
+                                                class="unify-svg-icon"
+                                                id="unify-i-anonymousId"
+                                                data-tooltip="Add field to Profile API request"
+                                            />
+                                        </p>
+                                        <p
+                                            class="click-mouse"
+                                            id="anonymousId-p"
+                                        ></p>
+                                    </div>
+                                    <div class="get-cookie-btns">
+                                        <p>
+                                            <button
+                                                class="btn btn-outline-warning"
+                                                id="traits-cookie-get"
+                                                data-target="traits-p"
+                                            >
+                                                traits
+                                            </button>
+                                            <img
+                                                src="./unify-icon.svg"
+                                                alt="Profile API"
+                                                class="unify-svg-icon"
+                                                id="unify-i-traits"
+                                                data-tooltip="Add field to Profile API request"
+                                            />
+                                        </p>
+                                    </div>
+                                    <p class="click-mouse" id="traits-p"></p>
+                                    <div class="get-cookie-btns">
+                                        <p>
+                                            <button
+                                                class="btn btn-outline-warning"
+                                                id="groupId-cookie-get"
+                                                data-target="groupId-p"
+                                            >
+                                                groupId
+                                            </button>
+                                            <img
+                                                src="./unify-icon.svg"
+                                                alt="Profile API"
+                                                class="unify-svg-icon"
+                                                id="unify-i-groupId"
+                                                data-tooltip="Add field to Profile API request"
+                                            />
+                                        </p>
+                                        <p
+                                            class="click-mouse"
+                                            id="groupId-p"
+                                        ></p>
+                                    </div>
+                                    <div class="get-cookie-btns">
+                                        <p>
+                                            <button
+                                                class="btn btn-outline-warning"
+                                                id="groupTraits-cookie-get"
+                                                data-target="groupTraits-p"
+                                            >
+                                                groupTraits
+                                            </button>
+                                            <img
+                                                src="./unify-icon.svg"
+                                                alt="Profile API"
+                                                class="unify-svg-icon"
+                                                id="unify-i-groupTraits"
+                                                data-tooltip="Add field to Profile API request"
+                                            />
+                                        </p>
+                                        <p
+                                            class="click-mouse"
+                                            id="groupTraits-p"
+                                        ></p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </nav>
-                </div> <!-- Close sidebar-container -->
-            </div> <!-- Close rightSidebarWrapper -->
-        </div> <!-- Close row -->
+                            <div id="network-requests">
+                                <h5>Segment Network Requests</h5>
+                                <div id="segment-network-requests">
+                                    <ul
+                                        class="network-requests-list"
+                                        id="network-requests-list"
+                                    >
+                                        <!-- NETWORK REQUESTS AS LI -->
+                                    </ul>
+                                </div>
 
-            
-        <div id="eventTriggerContainer">
-            <button class="btn eventTriggerBtn btn-outline-segment-green" id="pageTrigger">Page</button>
-            <button class="btn eventTriggerBtn btn-outline-segment-green" id="identifyTrigger">Identify</button>
-            <button class="btn eventTriggerBtn btn-outline-segment-green" id="trackTrigger">Track</button>
-            <button class="btn eventTriggerBtn btn-outline-segment-green" id="groupTrigger">Group</button>
-            <button class="btn eventTriggerBtn btn-outline-segment-green" id="aliasTrigger">Alias</button>
+                                <div
+                                    id="segment-responses"
+                                    class="segment-responses"
+                                >
+                                    <h5>Segment Event Requests</h5>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                    <!-- Close sidebar-container -->
+                </div>
+                <!-- Close rightSidebarWrapper -->
+            </div>
+            <!-- Close row -->
+
+            <div id="eventTriggerContainer">
+                <button
+                    class="btn eventTriggerBtn btn-outline-segment-green"
+                    id="pageTrigger"
+                >
+                    Page
+                </button>
+                <button
+                    class="btn eventTriggerBtn btn-outline-segment-green"
+                    id="identifyTrigger"
+                >
+                    Identify
+                </button>
+                <button
+                    class="btn eventTriggerBtn btn-outline-segment-green"
+                    id="trackTrigger"
+                >
+                    Track
+                </button>
+                <button
+                    class="btn eventTriggerBtn btn-outline-segment-green"
+                    id="groupTrigger"
+                >
+                    Group
+                </button>
+                <button
+                    class="btn eventTriggerBtn btn-outline-segment-green"
+                    id="aliasTrigger"
+                >
+                    Alias
+                </button>
+            </div>
         </div>
-    </div> <!-- Close container-fluid -->
+        <!-- Close container-fluid -->
 
-    <!-- FOOTER -->
-    <footer class="footer">
+        <!-- FOOTER -->
+        <footer class="footer">
             <!-- <span class="text-muted">&copy; Liz Kane</span> -->
-        <!-- Toast notification element -->
-        <div id="toast" class="toast">Copied to clipboard!</div>
-        <!-- <button id="analytics-reset" class="btn btn-outline-danger click-mouse" onclick="resetAjsUser()">analytics.reset()</button> -->
-    </footer>
+            <!-- Toast notification element -->
+            <div id="toast" class="toast">Copied to clipboard!</div>
+            <!-- <button id="analytics-reset" class="btn btn-outline-danger click-mouse" onclick="resetAjsUser()">analytics.reset()</button> -->
+        </footer>
 
-</body>
+        <!-- <script src="./campaignData.js"></script> -->
+        <!-- <script src="./userData.js"></script> -->
 
+        <!-- FAKERS USERS.JSON FILE -->
+        <script>
+            // Fetch JSON data from users.json
+            const userList = document.getElementById("user-list");
+            let fakerUserData;
+            // Fetch users from the JSON file
+            const getUserData = () => {
+                console.log("Fetching user data...");
+                fetch("users.json") // Adjust path if necessary based on server setup
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(
+                                `HTTP error! status: ${response.status}`
+                            );
+                        }
+                        return response.json();
+                    })
+                    .then((users) => {
+                        if (users.length === 0) {
+                            console.log("No users found in users.json.");
+                            alert("No users found. Please append users first!");
+                            return;
+                        }
 
+                        // Select a random user from the array
+                        const randomIndex = Math.floor(
+                            Math.random() * users.length
+                        );
+                        const user = users[randomIndex];
 
- 
-<!-- <script src="./campaignData.js"></script> -->
-<!-- <script src="./userData.js"></script> -->
+                        // Display the random user in the DOM (Optional)
+                        // const userItem = document.// createElement('li');
+                        // userItem.textContent = `
+                        //     ${user.firstName} ${user.// lastName}
+                        //     Username: ${user.username}
+                        //     Phone: ${user.phone}
+                        //     Email: ${user.email}
+                        //     Address: ${user.streetAddress}, $// {user.city}, ${user.state}, $// {user.zipcode}`;
+                        // userList.appendChild(userItem);
+                        userList.innerHTML = "";
 
+                        // Create and append individual <li> elements for each piece of user information
+                        const userInfo = [
+                            `<span class="bold">Name: </span> ${user.firstName} ${user.lastName}`,
+                            `<span class="bold">Username: </span>${user.username}`,
+                            `<span class="bold">Phone: </span>${user.phone}`,
+                            `<span class="bold">Email: </span>${user.email}`,
+                            `<span class="bold">Address: </span> ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`,
+                        ];
 
-<!-- FAKERS USERS.JSON FILE -->
-<script>
-    // Fetch JSON data from users.json
-    const userList = document.getElementById('user-list');
-    let fakerUserData;
-    // Fetch users from the JSON file
-    const getUserData = () => {
-        console.log('Fetching user data...');
-        fetch('users.json') // Adjust path if necessary based on server setup
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(users => {
-                if (users.length === 0) {
-                    console.log('No users found in users.json.');
-                    alert('No users found. Please append users first!');
-                    return;
-                }
-    
-                // Select a random user from the array
-                const randomIndex = Math.floor(Math.random() * users.length);
-                const user = users[randomIndex];
-    
-                // Display the random user in the DOM (Optional)
-                // const userItem = document.// createElement('li');
-                // userItem.textContent = `
-                //     ${user.firstName} ${user.// lastName} 
-                //     Username: ${user.username} 
-                //     Phone: ${user.phone} 
-                //     Email: ${user.email} 
-                //     Address: ${user.streetAddress}, $// {user.city}, ${user.state}, $// {user.zipcode}`;
-                // userList.appendChild(userItem);
-                userList.innerHTML = '';
+                        userInfo.forEach((info) => {
+                            const userItem = document.createElement("li");
+                            userItem.innerHTML = info;
+                            userList.appendChild(userItem);
+                        });
 
-                // Create and append individual <li> elements for each piece of user information
-                const userInfo = [
-                    `<span class="bold">Name: </span> ${user.firstName} ${user.lastName}`,
-                    `<span class="bold">Username: </span>${user.username}` ,
-                    `<span class="bold">Phone: </span>${user.phone}` ,
-                    `<span class="bold">Email: </span>${user.email}` ,
-                    `<span class="bold">Address: </span> ${user.streetAddress}, ${user.city}, ${user.state}, ${user.zipcode}`
-                ];
+                        // Populate form fields
+                        document.getElementById("firstName").value =
+                            user.firstName;
+                        document.getElementById("lastName").value =
+                            user.lastName;
+                        document.getElementById("username").value =
+                            user.username;
+                        document.getElementById("phone").value = user.phone;
+                        document.getElementById("street").value =
+                            user.streetAddress;
+                        document.getElementById("city").value = user.city;
+                        document.getElementById("state").value = user.state;
+                        document.getElementById("zipcode").value = user.zipcode;
+                        document.getElementById("email").value = user.email;
 
-                userInfo.forEach(info => {
-                    const userItem = document.createElement('li');
-                    userItem.innerHTML = info;
-                    userList.appendChild(userItem);
-                });
+                        // Update Global Variables
+                        firstName = user.firstName;
+                        lastName = user.lastName;
+                        username = user.username;
+                        phone = user.phone;
+                        street = user.streetAddress;
+                        city = user.city;
+                        state = user.state;
+                        zipcode = user.zipcode;
+                        email = user.email;
 
+                        currentUser = {
+                            ...currentUser,
+                            firstName,
+                            lastName,
+                            username,
+                            phone,
+                            street,
+                            city,
+                            state,
+                            zipcode,
+                            email,
+                        };
+                        console.log("currentUser : ", currentUser);
+                    })
+                    .catch((err) => {
+                        console.error("Error fetching user data:", err);
+                        alert(
+                            "Error fetching user data. Check console for details."
+                        );
+                    });
+            };
+            document
+                .getElementById("generateFakerUserData")
+                .addEventListener("click", getUserData);
+        </script>
+        <script src="./segment-demo.js" type="module"></script>
 
-                // Populate form fields
-                document.getElementById('firstName').value = user.firstName;
-                document.getElementById('lastName').value = user.lastName;
-                document.getElementById('username').value = user.username;
-                document.getElementById('phone').value = user.phone;
-                document.getElementById('street').value = user.streetAddress;
-                document.getElementById('city').value = user.city;
-                document.getElementById('state').value = user.state;
-                document.getElementById('zipcode').value = user.zipcode;
-                document.getElementById('email').value = user.email;
-
-                // Update Global Variables
-                firstName = user.firstName
-                lastName = user.lastName
-                username = user.username
-                phone = user.phone
-                street = user.streetAddress
-                city = user.city
-                state = user.state
-                zipcode = user.zipcode
-                email = user.email
-                
-                currentUser= {...currentUser, firstName, lastName, username, phone, street, city, state, zipcode, email, }
-                console.log('currentUser : ',currentUser);
-            })
-            .catch(err => {
-                console.error('Error fetching user data:', err);
-                alert('Error fetching user data. Check console for details.');
-            });
-                
-        };
-        document.getElementById('generateFakerUserData').addEventListener('click', getUserData);
-</script>
-<script src="./segment-demo.js" type="module"></script> 
-
-<!-- <script>
+        <!-- <script>
     // Function to fetch environment variables from the server
     async function getEnvVars() {
       try {
@@ -743,11 +1268,7 @@
     init();
   </script> -->
 
-
-
-<!-- GOOGLE : GA4 & GTAG -->
-<!-- Google tag (gtag.js) -->
-
-
-
+        <!-- GOOGLE : GA4 & GTAG -->
+        <!-- Google tag (gtag.js) -->
+    </body>
 </html>
