@@ -23,3 +23,33 @@ $ http-server
 ```
 
 Open your browser and visit http://localhost:8080. These files will now be served over HTTP, which will bypass the CORS restrictions.
+
+Optionally, you can use: 
+
+```sh
+$ node server.js
+```
+
+Open your browser and visit http://localhost:3001/. 
+
+
+## Configuring the Analytics.js & Server Sources with your `writeKey`
+
+Create a new .env at the top-level with these variables. Update the links with the links to your Segment Resources.
+
+    GTAGID=""
+
+    # https://app.segment.com/liz-kane/sources/segment_demo/debugger
+    SEGMENTAJSWRITEKEY=""
+
+    # https://app.segment.com/liz-kane/sources/segment_demo_node/debugger
+    SEGMENTNODEWRITEKEY=""
+
+    # Segment Demo Space
+    SPACEID=""
+
+    PROFILEAPIKEY=""
+
+    BASE64PROFILEAPIKEY = ""
+
+In the `Components/nav.html` file, past in your Analytics.js source's `writeKey` in 2 places within the Segment Snippet.
