@@ -5,6 +5,9 @@
 import { campaignData } from './campaignData.js';
 import { userData } from './userData.js';
 import { surfacePayload } from './middleware.js';
+// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from './node_modules/uuid/dist/esm-browser/index.js';
+
 
 
 // import { getUserData } from './Components/getUserData.js';
@@ -1284,7 +1287,8 @@ async function updateProfile(event, button, type) {
         if(!analytics.user().id()){
             console.log('INSIDE !userId (1) : ', userId)
             
-            let tempUserId = uuidv4()
+            // let tempUserId = uuidv4()
+            let tempUserId = uuidv4();  // Generates a valid UUID
             console.log('INSIDE !userId (2) : ', tempUserId)
             analytics.user().id(tempUserId);
             console.log('INSIDE !userId (3) : ', analytics.user().id())
