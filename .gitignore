@@ -1,5 +1,6 @@
 /node_modules
 /.env
 ignore/
-server.js
+# server.jss
 .vscode/
+/.env.secondary
