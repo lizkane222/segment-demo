@@ -334,7 +334,7 @@ let Track = async ({event, properties, context, anonymousId, userId, callback}) 
 let Identify = async (userId, anonymousId, traits, context, campaign, globalVariables, callback) => {
     const pageData = {
         path : window.location.pathname,
-        referrer : context.referrer,
+        referrer : referrer,
         search : window.location.search,
         title : document.title,
         url : window.location.href
@@ -1298,7 +1298,7 @@ async function updateProfile(event, button, type) {
         }
     }
     // Await the completion of updateCampaignFormAndQueryString
-    let data = await updateCampaignFormAndQueryString(true)
+    // let data = await updateCampaignFormAndQueryString(true)
     
     userList.innerHTML = '';
 
@@ -1350,8 +1350,8 @@ async function updateProfile(event, button, type) {
             userId || analytics.user().id() || null,
             anonymousId || analytics.user().anonymousId() || null, 
             tempTraits, 
-            data.context, 
-            campaign, 
+            // data.context, 
+            // campaign, 
             // globalVariables
         )
     }
