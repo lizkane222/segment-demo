@@ -1,376 +1,490 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- STYLESHEET FOR BOOTSTRAP ICONS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.x.x/font/bootstrap-icons.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center; /* Center the divs horizontally */
-            align-items: flex-start; /* Align divs to the top of the page */
-            min-height: 100vh; /* Ensure full height of the viewport */
-            background-color: #f9f9f9; /* Optional background color */
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <!-- STYLESHEET FOR BOOTSTRAP ICONS -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.x.x/font/bootstrap-icons.css"
+        />
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center; /* Center the divs horizontally */
+                align-items: flex-start; /* Align divs to the top of the page */
+                min-height: 100vh; /* Ensure full height of the viewport */
+                background-color: #f9f9f9; /* Optional background color */
+            }
+
+            .container,
+            .card {
+                text-align: left; /* Align all text to the left inside the div */
+                width: 90%; /* Allow the div to adjust within the max-width */
+                background-color: #ffffff;
+                padding: 20px;
+                margin: 1em 0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for design */
+                border-radius: 8px; /* Optional rounded corners */
+                align-self: flex-start;
+                align-items: center;
+            }
+
+            .container {
+                margin: 1em;
+                min-width: 30vw;
+                padding: 20px;
+            }
+
+            h3,
+            h2,
+            p,
+            a {
+                margin: 10px 0; /* Add spacing around text elements */
+            }
+            pre {
+                background-color: #f4f4f4;
+                padding: 10px;
+                border-radius: 5px;
+                overflow-x: auto;
+                font-family: "Courier New", Courier, monospace;
+                max-width: 100%;
+                margin: 1em auto;
+            }
+
+            code {
+                color: #d63384;
+                font-size: 0.8em;
+            }
+
+            .code-container {
+                position: relative; /* To position the copy icon within the block */
+                background-color: #f4f4f4;
+                border-radius: 5px;
+            }
+
+            .code-block {
+                font-family: "Courier New", Courier, monospace;
+                overflow-x: auto;
+            }
+
+            .copy-icon {
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                cursor: pointer;
+                font-size: 1rem;
+                color: #cfd8e2;
+            }
+
+            .copy-icon:hover {
+                color: #6d8ca3; /* Darker color for hover effect */
+            }
+
+            a {
+                color: #1a73e8;
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            .inline-code {
+                background-color: #f4f4f4;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-family: "Courier New", Courier, monospace;
+            }
+
+            /* Style for the toast notification */
+            .toast {
+                visibility: hidden;
+                min-width: 150px;
+                max-height: 40px;
+                margin-left: -125px;
+                background-color: #f0f0f0; /* Light grey background */
+                color: #333; /* Dark text color for contrast */
+                text-align: center;
+                border-radius: 10px; /* Curved edges */
+                padding: 10px;
+                position: fixed;
+                z-index: 1;
+                left: 50%;
+                bottom: 30px;
+                font-size: 17px;
+                opacity: 0; /* Start as invisible */
+                transition: opacity 0.8s ease-in-out, visibility 0s linear 0.5s; /* Fade-in/out effect */
+            }
+
+            /* Toast animation: fade in and out */
+            .toast.show {
+                visibility: visible;
+                opacity: 1;
+                transition: opacity 0.5s ease-in-out, visibility 0s linear 0s;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- Toast notification element -->
+        <div id="toast" class="toast">Copied!</div>
+
+        <div class="container">
+            <h2>SEGMENT'S ANALYTICS.JS EVENTS : SPECS & FORMATS</h2>
+            <div class="card">
+                <h3>Spec Track</h3>
+                <a href="https://segment.com/docs/connections/spec/track/"
+                    >https://segment.com/docs/connections/spec/track/</a
+                >
+                <p>The Track method follows this format :</p>
+                <code class="inline-code"
+                    >analytics.track(event, [properties], [options],
+                    [callback]);</code
+                >
+                <div class="code-container">
+                    <pre>
+                        <code class="code-block">
+                            let Track = (event, properties, context, callback) => {
+                                analytics.page(
+                                    event,
+                                    ...(properties ? properties : {}),
+                                    ...(context ? {...context,campaign} : {}),
+                                    ...(callback ? callback : {})
+                                )
+                            }
+                        </code>
+                    </pre>
+                    <i
+                        onclick="copyElement(this)"
+                        class="segment-green-text bi bi-copy copy-icon"
+                    ></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Spec Identify</h3>
+            <a href="https://segment.com/docs/connections/spec/"
+                >https://segment.com/docs/connections/spec/</a
+            >
+            <p>The Identify method follows this format :</p>
+            <code class="inline-code"
+                >analytics.identify([userId], [traits], [options],
+                [callback]);</code
+            >
+            <div class="code-container">
+                <pre>
+                    <code class="code-block">
+        let Identify = (traits, context, callback) => {
+            analytics.identify(
+                userId,
+                ...(traits ? {...traits,
+                ...(firstName ? { firstName } : {}),
+                ...(lastName ? { lastName } : {}),
+                ...(email ? { email } : {}),
+                ...(username ? { username } : {}),
+                ...(phone ? { phone } : {})
+                } : {}),
+                ...(context ? context : {}),
+                ...(callback ? callback : {})
+            )
         }
+                    </code>
+                </pre>
+                <i
+                    onclick="copyElement(this)"
+                    class="segment-green-text bi bi-copy copy-icon"
+                ></i>
+            </div>
+        </div>
 
-        .container, .card {
-            text-align: left; /* Align all text to the left inside the div */
-            width: 90%; /* Allow the div to adjust within the max-width */
-            background-color: #ffffff;
-            padding: 20px;
-            margin : 1em 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for design */
-            border-radius: 8px; /* Optional rounded corners */
-            align-self:flex-start;
-            align-items: center;
+        <div class="card">
+            <h3>Spec Page</h3>
+            <a href="https://segment.com/docs/connections/spec/"
+                >https://segment.com/docs/connections/spec/</a
+            >
+            <p>The Page method follows this format :</p>
+            <code class="inline-code"
+                >analytics.page([category], [name], [properties], [options],
+                [callback]);</code
+            >
+            <div class="code-container">
+                <pre>
+                    <code class="code-block">
+        let Page = (name, category, properties, context, callback) => {
+            analytics.page(
+                name,
+                ...(category ? category : {}),
+                ...(properties ? properties : {}),
+                ...(context ? {...context,campaign} : {}),
+                ...(callback ? callback : {})
+            )
         }
+                    </code>
+                </pre>
+                <i
+                    onclick="copyElement(this)"
+                    class="segment-green-text bi bi-copy copy-icon"
+                ></i>
+            </div>
+        </div>
 
-        .container{
-            margin : 1em;
-            min-width:30vw;
-            padding: 20px;
+        <div class="card">
+            <h3>Spec Group</h3>
+            <a href="https://segment.com/docs/connections/spec/group/"
+                >https://segment.com/docs/connections/spec/group/</a
+            >
+            <p>The Group method follows this format :</p>
+            <code class="inline-code"
+                >analytics.group(groupId, [traits], [options],
+                [callback]);</code
+            >
+            <div class="code-container">
+                <pre>
+                    <code class="code-block">
+        let Group = (groupId, traits, context, callback) => {
+            analytics.identify(
+                groupId,
+                ...(traits ? traits : {}),
+                ...(context ? context : {}),
+                ...(callback ? callback : {})
+                )
         }
+                    </code>
+                </pre>
+                <i
+                    onclick="copyElement(this)"
+                    class="segment-green-text bi bi-copy copy-icon"
+                ></i>
+            </div>
+        </div>
 
-        h3, h2, p, a {
-            margin: 10px 0; /* Add spacing around text elements */
+        <div class="card">
+            <h3>Spec Alias</h3>
+            <a href="https://segment.com/docs/connections/spec/alias/"
+                >https://segment.com/docs/connections/spec/alias/</a
+            >
+            <p>The Alias method follows this format :</p>
+            <code class="inline-code"
+                >analytics.alias(userId, [previousId], [options],
+                [callback]);</code
+            >
+            <div class="code-container">
+                <pre>
+                    <code class="code-block">
+        let Alias = (userId, previousId, context, callback) => {
+            analytics.identify(
+                userId,
+                previousId,
+                ...(context ? context : {}),
+                ...(callback ? callback : {})
+                )
         }
-        pre {
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            font-family: 'Courier New', Courier, monospace;
-            max-width: 100%;
-            margin: 1em auto;
-        }
+                    </code>
+                </pre>
+                <i
+                    onclick="copyElement(this)"
+                    class="segment-green-text bi bi-copy copy-icon"
+                ></i>
+            </div>
+        </div>
 
-        code {
-            color: #d63384; 
-            font-size: .8em;
-        }
-        
-        .code-container {
-            position: relative; /* To position the copy icon within the block */
-            background-color: #f4f4f4;
-            border-radius: 5px;
-        }
+        <div class="container">
+            <h2>Cookies & Variables</h2>
+            <div class="card">
+                <h3>CLIENT-SIDE AJS COOKIE METHODS</h3>
+                <a
+                    href="https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/cookie-validity-update/#client-side-cookie-methods-get-set-clear"
+                    >https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/cookie-validity-update/#client-side-cookie-methods-get-set-clear</a
+                >
+                <div class="code-container">
+                    <pre>
+                        <code class="code-block">
+            userId = analytics.user().id();
+            anonymousId =analytics.user().anonymousId();
+            traits =analytics.user().traits();
+            groupId =analytics.group().id();
+            groupTraits =analytics.group().traits();
+                        </code>
+                    </pre>
+                    <i
+                        onclick="copyElement(this)"
+                        class="segment-green-text bi bi-copy copy-icon"
+                    ></i>
+                </div>
+            </div>
+        </div>
 
-        .code-block {
-            font-family: 'Courier New', Courier, monospace;
-            overflow-x: auto;
-        }
+        <div class="card">
+            <h3>GLOBAL VARIABLES</h3>
+            <div class="code-container">
+                <pre>
+                    <code class="code-block">
+        let firstName
+        let lastName
+        let username
+        let phone
+        let email
+                    </code>
+                </pre>
+                <i
+                    onclick="copyElement(this)"
+                    class="segment-green-text bi bi-copy copy-icon"
+                ></i>
+            </div>
 
-        .copy-icon {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 1rem; 
-            color:#cfd8e2;
-        }
+            <h4>GLOBAL VARIABLES FOUND IN INDEX.HTML FILE'S</h4>
+            <div class="code-container">
+                <pre>
+                    <code class="code-block">
+        let userId
+        let anonymousId
+        let traits
+        let groupId
+        let groupTraits
+        let sessionId
+        let sessionNumber
+        let clientId
+        let cid
+                    </code>
+                </pre>
+                <i
+                    onclick="copyElement(this)"
+                    class="segment-green-text bi bi-copy copy-icon"
+                ></i>
+            </div>
+        </div>
 
-        .copy-icon:hover {
-            color: #6d8ca3; /* Darker color for hover effect */
-        }
+        <div class="container">
+            <div class="card">
+                <h3>FUNCTIONS & DESCRIPTION</h3>
+                <p>
+                    <code>updateCookie(getValueFunc, spanId)</code> : updates
+                    right-sidebar's cookies within span upon clicking the
+                    corresponding button. Parameters : getValueFunc the button
+                    clicked (and if it's a function or only name) to return
+                    value for span's text, spanId the id of the span.
+                </p>
+                <p>
+                    <code>copyToClipboard(pId)</code> : copies the innerText of
+                    a p tag. Parameters : the id of the clicked element.
+                </p>
+                <p>
+                    <code>showToast()</code> : temporarily reveals banner that
+                    item was successfully copied as a result of
+                    copyToClipboard().
+                </p>
+            </div>
 
-        a {
-            color: #1a73e8;
-            text-decoration: none;
-        }
+            <div class="card">
+                <h2>EVENT HANDLERS</h2>
 
-        a:hover {
-            text-decoration: underline;
-        }
+                <h3>Add event listener to the Clear Form button</h3>
+                <div class="code-container">
+                    <pre>
+                        <code class="code-block">
+            document.getElementById('clearForm').addEventListener('click', clearForm);
+            document.getElementById('check-data').addEventListener('click', checkData);
+            document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser);
+                        </code>
+                    </pre>
+                    <i
+                        onclick="copyElement(this)"
+                        class="segment-green-text bi bi-copy copy-icon"
+                    ></i>
+                </div>
 
-        .inline-code {
-            background-color: #f4f4f4;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-family: 'Courier New', Courier, monospace;
-        }
+                <h3>Bind buttons to update respective p tags</h3>
+                <div class="code-container">
+                    <pre>
+                        <code class="code-block">
+            document.getElementById("userId-cookie-get").addEventListener("click", () => updateCookie(userId, "userId-p"));
+            document.getElementById("anonymousId-cookie-get").addEventListener("click", () => updateCookie(anonymousId, "anonymousId-p"));
+            document.getElementById("traits-cookie-get").addEventListener("click", () => updateCookie(traits, "traits-p"));
+            document.getElementById("groupId-cookie-get").addEventListener("click", () => updateCookie(groupId, "groupId-p"));
+            document.getElementById("groupTraits-cookie-get").addEventListener("click", () => updateCookie(groupTraits, "groupTraits-p"));
+                        </code>
+                    </pre>
+                    <i
+                        onclick="copyElement(this)"
+                        class="segment-green-text bi bi-copy copy-icon"
+                    ></i>
+                </div>
 
-        /* Style for the toast notification */
-        .toast {
-            visibility: hidden;
-            min-width: 150px;
-            max-height : 40px;
-            margin-left: -125px;
-            background-color: #f0f0f0; /* Light grey background */
-            color: #333; /* Dark text color for contrast */
-            text-align: center;
-            border-radius: 10px; /* Curved edges */
-            padding: 10px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
-            font-size: 17px;
-            opacity: 0; /* Start as invisible */
-            transition: opacity 0.8s ease-in-out, visibility 0s linear 0.5s; /* Fade-in/out effect */
-        }
+                <h3>Event listener for form submission</h3>
+                <div class="code-container">
+                    <pre>
+                        <code class="code-block">
+            const form = document.getElementById('myForm');
+            form.addEventListener('submit', updateProfile);
+                        </code>
+                    </pre>
+                    <i
+                        onclick="copyElement(this)"
+                        class="segment-green-text bi bi-copy copy-icon"
+                    ></i>
+                </div>
 
-        /* Toast animation: fade in and out */
-        .toast.show {
-            visibility: visible;
-            opacity: 1;
-            transition: opacity 0.5s ease-in-out, visibility 0s linear 0s;
-        }
-    </style>
-</head>
+                <div class="code-container">
+                    <pre>
+                        <code class="code-block">
+            firstName = document.getElementById('firstName').value;
+            lastName = document.getElementById('lastName').value;
+            username = document.getElementById('username').value;
+            phone = document.getElementById('phone').value;
+            email = document.getElementById('email').value;
+            
+            document.getElementById('myForm').reset();
+                        </code>
+                    </pre>
+                    <i
+                        onclick="copyElement(this)"
+                        class="segment-green-text bi bi-copy copy-icon"
+                    ></i>
+                </div>
+            </div>
+        </div>
 
-<body>
-<!-- Toast notification element -->
-<div id="toast" class="toast">Copied!</div>
+        <script>
+            // COPY CODEBLOCK CONTENTS TO CLIPBOARD
+            function copyElement(iconElement) {
+                // Find the closest container with the code block
+                const codeBlock =
+                    iconElement.parentElement.querySelector(".code-block");
+                if (codeBlock) {
+                    // Create a temporary textarea to copy the text
+                    const tempTextArea = document.createElement("textarea");
+                    tempTextArea.value = codeBlock.innerText; // Get the plain text from the code block
+                    document.body.appendChild(tempTextArea);
 
-<div class="container">
-<h2>SEGMENT'S ANALYTICS.JS EVENTS : SPECS & FORMATS</h2>
-<div class="card">
-    <h3>Spec Track</h3> <a href="https://segment.com/docs/connections/spec/track/">https://segment.com/docs/connections/spec/track/</a>
-    <p>The Track method follows this format :</p>
-    <code class="inline-code">analytics.track(event, [properties], [options], [callback]);</code>
-    <div class="code-container">
-        <pre><code class="code-block">
-let Track = (event, properties, context, callback) => {
-    analytics.page(
-        event,
-        ...(properties ? properties : {}),
-        ...(context ? {...context,campaign} : {}),
-        ...(callback ? callback : {})
-    )
-}
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-</div>
+                    // Copy the text
+                    tempTextArea.select();
+                    document.execCommand("copy");
 
-<div class="card">
-    <h3>Spec Identify</h3> <a href="https://segment.com/docs/connections/spec/">https://segment.com/docs/connections/spec/</a>
-    <p>The Identify method follows this format : </p>
-    <code class="inline-code">analytics.identify([userId], [traits], [options], [callback]);</code>
-    <div class="code-container">
-        <pre><code class="code-block">
-let Identify = (traits, context, callback) => {
-    analytics.identify(
-        userId,
-        ...(traits ? {...traits,
-        ...(firstName ? { firstName } : {}),
-        ...(lastName ? { lastName } : {}),
-        ...(email ? { email } : {}),
-        ...(username ? { username } : {}),
-        ...(phone ? { phone } : {})
-        } : {}),
-        ...(context ? context : {}),
-        ...(callback ? callback : {})
-    )
-}
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-</div>
+                    // Remove the temporary textarea
+                    document.body.removeChild(tempTextArea);
 
-<div class="card">
-    <h3>Spec Page</h3> <a href="https://segment.com/docs/connections/spec/">https://segment.com/docs/connections/spec/</a>
-    <p>The Page method follows this format : </p>
-    <code class="inline-code">analytics.page([category], [name], [properties], [options], [callback]);</code>
-    <div class="code-container">
-        <pre><code class="code-block">
-let Page = (name, category, properties, context, callback) => {
-    analytics.page(
-        name,
-        ...(category ? category : {}),
-        ...(properties ? properties : {}),
-        ...(context ? {...context,campaign} : {}),
-        ...(callback ? callback : {})
-    )
-}
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-</div>
+                    // Display a message or toast (optional)
+                    //alert('Code copied to clipboard!');
+                }
+                showToast();
+            }
 
-<div class="card">
-    <h3>Spec Group</h3> <a href="https://segment.com/docs/connections/spec/group/">https://segment.com/docs/connections/spec/group/</a>
-    <p>The Group method follows this format : </p>
-    <code class="inline-code">analytics.group(groupId, [traits], [options], [callback]);</code>
-    <div class="code-container">
-        <pre><code class="code-block">
-let Group = (groupId, traits, context, callback) => {
-    analytics.identify(
-        groupId,
-        ...(traits ? traits : {}),
-        ...(context ? context : {}),
-        ...(callback ? callback : {})
-        )
-}
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-</div>
+            // Function to display the toast message
+            function showToast() {
+                var toast = document.getElementById("toast");
+                toast.classList.add("show");
 
-<div class="card">
-    <h3>Spec Alias</h3> <a href="https://segment.com/docs/connections/spec/alias/">https://segment.com/docs/connections/spec/alias/</a>
-    <p>The Alias method follows this format : </p>
-    <code class="inline-code">analytics.alias(userId, [previousId], [options], [callback]);</code>
-    <div class="code-container">
-        <pre><code class="code-block">
-let Alias = (userId, previousId, context, callback) => {
-    analytics.identify(
-        userId,
-        previousId,
-        ...(context ? context : {}),
-        ...(callback ? callback : {})
-        )
-}
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-</div>
-</div>
-
-<div class="container">
-<h2>Cookies & Variables</h2>
-<div class="card">
-    <h3>CLIENT-SIDE AJS COOKIE METHODS</h3>
-    <a href="https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/cookie-validity-update/#client-side-cookie-methods-get-set-clear">https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/cookie-validity-update/#client-side-cookie-methods-get-set-clear</a>
-    <div class="code-container">
-        <pre><code class="code-block">
-userId = analytics.user().id();
-anonymousId =analytics.user().anonymousId();
-traits =analytics.user().traits();
-groupId =analytics.group().id();
-groupTraits =analytics.group().traits();
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-</div>
-<div class="card">
-    <h3>GLOBAL VARIABLES</h3>
-    <div class="code-container">
-        <pre><code class="code-block">
-let firstName
-let lastName
-let username
-let phone
-let email
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-
-    <h4>GLOBAL VARIABLES FOUND IN INDEX.HTML FILE'S</h4>
-    <div class="code-container">
-        <pre><code class="code-block">
-let userId
-let anonymousId
-let traits
-let groupId
-let groupTraits
-let sessionId
-let sessionNumber
-let clientId
-let cid
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-</div>
-</div>
-
-<div class="container">
-<div class="card">
-<h3>FUNCTIONS & DESCRIPTION</h3>
-  <p><code>updateCookie(getValueFunc, spanId)</code> : updates right-sidebar's cookies within span upon clicking the corresponding button. Parameters : getValueFunc the button clicked (and if it's a function or only name) to return value for span's text, spanId the id of the span.
-  <p><code>copyToClipboard(pId)</code> : copies the innerText of a p tag. Parameters : the id of the clicked element.</p>
-  <p><code>showToast()</code> : temporarily reveals banner that item was successfully copied as a result of copyToClipboard().</p>
-</div>
-
-<div class="card">
-    <h2>EVENT HANDLERS</h2>
-
-    <h3>Add event listener to the Clear Form button</h3>
-    <div class="code-container">
-        <pre><code class="code-block">
-document.getElementById('clearForm').addEventListener('click', clearForm);
-document.getElementById('check-data').addEventListener('click', checkData);
-document.getElementById('reset-ajs-user').addEventListener('click', resetAjsUser);
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-
-    <h3>Bind buttons to update respective p tags</h3>
-    <div class="code-container">
-        <pre><code class="code-block">
-document.getElementById("userId-cookie-get").addEventListener("click", () => updateCookie(userId, "userId-p"));
-document.getElementById("anonymousId-cookie-get").addEventListener("click", () => updateCookie(anonymousId, "anonymousId-p"));
-document.getElementById("traits-cookie-get").addEventListener("click", () => updateCookie(traits, "traits-p"));
-document.getElementById("groupId-cookie-get").addEventListener("click", () => updateCookie(groupId, "groupId-p"));
-document.getElementById("groupTraits-cookie-get").addEventListener("click", () => updateCookie(groupTraits, "groupTraits-p"));
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-
-    <h3>Event listener for form submission</h3>
-    <div class="code-container">
-        <pre><code class="code-block">
-const form = document.getElementById('myForm');
-form.addEventListener('submit', updateProfile);
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-
-    <div class="code-container">
-        <pre><code class="code-block">
-firstName = document.getElementById('firstName').value;
-lastName = document.getElementById('lastName').value;
-username = document.getElementById('username').value;
-phone = document.getElementById('phone').value;
-email = document.getElementById('email').value;
-
-document.getElementById('myForm').reset();
-        </code></pre>
-        <i onclick="copyElement(this)" class="segment-green-text bi bi-copy copy-icon"></i>
-    </div>
-
-</div>
-</body>
-
-<script>
-    // COPY CODEBLOCK CONTENTS TO CLIPBOARD
-    function copyElement(iconElement) {
-        // Find the closest container with the code block
-        const codeBlock = iconElement.parentElement.querySelector('.code-block');
-        if (codeBlock) {
-            // Create a temporary textarea to copy the text
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = codeBlock.innerText; // Get the plain text from the code block
-            document.body.appendChild(tempTextArea);
-
-            // Copy the text
-            tempTextArea.select();
-            document.execCommand('copy');
-
-            // Remove the temporary textarea
-            document.body.removeChild(tempTextArea);
-
-            // Display a message or toast (optional)
-            //alert('Code copied to clipboard!');
-        }
-        showToast();
-
-    }
-    
-    // Function to display the toast message
-    function showToast() {
-        var toast = document.getElementById("toast");
-        toast.classList.add("show");
-    
-        // Hide the toast after 2 seconds
-        setTimeout(function () {
-            toast.classList.remove("show");
-        }, 2000);
-    }
-</script>
+                // Hide the toast after 2 seconds
+                setTimeout(function () {
+                    toast.classList.remove("show");
+                }, 2000);
+            }
+        </script>
+    </body>
 </html>
